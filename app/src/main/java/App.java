@@ -7,7 +7,7 @@ import view.MainView;
 public class App extends Application {
 	public void start(Stage stage) {
 		MainView mainView = new MainView(); 
-		Scene scene = new Scene(mainView.getView(), 300, 200);
+		Scene scene = new Scene(mainView.getView(), 1280, 1000);
 		
 		stage.setTitle("Shogi v1.0");
 		stage.setScene(scene);

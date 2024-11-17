@@ -16,7 +16,7 @@ public class MainView {
 		root.setCenter(gridPane);
 		
 		gridPane.setStyle(
-			"-fx-background-image: url('" + getClass().getResource("/wood1.jpg") + "'); " +
+			"-fx-background-image: url('" + getClass().getResource("/image/boards/wood1.jpg") + "'); " +
 			"-fx-background-size: cover; " +
 			"-fx-background-position: center; " +
 			"-fx-border-width: 0.5; -fx-border-color: black"
