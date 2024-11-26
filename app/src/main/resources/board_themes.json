@@ -1,0 +1,46 @@
+{
+    "DOUBUTSU_FLIP": {
+        "image": "doubutsu_flip.png",
+        "thumbnail": "doubutsu.png"
+    },
+    "DOUBUTSU": {
+        "image": "doubutsu.png",
+        "thumbnail": "doubutsu.png"
+    },
+    "KAYA1": {
+        "image": "kaya1.jpg",
+        "thumbnail": "kaya1.png"
+    },
+    "KAYA2": {
+        "image": "kaya2.jpg",
+        "thumbnail": "kaya2.png"
+    },
+    "KINKAKU": {
+        "image": "kinkaku.jpg",
+        "thumbnail": "kinkaku.png"
+    },
+    "OAK": {
+        "image": "oak.png",
+        "thumbnail": "oak.png"
+    },
+    "PAINTING1": {
+        "image": "painting1.jpg",
+        "thumbnail": "painting1.png"
+    },
+    "PAINTING2": {
+        "image": "painting2.jpg",
+        "thumbnail": "painting2.png"
+    },
+    "SPACE": {
+        "image": "space.png",
+        "thumbnail": "space.png"
+    },
+    "WOOD": {
+        "image": "wood.png",
+        "thumbnail": "wood.png"
+    },
+    "WOOD1": {
+        "image": "wood1.jpg",
+        "thumbnail": "wood1.png"
+    }
+}

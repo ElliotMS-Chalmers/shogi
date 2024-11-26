@@ -1,0 +1,12 @@
+* {
+    -fx-dark-base: #131210;
+    -fx-light-base: #EDEBE9;
+}
+
+BorderPane {
+    -fx-background-color: -fx-light-base;
+}
+
+BorderPane.dark {
+    -fx-background-color: -fx-dark-base;
+}

@@ -1,0 +1,92 @@
+{
+  "RYOKO_1_KANJI": {
+    "folder": "Ryoko_1Kanji"
+  },
+  "KANJI_LIGHT": {
+    "folder": "kanji_light"
+  },
+  "KANJI_BROWN": {
+    "folder": "kanji_brown"
+  },
+  "ORANGAIN": {
+    "folder": "orangain"
+  },
+  "KANJI_RED_WOOD": {
+    "folder": "kanji_red_wood"
+  },
+  "POTELLA": {
+    "folder": "Portella"
+  },
+  "PORTELLA_2_KANJI": {
+    "folder": "Portella_2Kanji"
+  },
+  "KANJI_3D": {
+    "folder": "1Kanji_3D"
+  },
+  "KANJI_2_3D": {
+    "folder": "2Kanji_3D"
+  },
+  "SHOGI_CZ": {
+    "folder": "Shogi_cz"
+  },
+  "CZECH": {
+    "folder": "Shogi_FCZ"
+  },
+  "ENGRAVED_SHOGI_CZ": {
+    "folder": "Engraved_cz"
+  },
+  "ENGRAVED_SHOGI_CZ_BNW": {
+    "folder": "Engraved_cz_BnW"
+  },
+  "KANJI_GUIDE_SHADOWED": {
+    "folder": "Kanji_Guide_Shadowed"
+  },
+  "VALDIVIA": {
+    "folder": "Valdivia"
+  },
+  "VALDIVIA_2": {
+    "folder": "Vald_opt"
+  },
+  "SHOGI_BNW": {
+    "folder": "shogi_BnW"
+  },
+  "PIXEL_8BIT": {
+    "folder": "pixel"
+  },
+  "INTERNATIONAL_COLORED_2D": {
+    "folder": "Intl_Colored_2D"
+  },
+  "INTERNATIONAL_COLORED_3D": {
+    "folder": "Intl_Colored_3D"
+  },
+  "INTERNATIONAL_SHADOWED": {
+    "folder": "Intl_Shadowed"
+  },
+  "INTERNATIONAL_MONOCHROME_2D": {
+    "folder": "Intl_Monochrome_2D"
+  },
+  "INTERNATIONAL_WOODEN_3D": {
+    "folder": "Intl_Wooden_3D"
+  },
+  "INTERNATIONAL_PORTELLA": {
+    "folder": "Intl_Portella"
+  },
+  "INTERNATIONAL": {
+    "folder": "international"
+  },
+  "JOYFUL": {
+    "folder": "joyful"
+  },
+  "SIMPLE_KANJI": {
+    "folder": "simple_kanji"
+  },
+  "DOUBUTSU": {
+    "folder": "doubutsu"
+  },
+  "LOGY_GAMES": {
+    "folder": "Logy_Games"
+  },
+  "WESTERN": {
+    "folder": "western"
+  }
+}
