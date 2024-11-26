@@ -1,6 +1,10 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import model.Game;
+import model.variants.Standard;
+import variants.Variant;
 import util.*;
 import view.*;
 
@@ -12,12 +16,17 @@ public class App extends Application {
                 themeManager.getPieceSet(settings.getPieceSet()),
                 themeManager.getBoardTheme(settings.getBoardTheme())
         );
+
+		Variant gameMode = new Standard();
+		Game game = new Game(gameMode);
+
         BoardView board = new BoardView(9, theme);
         PieceStandView gotePieceStand = new PieceStandView(Side.GOTE, theme);
         PieceStandView sentePieceStand = new PieceStandView(Side.SENTE, theme);
 		GameView gameView = new GameView(board, gotePieceStand, sentePieceStand);
 		Scene scene = new Scene(gameView.getView(), 1280, 1000);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+
 
 		stage.setTitle("Shogi v1.0");
 		stage.setScene(scene);
