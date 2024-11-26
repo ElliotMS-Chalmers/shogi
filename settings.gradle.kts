@@ -7,3 +7,5 @@ plugins {
 
 rootProject.name = "shogi"
 include("app")
+include("app:src:main:model")
+findProject(":app:src:main:model")?.name = "model"
