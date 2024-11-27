@@ -1,8 +1,9 @@
-package pieces;
+package model.pieces;
+
+import util.Side;
 
 public class Knight extends Promotable{
-    public Knight(boolean team){
-        this.team = team;
+    public Knight(Side side) {
+        super(side);
     }
-    public void Promote(){}
 }

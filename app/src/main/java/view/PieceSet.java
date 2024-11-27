@@ -4,7 +4,6 @@ import java.io.InputStream;
 import javafx.scene.image.Image;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import util.Piece;
 
 public class PieceSet {
     private final String folder;

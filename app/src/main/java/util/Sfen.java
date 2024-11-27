@@ -1,5 +1,7 @@
 package util;
 
+import java.util.function.BiConsumer;
+
 public class Sfen {
     private String boardPosition;
     private char turn;             // 'b' for Black, 'w' for White
@@ -62,6 +64,26 @@ public class Sfen {
 
     public String[] getRows() {
         return this.getBoardPosition().split("/");
+    }
+
+    public void forEachPiece(BiConsumer<String, Pos> pieceHandler) {
+        String[] rows = getRows();
+        for (int row = 0; row < rows.length; row++) {
+            int col = 0;
+            for (int i = 0; i < rows[row].length(); i++) {
+                char ch = rows[row].charAt(i);
+                if (Character.isDigit(ch)) {
+                    col += Character.getNumericValue(ch);
+                } else if (ch == '+') {
+                    char nextCh = rows[row].charAt(++i);
+                    pieceHandler.accept("+" + nextCh, new Pos(row, col));
+                    col += 2;
+                } else {
+                    pieceHandler.accept(Character.toString(ch), new Pos(row, col));
+                    col += 1;
+                }
+            }
+        }
     }
 }
 

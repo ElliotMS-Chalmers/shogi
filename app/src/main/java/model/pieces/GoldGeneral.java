@@ -1,9 +1,11 @@
-package pieces;
+package model.pieces;
 
-public class GoldGeneral extends Promotable{
+import util.Side;
+
+public class GoldGeneral extends Promotable {
     private int[][] moves = {{-1,1}, {0,1}, {1,1}, {-1,0},{1,0},{0,-1}};
-    public GoldGeneral(boolean team){
-        this.team = team;
+
+    public GoldGeneral(Side side) {
+        super(side);
     }
-    public void Promote(){}
 }

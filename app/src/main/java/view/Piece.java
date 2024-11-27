@@ -1,4 +1,4 @@
-package util;
+package view;
 
 public enum Piece {
     SENTE_KING("K", "0OU"),

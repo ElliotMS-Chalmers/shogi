@@ -1,8 +1,9 @@
-package pieces;
+package model.pieces;
 
-public class Bishop extends Promotable{
-    public Bishop(boolean team){
-        this.team = team;
+import util.Side;
+
+public class Bishop extends Promotable {
+    public Bishop(Side side) {
+        super(side);
     }
-    public void Promote(){}
 }

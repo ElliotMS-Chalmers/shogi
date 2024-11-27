@@ -1,5 +1,15 @@
-package pieces;
+package model.pieces;
 
-public abstract class Promotable extends Piece{
-    public abstract void Promote();
+import util.Side;
+
+public abstract class Promotable extends Piece {
+    private boolean isPromoted = false;
+
+    public Promotable(Side side) {
+        super(side);
+    }
+
+    public void promote() {
+        isPromoted = true;
+    };
 }

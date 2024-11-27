@@ -1,24 +1,36 @@
 package model;
 
-import variants.Variant;
+import model.pieces.*;
+import model.variants.Variant;
+import util.Pos;
+import util.Sfen;
+import util.Side;
 
 public class Game {
     private boolean turn = false;
-    private Variant gameMode;
+    private Variant variant;
     private Board board;
-    //We might not use players
-    private Player player1;
-    private Player player2;
+    private Player sentePlayer = new Player(new Piece[] {}, new Piece[] { new Pawn(Side.SENTE), new Knight(Side.SENTE), new Lance(Side.SENTE) }, false); // TESTING
+    private Player gotePlayer = new Player(new Piece[] {}, new Piece[] { new Pawn(Side.GOTE), new Knight(Side.GOTE), new Lance(Side.GOTE), new Lance(Side.GOTE) }, true); // TESTING
+    private int moveCount = 1;
 
-    public Game(Variant gameMode){
-        this.gameMode = gameMode;
-        this.board = new Board(gameMode.getWidth(),gameMode.getHeight());
-        this.gameMode.initiatePieces(board); /*Det är inte optimalt att skicka board till Variant,
-                                             men vet inte hur annars man ska göra det.*/
+    public Game(Variant variant){
+        this.variant = variant;
+        this.board = new Board(variant.getWidth(), variant.getHeight());
+        this.board.initializeBoard(variant.getStartSfen());
     }
-    public void move(int x1,int y1,int x2,int y2){
-        this.board.move(x1,y1,x2,y2);
+    public void move(Pos from, Pos to){
+        this.board.move(from, to);
         if(turn){turn = false;}
         else{turn = true;}
+        moveCount++;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public Sfen getSfen() {
+        return new Sfen(board.getBoardAsSfen(), turn ? 'b' : 'w', sentePlayer.getHandAsSfen() + gotePlayer.getHandAsSfen(), moveCount);
     }
 }

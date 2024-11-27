@@ -1,50 +1,65 @@
-package view;
+package view.views;
 
+import controller.GameController;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
-import util.Piece;
+import model.Game;
 import util.Sfen;
 import util.Side;
+import view.Piece;
+import view.Theme;
 
 import java.util.*;
+import java.util.function.Consumer;
 
-public class PieceStandView {
-    private final VBox wrapper = new VBox();
+public class PieceStandView extends VBox {
     private final VBox pieceStand = new VBox();
     private final Theme theme;
     private Side side;
     private final Map<Piece, PieceStandSquare> squares = new HashMap<>() {};
+    private Consumer<Piece> clickHandler;
 
-    private class PieceStandSquare {
-        private final StackPane stackPane = new StackPane();
+    private class PieceStandSquare extends StackPane {
         private final ImageView imageView;
         private Label label = new Label();
         private Integer count;
+        private Piece piece;
 
         public PieceStandSquare(Piece piece) {
+            this.piece = piece;
+            this.getStyleClass().add("piece-stand-square");
             imageView = new ImageView(theme.getPieceSet().getImage(piece));
             imageView.setManaged(false); // important!
             imageView.setPreserveRatio(true);
-            imageView.fitWidthProperty().bind(stackPane.widthProperty());
-            imageView.fitHeightProperty().bind(stackPane.heightProperty());
-            stackPane.getChildren().add(imageView);
+            imageView.fitWidthProperty().bind(this.widthProperty());
+            imageView.fitHeightProperty().bind(this.heightProperty());
+            this.getChildren().add(imageView);
 
-            label.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-border-width: 1; -fx-border-radius: 3; -fx-border-color: #474747; -fx-background-color: white; -fx-background-radius: 3; -fx-padding: -3 3 -3 3;");
             switch (side) {
                 case SENTE: StackPane.setAlignment(label, Pos.BOTTOM_RIGHT); break;
                 case GOTE: StackPane.setAlignment(label, Pos.TOP_RIGHT); break;
             }
-            stackPane.setStyle("-fx-padding: 0 3 0 0");
-            stackPane.getChildren().add(label);
+            this.getChildren().add(label);
 
-            stackPane.prefHeightProperty().bind(
-                    wrapper.heightProperty().divide(9)
+            this.prefHeightProperty().bind(
+                    PieceStandView.this.heightProperty().divide(9)
             );
-            stackPane.prefWidthProperty().bind(stackPane.heightProperty());
+            this.prefWidthProperty().bind(this.heightProperty());
             setCount(0);
+
+            this.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (clickHandler != null) {
+                        clickHandler.accept(piece);
+                    }
+                }
+            });
         }
 
         public void setCount(Integer count) {
@@ -58,23 +73,19 @@ public class PieceStandView {
             }
             label.setText(count.toString());
         }
-
-        public StackPane getView() {
-            return stackPane;
-        }
     }
 
     public PieceStandView(Side side, Theme theme) {
         this.side = side;
         this.theme = theme;
 
-        wrapper.prefHeight(Double.MAX_VALUE);
-        wrapper.getChildren().add(pieceStand);
+        this.prefHeight(Double.MAX_VALUE);
+        this.getChildren().add(pieceStand);
 
         Piece[] pieceList = new Piece[]{};
         switch(side) {
             case SENTE:
-                wrapper.setAlignment(Pos.BOTTOM_CENTER);
+                this.setAlignment(Pos.BOTTOM_CENTER);
                 pieceList = new Piece[]{
                         Piece.SENTE_ROOK,
                         Piece.SENTE_BISHOP,
@@ -86,7 +97,7 @@ public class PieceStandView {
                 };
                 break;
             case GOTE:
-                wrapper.setAlignment(Pos.TOP_CENTER);
+                this.setAlignment(Pos.TOP_CENTER);
                 pieceList = new Piece[] {
                         Piece.GOTE_PAWN,
                         Piece.GOTE_LANCE,
@@ -102,7 +113,7 @@ public class PieceStandView {
         for (Piece piece : pieceList) {
             PieceStandSquare square = new PieceStandSquare(piece);
             squares.put(piece, square);
-            pieceStand.getChildren().add(square.getView());
+            pieceStand.getChildren().add(square);
         }
     }
 
@@ -110,10 +121,6 @@ public class PieceStandView {
         PieceStandSquare square = squares.get(piece);
         if (square == null) { throw new IllegalArgumentException("Invalid piece"); }
         square.setCount(count);
-    }
-
-    public VBox getView() {
-        return wrapper;
     }
 
     public void drawHand(Sfen sfen) {
@@ -131,5 +138,9 @@ public class PieceStandView {
                 setCapturedPieceCount(Piece.fromSfenAbbreviation(Character.toString(ch)), count);
             }
         }
+    }
+
+    public void setClickHandler(Consumer<Piece> clickHandler) {
+        this.clickHandler = clickHandler;
     }
 }

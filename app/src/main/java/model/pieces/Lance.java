@@ -1,8 +1,9 @@
-package pieces;
+package model.pieces;
+
+import util.Side;
 
 public class Lance extends Promotable{
-    public Lance(boolean team){
-        this.team = team;
+    public Lance(Side side) {
+        super(side);
     }
-    public void Promote(){}
 }

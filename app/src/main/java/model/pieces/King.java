@@ -1,8 +1,11 @@
-package pieces;
+package model.pieces;
 
-public class King extends Piece{
+import util.Side;
+
+public class King extends Piece {
     private int[][] moves = {{-1,1}, {0,1}, {1,1}, {-1,0},{1,0},{-1,-1},{0,-1},{1,-1}};
-    public King(boolean team){
-        this.team = team;
+
+    public King(Side side) {
+        super(side);
     }
 }
