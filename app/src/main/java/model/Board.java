@@ -1,8 +1,6 @@
 package model;
 
-import model.pieces.Pawn;
 import model.pieces.Piece;
-import model.pieces.Promotable;
 import util.Pos;
 import util.Sfen;
 
@@ -10,12 +8,11 @@ public class Board {
     private Piece[][] grid;
 
     public Board(int width, int height){
-        grid = new Piece[width][height];
+        grid = new Piece[height][width];
     }
-    public void move(Pos from, Pos to){ //Is run throuhg Game to alse change the turn
-        Piece piece = grid[from.row()][from.col()];
-        grid[to.row()][to.col()] = piece;
-        grid[from.row()][from.col()] = null;
+    public void move(Pos from, Pos to){ //Is run through Game to also change the turn
+        setAtPosition(to,grid[from.row()][from.col()]);
+        setAtPosition(from,null);
     }
     public Piece[][] getCurrentBoard(){
         return grid;
@@ -23,7 +20,10 @@ public class Board {
     public void setAtPosition(Pos pos, Piece piece){
         grid[pos.row()][pos.col()] = piece;
     }
-
+    public void setSfen(Sfen sfen){
+        grid = new Piece[grid.length][grid[0].length];
+        initializeBoard(sfen);
+    }
     public String getBoardAsSfen() {
         StringBuilder sfen = new StringBuilder();
 
@@ -51,7 +51,6 @@ public class Board {
         if (!sfen.isEmpty()) {
             sfen.setLength(sfen.length() - 1);
         }
-
         return sfen.toString();
     }
 

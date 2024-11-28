@@ -39,8 +39,7 @@ public class GameController {
     }
 
     private void movePiece(Pos from, Pos to) {
-        Board board = game.getBoard();
-        board.move(from, to);
+        game.move(from, to);
         gameView.clearHighlightedSquares();
         lastBoardPosClicked = null;
         reDrawBoard();
