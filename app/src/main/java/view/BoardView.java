@@ -1,20 +1,17 @@
-package view.views;
+package view;
 
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import util.Pos;
-import view.Piece;
-import view.Theme;
 
 import java.util.function.Consumer;
 
 public class BoardView extends GridPane {
-    private final SquareView[][] boardSquares;
-    private final Theme theme; // should probably be moved to model
+    private final SquareView[][] squares;
 
-    public class SquareView extends view.views.SquareView {
+    public class SquareView extends view.SquareView {
         public final Pos pos;
 
         public SquareView(Pos pos){
@@ -28,35 +25,39 @@ public class BoardView extends GridPane {
         }
     }
 
-    public BoardView(Integer size, Theme theme) {
-        this.theme = theme;
-        boardSquares = new SquareView[size][size];
+    public BoardView(Integer size) {
+        squares = new SquareView[size][size];
         this.setId("board");
         this.prefWidthProperty().bind(this.heightProperty());
+		setContraints();
+		populateGrid();
+    }
 
-        updateBackground();
-		
-		for (int i = 0; i < size; i++) {
+    private void setContraints() {
+        int size = squares.length;
+        for (int i = 0; i < size; i++) {
             ColumnConstraints colConstraint = new ColumnConstraints();
             colConstraint.setPercentWidth(100.0 / size);
             this.getColumnConstraints().add(colConstraint);
-            
+
             RowConstraints rowConstraint = new RowConstraints();
             rowConstraint.setPercentHeight(100.0 / size);
             this.getRowConstraints().add(rowConstraint);
         }
-        
-		for (int row = 0; row < size; row++) {
+    }
+
+    private void populateGrid() {
+        int size = squares.length;
+        for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 SquareView square = new SquareView(new Pos(row, col));
-                boardSquares[row][col] = square;
+                squares[row][col] = square;
                 this.add(square, col, row);
             }
         }
     }
 
-    public void updateBackground() {
-        Image image = theme.getBoardTheme().getImage();
+    public void setBackground(Image image) {
         BackgroundImage backgroundImage = new BackgroundImage(
                 image,
                 BackgroundRepeat.NO_REPEAT,
@@ -69,19 +70,13 @@ public class BoardView extends GridPane {
         this.setBackground(background);
     }
 
-    public void drawPiece(Piece piece, Pos pos) {
-        Image image = theme.getPieceSet().getImage(piece);
-        SquareView square = boardSquares[pos.row()][pos.col()];
+    public void drawImageAt(Image image, Pos pos) {
+        SquareView square = squares[pos.row()][pos.col()];
         square.setImage(image);
     }
 
-//    public void drawPiece(Image image, Pos pos) {
-//        SquareView square = boardSquares[pos.row()][pos.col()];
-//        square.setImage(image);
-//    }
-
     public void clearBoard() {
-        for (SquareView[] row : boardSquares) {
+        for (SquareView[] row : squares) {
             for (SquareView square : row) {
                 square.setImage(null);
             }
@@ -89,11 +84,11 @@ public class BoardView extends GridPane {
     }
 
     public void highlightSquare(Pos pos) {
-        boardSquares[pos.row()][pos.col()].highlight();
+        squares[pos.row()][pos.col()].highlight();
     }
 
     public void clearHighlightedSquares() {
-        for (SquareView[] row : boardSquares) {
+        for (SquareView[] row : squares) {
             for (SquareView square : row) {
                 square.unHighlight();
             }
@@ -101,7 +96,7 @@ public class BoardView extends GridPane {
     }
 
     public void setClickHandler(Consumer<SquareView> clickHandler) {
-        for (SquareView[] row : boardSquares) {
+        for (SquareView[] row : squares) {
             for (SquareView square : row) {
                 square.setOnMousePressed(new EventHandler<MouseEvent>() {
                     @Override

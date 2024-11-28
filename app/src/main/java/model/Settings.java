@@ -6,8 +6,9 @@ import java.util.Properties;
 
 public class Settings {
     Properties properties = new Properties();
-    private String pieceSet;
-    private String boardTheme;
+    ThemeManager themeManager = new ThemeManager();
+    private PieceSet pieceSet;
+    private BoardTheme boardTheme;
 
     public Settings(String path) {
         try (InputStream inputStream = Settings.class.getResourceAsStream(path)) {
@@ -15,18 +16,21 @@ public class Settings {
                 throw new IllegalArgumentException("Resource not found: " + path);
             }
             properties.load(inputStream);
-            pieceSet = properties.getProperty("piece_set");
-            boardTheme = properties.getProperty("board_theme");
+            String pieceSetName = properties.getProperty("piece_set");
+            String boardThemeName = properties.getProperty("board_theme");
+            pieceSet = themeManager.getPieceSet(pieceSetName);
+            boardTheme = themeManager.getBoardTheme(boardThemeName);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public String getPieceSet() {
+    public PieceSet getPieceSet() {
         return pieceSet;
     }
 
-    public String getBoardTheme() {
+    public BoardTheme getBoardTheme() {
         return boardTheme;
     }
 }

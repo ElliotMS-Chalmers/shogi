@@ -1,11 +1,8 @@
-package view.views;
+package view;
 
-import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import util.Pos;
 
 public class SquareView extends StackPane {
     protected ImageView imageView;
