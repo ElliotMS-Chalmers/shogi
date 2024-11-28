@@ -4,13 +4,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import model.Game;
+import model.Settings;
 import model.variants.Standard;
 import model.variants.Variant;
-import util.*;
 import view.*;
-import view.views.BoardView;
 import view.views.GameView;
-import view.views.PieceStandView;
 
 public class App extends Application {
 	public void start(Stage stage) {
@@ -24,10 +22,10 @@ public class App extends Application {
 
         // Initialize model
         Variant variant = new Standard();
-        Game game = new Game(variant);
+        Game model = new Game(variant);
 
         // Initialize view
-        GameView gameView = new GameView(theme);
+        GameView gameView = new GameView(theme); // should move theme to model
         Scene scene = new Scene(gameView, 1280, 1000);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setTitle("Shogi v1.0");
@@ -37,14 +35,7 @@ public class App extends Application {
         stage.show();
 
         // Initialize controller
-        GameController gameController = new GameController(game, gameView);
-
-        // TESTING DRAW BOARD, something like this should be in controller
-        // boardView.drawPiece(Piece.GOTE_PROMOTED_SILVER, 4, 4);
-        // Sfen sfen = new Sfen("lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b RG9S2NL5P2gs2n 1");
-        // boardView.drawBoard(sfen);
-        // gotePieceStand.drawHand(sfen);
-        /// sentePieceStand.drawHand(sfen);
+        GameController gameController = new GameController(model, gameView);
     }
 
     public static void main(String[] args) {

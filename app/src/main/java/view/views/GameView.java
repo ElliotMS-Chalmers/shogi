@@ -41,8 +41,8 @@ public class GameView extends BorderPane {
 		boardView.clearBoard();
 	}
 
-	public void drawBoard(Sfen sfen) {
-		boardView.drawBoard(sfen);
+	public void drawPiece(view.Piece piece, util.Pos pos) {
+		boardView.drawPiece(piece, pos);
 	}
 
 	public void drawHand(Sfen sfen) {

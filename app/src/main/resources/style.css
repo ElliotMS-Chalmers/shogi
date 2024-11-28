@@ -18,7 +18,7 @@ BorderPane .dark {
     -fx-padding: 0;
 }
 
-.board-square.selected, piece-stand-square.selected{
+.square.selected {
     -fx-background-color: #9bb95780;
 }
 

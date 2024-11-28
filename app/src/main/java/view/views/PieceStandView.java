@@ -1,14 +1,11 @@
 package view.views;
 
-import controller.GameController;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
-import model.Game;
 import util.Sfen;
 import util.Side;
 import view.Piece;
@@ -19,47 +16,30 @@ import java.util.function.Consumer;
 
 public class PieceStandView extends VBox {
     private final VBox pieceStand = new VBox();
-    private final Theme theme;
+    private final Theme theme; // should probably be moved to model
     private Side side;
-    private final Map<Piece, PieceStandSquare> squares = new HashMap<>() {};
-    private Consumer<Piece> clickHandler;
+    private final Map<Piece, SquareView> squares = new HashMap<>() {};
 
-    private class PieceStandSquare extends StackPane {
-        private final ImageView imageView;
-        private Label label = new Label();
+    public class SquareView extends view.views.SquareView {
+        private final Label label = new Label();
+        private final Piece piece;
         private Integer count;
-        private Piece piece;
 
-        public PieceStandSquare(Piece piece) {
+        public SquareView(Piece piece) {
+            super();
             this.piece = piece;
             this.getStyleClass().add("piece-stand-square");
-            imageView = new ImageView(theme.getPieceSet().getImage(piece));
-            imageView.setManaged(false); // important!
-            imageView.setPreserveRatio(true);
-            imageView.fitWidthProperty().bind(this.widthProperty());
-            imageView.fitHeightProperty().bind(this.heightProperty());
-            this.getChildren().add(imageView);
-
+            this.setImage(theme.getPieceSet().getImage(piece));
             switch (side) {
                 case SENTE: StackPane.setAlignment(label, Pos.BOTTOM_RIGHT); break;
                 case GOTE: StackPane.setAlignment(label, Pos.TOP_RIGHT); break;
             }
             this.getChildren().add(label);
-
             this.prefHeightProperty().bind(
                     PieceStandView.this.heightProperty().divide(9)
             );
             this.prefWidthProperty().bind(this.heightProperty());
             setCount(0);
-
-            this.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if (clickHandler != null) {
-                        clickHandler.accept(piece);
-                    }
-                }
-            });
         }
 
         public void setCount(Integer count) {
@@ -111,19 +91,19 @@ public class PieceStandView extends VBox {
         }
 
         for (Piece piece : pieceList) {
-            PieceStandSquare square = new PieceStandSquare(piece);
+            SquareView square = new SquareView(piece);
             squares.put(piece, square);
             pieceStand.getChildren().add(square);
         }
     }
 
     public void setCapturedPieceCount(Piece piece, Integer count) {
-        PieceStandSquare square = squares.get(piece);
+        SquareView square = squares.get(piece);
         if (square == null) { throw new IllegalArgumentException("Invalid piece"); }
         square.setCount(count);
     }
 
-    public void drawHand(Sfen sfen) {
+    public void drawHand(Sfen sfen) { // THIS SHOULD PROBABLY BE MOVED TO CONTROLLER
         String capturedPieces = sfen.getCapturedPieces();
         for (int i = 0; i < capturedPieces.length()-1; i++) {
             char ch = capturedPieces.charAt(i);
@@ -140,7 +120,16 @@ public class PieceStandView extends VBox {
         }
     }
 
-    public void setClickHandler(Consumer<Piece> clickHandler) {
-        this.clickHandler = clickHandler;
+    public void setClickHandler(Consumer<SquareView> clickHandler) {
+        squares.forEach((piece, square) -> {
+            square.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (clickHandler != null) {
+                        clickHandler.accept(square);
+                    }
+                }
+            });
+        });
     }
 }

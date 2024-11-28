@@ -1,64 +1,36 @@
 package view.views;
 
-import controller.GameController;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import util.Pos;
-import util.Sfen;
 import view.Piece;
 import view.Theme;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class BoardView extends GridPane {
-    private final BoardSquare[][] boardSquares;
-    private final Theme theme;
-    private Consumer<Pos> clickHandler;
+    private final SquareView[][] boardSquares;
+    private final Theme theme; // should probably be moved to model
 
-    private class BoardSquare extends StackPane {
-        private ImageView imageView;
-        private Pos pos;
+    public class SquareView extends view.views.SquareView {
+        public final Pos pos;
 
-        public BoardSquare(Pos pos){
+        public SquareView(Pos pos){
+            super();
             this.pos = pos;
-            imageView = new ImageView();
-            imageView.setManaged(false); // important!
-            imageView.setPreserveRatio(true);
-            imageView.fitWidthProperty().bind(this.widthProperty());
-            imageView.fitHeightProperty().bind(this.heightProperty());
-            this.getChildren().add(imageView);
-
-            this.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if (clickHandler != null) {
-                        clickHandler.accept(pos);
-                    }
-                }
-            });
             this.getStyleClass().add("board-square");
         }
 
-        public void setImage(Image image) {
-            imageView.setImage(image);
-        }
-
-        public void highlight() {
-            this.getStyleClass().add("selected");
-        }
-
-        public void unHighlight() {
-            this.getStyleClass().remove("selected");
+        public Pos getPos() {
+            return pos;
         }
     }
 
     public BoardView(Integer size, Theme theme) {
         this.theme = theme;
-        boardSquares = new BoardSquare[size][size];
+        boardSquares = new SquareView[size][size];
         this.setId("board");
         this.prefWidthProperty().bind(this.heightProperty());
 
@@ -76,7 +48,7 @@ public class BoardView extends GridPane {
         
 		for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
-                BoardSquare square = new BoardSquare(new Pos(row, col));
+                SquareView square = new SquareView(new Pos(row, col));
                 boardSquares[row][col] = square;
                 this.add(square, col, row);
             }
@@ -99,19 +71,18 @@ public class BoardView extends GridPane {
 
     public void drawPiece(Piece piece, Pos pos) {
         Image image = theme.getPieceSet().getImage(piece);
-        BoardSquare square = boardSquares[pos.row()][pos.col()];
+        SquareView square = boardSquares[pos.row()][pos.col()];
         square.setImage(image);
     }
 
-    public void drawBoard(Sfen sfen) {
-        sfen.forEachPiece((abbr, pos) -> {
-            drawPiece(Piece.fromSfenAbbreviation(abbr), pos);
-        });
-    }
+//    public void drawPiece(Image image, Pos pos) {
+//        SquareView square = boardSquares[pos.row()][pos.col()];
+//        square.setImage(image);
+//    }
 
     public void clearBoard() {
-        for (BoardSquare[] row : boardSquares) {
-            for (BoardSquare square : row) {
+        for (SquareView[] row : boardSquares) {
+            for (SquareView square : row) {
                 square.setImage(null);
             }
         }
@@ -122,14 +93,25 @@ public class BoardView extends GridPane {
     }
 
     public void clearHighlightedSquares() {
-        for (BoardSquare[] row : boardSquares) {
-            for (BoardSquare square : row) {
+        for (SquareView[] row : boardSquares) {
+            for (SquareView square : row) {
                 square.unHighlight();
             }
         }
     }
 
-    public void setClickHandler(Consumer<Pos> clickHandler) {
-        this.clickHandler = clickHandler;
+    public void setClickHandler(Consumer<SquareView> clickHandler) {
+        for (SquareView[] row : boardSquares) {
+            for (SquareView square : row) {
+                square.setOnMousePressed(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if (clickHandler != null) {
+                            clickHandler.accept(square);
+                        }
+                    }
+                });
+            }
+        }
     }
 }

@@ -1,7 +1,5 @@
 package view;
 
-import util.Settings;
-
 public class Theme {
     private final PieceSet pieceSet;
     private final BoardTheme boardTheme;
