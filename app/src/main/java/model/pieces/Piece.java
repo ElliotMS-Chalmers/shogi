@@ -25,4 +25,14 @@ public abstract class Piece {
         }
         return abbr;
     }
+
+    protected abstract String getImageAbbreviationLetters();
+
+    public String getImageAbbreviation() {
+        String abbr = switch (side) {
+            case GOTE -> "0" + getImageAbbreviationLetters();
+            case SENTE -> "1" + getImageAbbreviationLetters();
+        };
+        return abbr;
+    };
 }

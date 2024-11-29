@@ -8,4 +8,9 @@ public class King extends Piece {
     public King(Side side) {
         super(side);
     }
+
+    @Override
+    protected String getImageAbbreviationLetters() {
+        return "OU";
+    }
 }

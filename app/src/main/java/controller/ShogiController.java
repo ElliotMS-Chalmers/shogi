@@ -2,12 +2,14 @@ package controller;
 
 import javafx.scene.image.Image;
 import model.Game;
+import model.PieceFactory;
 import model.Settings;
-import util.Piece;
+// import util.Piece;
 import util.Pos;
 import util.Sfen;
 import util.Side;
 import view.*;
+import model.pieces.*;
 
 import java.util.Arrays;
 
@@ -58,28 +60,28 @@ public class ShogiController {
 
     private void drawBoard(Sfen sfen) {
         sfen.forEachPiece((abbr, pos) -> {
-            Piece piece =  Piece.fromSfenAbbreviation(abbr);
+            Piece piece =  PieceFactory.fromSfenAbbreviation(abbr);
             Image image = settings.getPieceSet().getImage(piece);
             boardView.drawImageAt(image, pos);
         });
     }
 
     private void drawHands(Sfen sfen) {
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.GOTE_PAWN), 0);
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.GOTE_LANCE), 1);
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.GOTE_KNIGHT), 2);
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.GOTE_SILVER_GENERAL), 3);
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.GOTE_GOLD_GENERAL), 4);
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.GOTE_BISHOP), 5);
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.GOTE_ROOK), 6);
+        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Pawn(Side.GOTE)), 0);
+        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Lance(Side.GOTE)), 1);
+        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Knight(Side.GOTE)), 2);
+        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new SilverGeneral(Side.GOTE)), 3);
+        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new GoldGeneral(Side.GOTE)), 4);
+        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Bishop(Side.GOTE)), 5);
+        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Rook(Side.GOTE)), 6);
 
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.SENTE_ROOK), 0);
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.SENTE_BISHOP), 1);
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.SENTE_GOLD_GENERAL), 2);
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.SENTE_SILVER_GENERAL), 3);
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.SENTE_KNIGHT), 4);
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.SENTE_LANCE), 5);
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(Piece.SENTE_PAWN), 6);
+        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Rook(Side.SENTE)), 0);
+        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Bishop(Side.SENTE)), 1);
+        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new GoldGeneral(Side.SENTE)), 2);
+        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new SilverGeneral(Side.SENTE)), 3);
+        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Knight(Side.SENTE)), 4);
+        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Lance(Side.SENTE)), 5);
+        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Pawn(Side.SENTE)), 6);
     }
 
     private void updateHands(Sfen sfen) {

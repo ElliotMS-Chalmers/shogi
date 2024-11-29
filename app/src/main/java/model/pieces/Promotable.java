@@ -9,6 +9,18 @@ public abstract class Promotable extends Piece {
         super(side);
     }
 
+    @Override
+    public String getImageAbbreviation() {
+        String abbr = isPromoted ? getPromotedImageAbbreviationLetters() : getImageAbbreviationLetters();
+        abbr = switch (side) {
+            case GOTE -> "0" + abbr;
+            case SENTE -> "1" + abbr;
+        };
+        return abbr;
+    }
+
+    protected abstract String getPromotedImageAbbreviationLetters();
+
     public void promote() {
         isPromoted = true;
     };

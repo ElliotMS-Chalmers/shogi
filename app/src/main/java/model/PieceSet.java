@@ -4,7 +4,7 @@ import java.io.InputStream;
 import javafx.scene.image.Image;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import util.Piece;
+import model.pieces.Piece;
 
 public class PieceSet {
     private final String folder;
@@ -18,7 +18,7 @@ public class PieceSet {
         return folder;
     }
 
-    public Image getImage(Piece piece) { // TODO: MAKE NOT DEPENDENT ON VIEW PIECE CLASS
+    public Image getImage(Piece piece) {
         // implement image cache?
         String path = String.format("/image/pieces/%s/%s.png", this.folder, piece.getImageAbbreviation());
         InputStream inputStream = getClass().getResourceAsStream(path);
