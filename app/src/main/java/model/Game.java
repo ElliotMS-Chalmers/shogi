@@ -39,13 +39,34 @@ public class Game {
     }
 
     public void undo(){
-        board.setSfen(history.undo());
+        Sfen undoSfen = history.undo();
+        board.setSfen(undoSfen);
+        setCapturedPiecesFromSfen(undoSfen.getCapturedPieces());
         changeTurn();
         moveCount--;
     }
 
     public String getCapturedPiecesAsSfen(){
         return sentePlayer.getHandAsSfen() + gotePlayer.getHandAsSfen().toLowerCase();
+    }
+
+    public void setCapturedPiecesFromSfen(String sfen){
+        int amount = 1;
+        char c;
+        for(int i = 0; i < sfen.length(); i++){
+            c = sfen.charAt(i);
+            if(Character.isDigit(c)){
+                amount = (int) c;
+                continue;
+            }
+            Class<? extends Piece> pieceClass = PieceFactory.fromSfenAbbreviation(String.valueOf(Character.toUpperCase(c))).getClass();
+            if(Character.isUpperCase(c)){
+                sentePlayer.addCapturedPiece(pieceClass,amount);
+            }else{
+                gotePlayer.addCapturedPiece(pieceClass,amount);
+            }
+            amount = 1;
+        }
     }
 
     private void changeTurn(){

@@ -3,7 +3,6 @@ package model;
 import model.pieces.Piece;
 import util.Pos;
 import util.Sfen;
-import util.Side;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
