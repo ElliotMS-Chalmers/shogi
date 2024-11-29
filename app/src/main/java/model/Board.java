@@ -1,6 +1,7 @@
 package model;
 
 import model.pieces.Piece;
+import util.Move;
 import util.Pos;
 import util.Sfen;
 
@@ -10,9 +11,11 @@ public class Board {
     public Board(int width, int height){
         grid = new Piece[height][width];
     }
-    public void move(Pos from, Pos to){ //Is run through Game to also change the turn
+    public Move move(Pos from, Pos to){ //Is run through Game to also change the turn
+        Move move = new Move(from,to,getPieceAt(from),getPieceAt(to));
         setAtPosition(to,grid[from.row()][from.col()]);
         setAtPosition(from,null);
+        return move;
     }
     public Piece[][] getCurrentBoard(){
         return grid;

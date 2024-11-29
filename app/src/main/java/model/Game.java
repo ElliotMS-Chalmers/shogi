@@ -2,6 +2,7 @@ package model;
 
 import model.pieces.*;
 import model.variants.Variant;
+import util.Move;
 import util.Pos;
 import util.Sfen;
 import util.Side;
@@ -19,15 +20,14 @@ public class Game {
         this.variant = variant;
         this.board = new Board(variant.getWidth(), variant.getHeight());
         this.board.initializeBoard(variant.getStartSfen());
-        this.history = new History(variant.getStartSfen());
+        this.history = new History();
     }
     public void move(Pos from, Pos to){
-        Piece piece = board.getPieceAt(from);
-        if(piece == null){return;}
-        this.board.move(from, to);
+        if(board.getPieceAt(from) == null){return;}
+        Move move = board.move(from, to);
         changeTurn();
         moveCount++;
-        history.addMove(from,to,piece,turn,board.getBoardAsSfen(), getCapturedPiecesAsSfen());
+        history.addMove(move);
     }
 
     public Board getBoard() {
@@ -39,11 +39,20 @@ public class Game {
     }
 
     public void undo(){
-        Sfen undoSfen = history.undo();
-        board.setSfen(undoSfen);
-        setCapturedPiecesFromSfen(undoSfen.getCapturedPieces());
+        Move lastMove = history.removeLast();
         changeTurn();
         moveCount--;
+        if(lastMove.from() == null){
+            //If lastMove.from is null then the move was a placement of a captured piece on the board
+            //This undos that by returning the captured piece to the player's hand.
+            (turn ? sentePlayer : gotePlayer).addCapturedPiece(lastMove.movedPiece().getClass());
+        }else{
+            board.move(lastMove.to(),lastMove.from()); //Plays the last move in reverse.
+        }
+        if(lastMove.capturedPiece() != null){
+            (turn ? sentePlayer : gotePlayer).removeCapturedPiece(lastMove.capturedPiece().getClass());
+            board.setAtPosition(lastMove.to(),lastMove.capturedPiece());
+        }
     }
 
     public String getCapturedPiecesAsSfen(){

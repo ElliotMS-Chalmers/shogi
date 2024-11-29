@@ -61,4 +61,8 @@ public class Player {
     public void addCapturedPiece(Class<? extends Piece> pieceClass){
         //addCapturedPiece(pieceClass,1);
     }
+    public void removeCapturedPiece(Class<? extends Piece> pieceClass){
+        //This is used to undo moves
+        //addCapturedPiece(pieceClass,-1);
+    }
 }
