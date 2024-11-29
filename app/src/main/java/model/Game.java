@@ -2,7 +2,6 @@ package model;
 
 import model.pieces.*;
 import model.variants.Variant;
-import util.Move;
 import util.Pos;
 import util.Sfen;
 import util.Side;

@@ -1,7 +1,6 @@
 package model;
 
 import model.pieces.Piece;
-import util.Move;
 import util.Pos;
 import util.Sfen;
 
