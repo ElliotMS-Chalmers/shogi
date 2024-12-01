@@ -42,9 +42,7 @@ public class Game {
         Move lastMove = history.removeLast();
         changeTurn();
         moveCount--;
-        if(lastMove.from() == null){
-            //If lastMove.from is null then the move was a placement of a captured piece on the board
-            //This undos that by returning the captured piece to the player's hand.
+        if(lastMove.fromPlayerHand()){
             (turn ? sentePlayer : gotePlayer).addCapturedPiece(lastMove.movedPiece().getClass());
         }else{
             board.move(lastMove.to(),lastMove.from()); //Plays the last move in reverse.
