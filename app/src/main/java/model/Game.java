@@ -10,20 +10,36 @@ public class Game {
     private boolean turn = false;
     private Variant variant;
     private Board board;
-    private Player sentePlayer = new Player(new Piece[] {}, new Piece[] { new Pawn(Side.SENTE), new Knight(Side.SENTE), new Lance(Side.SENTE) }, false); // TESTING
-    private Player gotePlayer = new Player(new Piece[] {}, new Piece[] { new Pawn(Side.GOTE), new Knight(Side.GOTE), new Lance(Side.GOTE), new Lance(Side.GOTE) }, true); // TESTING
+    private Player sentePlayer;
+    private Player gotePlayer;
     private int moveCount = 1;
     private History history;
 
     public Game(Variant variant){
         this.variant = variant;
+
         this.board = new Board(variant.getWidth(), variant.getHeight());
         this.board.initializeBoard(variant.getStartSfen());
+
         this.history = new History();
+
+        this.sentePlayer = new Player(Side.SENTE);
+        this.sentePlayer.intializeHand(variant.getHand(Side.SENTE));
+
+        this.gotePlayer = new Player(Side.GOTE);
+        this.gotePlayer.intializeHand(variant.getHand(Side.GOTE));
     }
     public void move(Pos from, Pos to){
         if(board.getPieceAt(from) == null){return;}
         Move move = board.move(from, to);
+        Piece capturedPiece = move.capturedPiece();
+        if (capturedPiece != null) {
+            switch (capturedPiece.getSide()) {
+                case SENTE: gotePlayer.addCapturedPiece(move.capturedPiece().getClass()); break;
+                case GOTE: sentePlayer.addCapturedPiece(move.capturedPiece().getClass()); break;
+            }
+
+        }
         changeTurn();
         moveCount++;
         history.addMove(move);
@@ -34,6 +50,7 @@ public class Game {
     }
 
     public Sfen getSfen() {
+        System.out.println(new Sfen(board.getBoardAsSfen(), turn ? 'b' : 'w', sentePlayer.getHandAsSfen() + gotePlayer.getHandAsSfen(), moveCount).toString());
         return new Sfen(board.getBoardAsSfen(), turn ? 'b' : 'w', sentePlayer.getHandAsSfen() + gotePlayer.getHandAsSfen(), moveCount);
     }
 

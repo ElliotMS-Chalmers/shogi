@@ -12,7 +12,7 @@ import model.pieces.Piece;
 
 public class PieceSet {
     private final String folder;
-    private Map<String, byte[]> imageCache = new HashMap<>() {};
+    private final Map<String, byte[]> imageCache = new HashMap<>() {};
 
     @JsonCreator
     public PieceSet(@JsonProperty("folder") String folder) {

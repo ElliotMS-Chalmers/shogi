@@ -75,7 +75,7 @@ public class BoardView extends GridPane {
         square.setImage(image);
     }
 
-    public void clearBoard() {
+    public void clearPieces() {
         for (SquareView[] row : squares) {
             for (SquareView square : row) {
                 square.setImage(null);

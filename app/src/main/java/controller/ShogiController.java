@@ -36,27 +36,28 @@ public class ShogiController {
         sentePieceStandView.setClickHandler(this::processHandClick);
 
         setBackground();
-        render();
+        redraw();
     }
 
     private void setBackground() {
         boardView.setBackground(settings.getBoardTheme().getImage());
     }
 
-    private void movePiece(Pos from, Pos to) {
-        game.getBoard().move(from, to);
-        boardView.clearHighlightedSquares();
-        lastSquareClicked = null;
-        render();
-    }
-
-    private void render() {
-        boardView.clearBoard();
+    private void redraw() {
+        boardView.clearPieces();
         Sfen sfen = game.getSfen();
-        drawBoard(sfen);
         drawHands(sfen);
+        drawBoard(sfen);
         updateHands(sfen);
     }
+
+    private void movePiece(Pos from, Pos to) {
+        game.move(from, to);
+        boardView.clearHighlightedSquares();
+        lastSquareClicked = null;
+        redraw();
+    }
+
 
     private void drawBoard(Sfen sfen) {
         sfen.forEachPiece((abbr, pos) -> {
@@ -67,6 +68,7 @@ public class ShogiController {
     }
 
     private void drawHands(Sfen sfen) {
+
         gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Pawn(Side.GOTE)), 0);
         gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Lance(Side.GOTE)), 1);
         gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Knight(Side.GOTE)), 2);
@@ -87,6 +89,15 @@ public class ShogiController {
     private void updateHands(Sfen sfen) {
         Character[] gotePieceList = new Character[] {'p', 'l', 'n', 's', 'g', 'b', 'r'}; // TEMPORARY
         Character[] sentePieceList = new Character[] {'R', 'B', 'G', 'S', 'N', 'L', 'P'}; // TEMPORARY
+        sfen.forEachCapturedPiece((abbr, count) -> {
+            if (Character.isUpperCase(abbr)) {
+                int index = Arrays.asList(sentePieceList).indexOf(abbr);
+                sentePieceStandView.setCountAt(count, index);
+            } else {
+                int index = Arrays.asList(gotePieceList).indexOf(abbr);
+                gotePieceStandView.setCountAt(count, index);
+            }
+        });
 
         String capturedPieces = sfen.getCapturedPieces();
         for (int i = 0; i < capturedPieces.length()-1; i++) {
