@@ -30,6 +30,7 @@ public class Game {
         this.gotePlayer = new Player(Side.GOTE);
         this.gotePlayer.intializeHand(variant.getHand());
     }
+
     public void move(Pos from, Pos to){
         if(board.getPieceAt(from) == null){return;}
         Move move = board.move(from, to);
@@ -101,8 +102,7 @@ public class Game {
     }
 
     private void changeTurn(){
-        if(turn){turn = false;}
-        else{turn = true;}
+        turn = !turn;
     }
 
     public void playHand(Pos pos, Piece piece) {
@@ -111,5 +111,8 @@ public class Game {
             case GOTE -> gotePlayer.removeCapturedPiece(piece.getClass());
             case SENTE -> sentePlayer.removeCapturedPiece(piece.getClass());
         }
+        changeTurn();
+        moveCount++;
+        // TODO: history.addMove(move);
     }
 }

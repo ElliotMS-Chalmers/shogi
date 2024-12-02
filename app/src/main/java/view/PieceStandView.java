@@ -62,6 +62,10 @@ public class PieceStandView extends VBox {
         public Side getSide() {
             return side;
         }
+
+        public Integer getCount() {
+            return count;
+        }
     }
 
     public PieceStandView(Side side) {

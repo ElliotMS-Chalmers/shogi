@@ -1,6 +1,5 @@
 package model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import model.pieces.*;
 import model.pieces.Piece;
 import util.Side;

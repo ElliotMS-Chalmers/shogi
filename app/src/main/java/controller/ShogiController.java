@@ -37,6 +37,7 @@ public class ShogiController {
         sentePieceStandView.setClickHandler(this::processHandClick);
 
         setBackground();
+        drawHands();
         redraw();
     }
 
@@ -49,7 +50,6 @@ public class ShogiController {
         Sfen sfen = game.getSfen();
         drawBoard(sfen);
         updateHands(sfen);
-        drawHands(sfen);
     }
 
     private void movePiece(Pos from, Pos to) {
@@ -68,7 +68,7 @@ public class ShogiController {
         });
     }
 
-    private void drawHands(Sfen sfen) {
+    private void drawHands() {
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
         int i = 0;
         int j = hand.size()-1;
@@ -91,8 +91,8 @@ public class ShogiController {
         sfen.forEachCapturedPiece((abbr, count) -> {
             Piece piece = PieceFactory.fromSfenAbbreviation(String.valueOf(abbr));
             if (Character.isUpperCase(abbr)) {
-                int index = hand.indexOf(piece.getClass());
-                sentePieceStandView.setCountAt(count, game.getVariant().getHand().size() - index - 1);
+                int index = game.getVariant().getHand().size() - hand.indexOf(piece.getClass()) - 1;
+                sentePieceStandView.setCountAt(count, index);
             } else {
                 int index = hand.indexOf(piece.getClass());
                 gotePieceStandView.setCountAt(count, index);
@@ -104,8 +104,6 @@ public class ShogiController {
         Pos pos = square.getPos();
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
         if (lastSquareClicked instanceof PieceStandView.SquareView) {
-            Character[] gotePieceList = new Character[] {'r', 'b', 'g', 's', 'n', 'l', 'p'}; // TEMPORARY
-            Character[] sentePieceList = new Character[] {'R', 'B', 'G', 'S', 'N', 'L', 'P'}; // TEMPORARY
             Side side = ((PieceStandView.SquareView) lastSquareClicked).getSide();
             int index = ((PieceStandView.SquareView) lastSquareClicked).getIndex();
             switch (side) {
@@ -137,12 +135,11 @@ public class ShogiController {
         if (square.equals(lastSquareClicked)) {
             lastSquareClicked = null;
             square.unHighlight();
-            return;
-        }
-        if (lastSquareClicked != null) {
+        } else if (lastSquareClicked != null) {
             lastSquareClicked.unHighlight();
+        } else if (square.getCount() > 0) {
+            lastSquareClicked = square;
+            square.highlight();
         }
-        lastSquareClicked = square;
-        square.highlight();
     }
 }
