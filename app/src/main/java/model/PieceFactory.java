@@ -38,5 +38,13 @@ public class PieceFactory {
         }
         return piece;
     }
+
+    public static Piece fromClass(Class<? extends Piece> pieceClass, Side side) {
+        try {
+            return pieceClass.getDeclaredConstructor(Side.class).newInstance(side);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to instantiate piece: " + pieceClass.getName(), e);
+        }
+    }
 }
 

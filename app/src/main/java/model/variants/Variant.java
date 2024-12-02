@@ -4,6 +4,8 @@ import model.pieces.Piece;
 import model.Sfen;
 import util.Side;
 
+import java.util.List;
+
 public abstract class Variant {
     protected int width;
     protected int height;
@@ -19,5 +21,5 @@ public abstract class Variant {
 
     public Sfen getStartSfen() { return startSfen; }
 
-    public abstract Class<? extends Piece>[] getHand(Side side);
+    public abstract List<Class<? extends Piece>> getHand();
 }

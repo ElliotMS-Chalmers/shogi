@@ -25,10 +25,10 @@ public class Game {
         this.history = new History();
 
         this.sentePlayer = new Player(Side.SENTE);
-        this.sentePlayer.intializeHand(variant.getHand(Side.SENTE));
+        this.sentePlayer.intializeHand(variant.getHand());
 
         this.gotePlayer = new Player(Side.GOTE);
-        this.gotePlayer.intializeHand(variant.getHand(Side.GOTE));
+        this.gotePlayer.intializeHand(variant.getHand());
     }
     public void move(Pos from, Pos to){
         if(board.getPieceAt(from) == null){return;}
@@ -48,6 +48,10 @@ public class Game {
 
     public Board getBoard() {
         return board;
+    }
+
+    public Variant getVariant() {
+        return variant;
     }
 
     public Sfen getSfen() {

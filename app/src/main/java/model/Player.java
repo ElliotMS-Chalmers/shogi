@@ -2,6 +2,7 @@ package model;
 
 import model.pieces.Piece;
 
+import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
@@ -47,7 +48,7 @@ public class Player {
         addCapturedPiece(pieceClass,-1);
     }
 
-    public void intializeHand(Class<? extends Piece>[] hand) {
+    public void intializeHand(List<Class<? extends Piece>> hand) {
         for (Class<? extends Piece> pieceClass : hand) {
             capturedPieces.put(pieceClass, 0);
         }
