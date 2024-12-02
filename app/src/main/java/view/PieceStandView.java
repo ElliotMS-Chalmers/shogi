@@ -78,6 +78,7 @@ public class PieceStandView extends VBox {
     }
 
     private void populateGrid() {
+        // IF SIDE IS GOTE MAYBE DO IN REVERSED??!?!?
         for (int i = 0; i < squares.length; i++) {
             SquareView square = new SquareView(side, i);
             squares[i] = (square);

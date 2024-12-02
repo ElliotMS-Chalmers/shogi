@@ -2,7 +2,6 @@ package model;
 
 import model.pieces.Piece;
 import util.Pos;
-import util.Sfen;
 
 public class Board {
     private Piece[][] grid;

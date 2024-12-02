@@ -1,8 +1,8 @@
-package util;
+package model;
 
-import java.util.Arrays;
+import util.Pos;
+
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class Sfen {
     private String boardPosition;
@@ -89,6 +89,8 @@ public class Sfen {
     }
 
     public void forEachCapturedPiece(BiConsumer<Character, Integer> handler) {
+        if (capturedPieces.equals("-")) return;
+
         for (int i = 0; i < capturedPieces.length(); i++) {
             char ch = capturedPieces.charAt(i);
             int count = 1;

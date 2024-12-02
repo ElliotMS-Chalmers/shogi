@@ -1,16 +1,10 @@
 package model;
 
 import model.pieces.Piece;
-import util.Sfen;
 
-import javax.rmi.ssl.SslRMIClientSocketFactory;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.LinkedHashMap;
-import model.pieces.*;
+
 import util.Side;
 import java.lang.reflect.Constructor;
 
@@ -50,8 +44,7 @@ public class Player {
     }
 
     public void removeCapturedPiece(Class<? extends Piece> pieceClass){
-        //This is used to undo moves
-        //addCapturedPiece(pieceClass,-1);
+        addCapturedPiece(pieceClass,-1);
     }
 
     public void intializeHand(Class<? extends Piece>[] hand) {

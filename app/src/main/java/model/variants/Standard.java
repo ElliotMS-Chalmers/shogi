@@ -1,7 +1,7 @@
 package model.variants;
 
 import model.pieces.*;
-import util.Sfen;
+import model.Sfen;
 import util.Side;
 
 import java.util.Arrays;

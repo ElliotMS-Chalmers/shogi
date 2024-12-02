@@ -6,7 +6,7 @@ import model.PieceFactory;
 import model.Settings;
 // import util.Piece;
 import util.Pos;
-import util.Sfen;
+import model.Sfen;
 import util.Side;
 import view.*;
 import model.pieces.*;
@@ -46,9 +46,9 @@ public class ShogiController {
     private void redraw() {
         boardView.clearPieces();
         Sfen sfen = game.getSfen();
-        drawHands(sfen);
         drawBoard(sfen);
         updateHands(sfen);
+        drawHands(sfen);
     }
 
     private void movePiece(Pos from, Pos to) {
@@ -68,7 +68,6 @@ public class ShogiController {
     }
 
     private void drawHands(Sfen sfen) {
-
         gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Pawn(Side.GOTE)), 0);
         gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Lance(Side.GOTE)), 1);
         gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Knight(Side.GOTE)), 2);
@@ -89,33 +88,23 @@ public class ShogiController {
     private void updateHands(Sfen sfen) {
         Character[] gotePieceList = new Character[] {'p', 'l', 'n', 's', 'g', 'b', 'r'}; // TEMPORARY
         Character[] sentePieceList = new Character[] {'R', 'B', 'G', 'S', 'N', 'L', 'P'}; // TEMPORARY
+
+        for (int i = 0; i < 7; i++) {
+            sentePieceStandView.setCountAt(0, i);
+            gotePieceStandView.setCountAt(0, i);
+        }
+
         sfen.forEachCapturedPiece((abbr, count) -> {
             if (Character.isUpperCase(abbr)) {
                 int index = Arrays.asList(sentePieceList).indexOf(abbr);
                 sentePieceStandView.setCountAt(count, index);
+                System.out.println(count + ", " + index);
             } else {
                 int index = Arrays.asList(gotePieceList).indexOf(abbr);
                 gotePieceStandView.setCountAt(count, index);
+                System.out.println(count + ", " + index);
             }
         });
-
-        String capturedPieces = sfen.getCapturedPieces();
-        for (int i = 0; i < capturedPieces.length()-1; i++) {
-            char ch = capturedPieces.charAt(i);
-            int count = 1;
-            if (Character.isDigit(ch)) {
-                count = Character.getNumericValue(ch);
-                char nextCh = capturedPieces.charAt(++i);
-                ch = nextCh;
-            }
-            if (Character.isUpperCase(ch)) {
-                int index = Arrays.asList(sentePieceList).indexOf(ch);
-                sentePieceStandView.setCountAt(count, index);
-            } else {
-                int index = Arrays.asList(gotePieceList).indexOf(ch);
-                gotePieceStandView.setCountAt(count, index);
-            }
-        }
     }
 
     public void processBoardClick(BoardView.SquareView square) {
@@ -126,10 +115,12 @@ public class ShogiController {
             Side side = ((PieceStandView.SquareView) lastSquareClicked).getSide();
             int index = ((PieceStandView.SquareView) lastSquareClicked).getIndex();
             switch (side) {
-                case GOTE: /* play hand */ break;
-                case SENTE: /* play hand */ break;
+                case GOTE -> game.playHand(pos, PieceFactory.fromSfenAbbreviation(String.valueOf(gotePieceList[index])));
+                case SENTE -> game.playHand(pos, PieceFactory.fromSfenAbbreviation(String.valueOf(sentePieceList[index])));
             }
-
+            lastSquareClicked.unHighlight();
+            lastSquareClicked = null;
+            redraw();
 
         } else if (lastSquareClicked instanceof BoardView.SquareView) {
             Pos lastPos = ((BoardView.SquareView) lastSquareClicked).getPos();
