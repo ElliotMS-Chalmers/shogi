@@ -8,6 +8,7 @@ public class ShogiView extends HBox {
     private final BoardView boardView;
     private final PieceStandView gotePieceStandView;
     private final PieceStandView sentePieceStandView;
+    //private final HistoryView historyView;
 
     public ShogiView() {
         this.boardView = new BoardView(9); // size hard coded for now

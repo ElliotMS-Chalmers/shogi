@@ -23,7 +23,7 @@ public class Player {
              try {
                  Constructor<?> constructor = pieceClass.getConstructor(Side.class);
                  Piece piece = (Piece) constructor.newInstance(side);
-                 char abbr = piece.getSfenAbbreviation();
+                 String abbr = piece.getSfenAbbreviation();
                  if (count > 1) {
                      sfen.append(count).append(abbr);
                  } else if (count == 1) {

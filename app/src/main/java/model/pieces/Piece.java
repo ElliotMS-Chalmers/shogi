@@ -1,6 +1,7 @@
 package model.pieces;
 
 import util.Side;
+import util.Pos;
 
 public abstract class Piece {
     protected Side side;
@@ -13,18 +14,20 @@ public abstract class Piece {
         return side;
     }
 
-    public char getSfenAbbreviation(){
+    public String getSfenAbbreviation(){
         char letter = this.getClass().getSimpleName().charAt(0);
         if (letter == 'K') {
             letter = this.getClass().getSimpleName().equals("King") ? 'K' : 'N';
         }
         return switch(side){
-            case SENTE -> letter;
-            case GOTE -> Character.toLowerCase(letter);
+            case SENTE -> String.valueOf(letter);
+            case GOTE -> String.valueOf(letter).toLowerCase();
         };
     }
 
     protected abstract String getImageAbbreviationLetters();
+
+    //public abstract int[][] getAvailableMoves(Pos pos, Side side);
 
     public String getImageAbbreviation() {
         return switch (side) {

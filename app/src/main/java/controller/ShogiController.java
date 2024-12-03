@@ -11,7 +11,8 @@ import util.Side;
 import view.*;
 import model.pieces.*;
 
-import java.util.Arrays;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.MouseButton;
 import java.util.List;
 
 public class ShogiController {
@@ -21,6 +22,7 @@ public class ShogiController {
     private final BoardView boardView;
     private final PieceStandView gotePieceStandView;
     private final PieceStandView sentePieceStandView;
+
     private SquareView lastSquareClicked;
 
     public ShogiController(Settings settings, Game game, ShogiView shogiView) {
@@ -63,6 +65,7 @@ public class ShogiController {
     private void drawBoard(Sfen sfen) {
         sfen.forEachPiece((abbr, pos) -> {
             Piece piece =  PieceFactory.fromSfenAbbreviation(abbr);
+            System.out.println(pos.row() + ", " + pos.col());
             Image image = settings.getPieceSet().getImage(piece);
             boardView.drawImageAt(image, pos);
         });
@@ -100,8 +103,17 @@ public class ShogiController {
         });
     }
 
-    public void processBoardClick(BoardView.SquareView square) {
+    public void processBoardClick(BoardView.SquareView square, MouseEvent event) {
         Pos pos = square.getPos();
+        if (event.getButton() == MouseButton.SECONDARY) {
+            Piece piece = game.getBoard().getPieceAt(pos);
+            if (piece instanceof Promotable) {
+                ((Promotable) piece).promote();
+            }
+            redraw();
+            return;
+        }
+
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
         if (lastSquareClicked instanceof PieceStandView.SquareView) {
             Side side = ((PieceStandView.SquareView) lastSquareClicked).getSide();

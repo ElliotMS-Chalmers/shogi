@@ -6,7 +6,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import util.Pos;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class BoardView extends GridPane {
     private final SquareView[][] squares;
@@ -95,14 +95,14 @@ public class BoardView extends GridPane {
         }
     }
 
-    public void setClickHandler(Consumer<SquareView> clickHandler) {
+    public void setClickHandler(BiConsumer<SquareView, MouseEvent> clickHandler) {
         for (SquareView[] row : squares) {
             for (SquareView square : row) {
                 square.setOnMousePressed(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
                         if (clickHandler != null) {
-                            clickHandler.accept(square);
+                            clickHandler.accept(square, event);
                         }
                     }
                 });

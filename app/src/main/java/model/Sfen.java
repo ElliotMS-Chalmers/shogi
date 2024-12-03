@@ -79,7 +79,7 @@ public class Sfen {
                 } else if (ch == '+') {
                     char nextCh = rows[row].charAt(++i);
                     handler.accept("+" + nextCh, new Pos(row, col));
-                    col += 2;
+                    col += 1;
                 } else {
                     handler.accept(Character.toString(ch), new Pos(row, col));
                     col += 1;

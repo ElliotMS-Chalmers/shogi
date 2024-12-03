@@ -10,6 +10,12 @@ public abstract class Promotable extends Piece {
     }
 
     @Override
+    public String getSfenAbbreviation() {
+        String abbr = super.getSfenAbbreviation();
+        return isPromoted ? '+' + abbr : abbr;
+    }
+
+    @Override
     public String getImageAbbreviation() {
         String abbr = isPromoted ? getPromotedImageAbbreviationLetters() : getImageAbbreviationLetters();
         return switch (side) {
