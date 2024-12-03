@@ -2,29 +2,46 @@ package model;
 
 import model.pieces.*;
 import model.variants.Variant;
-import util.Move;
 import util.Pos;
-import util.Sfen;
 import util.Side;
+
+import java.lang.runtime.SwitchBootstraps;
 
 public class Game {
     private boolean turn = false;
     private Variant variant;
     private Board board;
-    private Player sentePlayer = new Player(new Piece[] {}, new Piece[] { new Pawn(Side.SENTE), new Knight(Side.SENTE), new Lance(Side.SENTE) }, false); // TESTING
-    private Player gotePlayer = new Player(new Piece[] {}, new Piece[] { new Pawn(Side.GOTE), new Knight(Side.GOTE), new Lance(Side.GOTE), new Lance(Side.GOTE) }, true); // TESTING
+    private Player sentePlayer;
+    private Player gotePlayer;
     private int moveCount = 1;
     private History history;
 
     public Game(Variant variant){
         this.variant = variant;
+
         this.board = new Board(variant.getWidth(), variant.getHeight());
         this.board.initializeBoard(variant.getStartSfen());
+
         this.history = new History();
+
+        this.sentePlayer = new Player(Side.SENTE);
+        this.sentePlayer.intializeHand(variant.getHand());
+
+        this.gotePlayer = new Player(Side.GOTE);
+        this.gotePlayer.intializeHand(variant.getHand());
     }
+
     public void move(Pos from, Pos to){
         if(board.getPieceAt(from) == null){return;}
         Move move = board.move(from, to);
+        Piece capturedPiece = move.capturedPiece();
+        if (capturedPiece != null) {
+            switch (capturedPiece.getSide()) {
+                case SENTE: gotePlayer.addCapturedPiece(move.capturedPiece().getClass()); break;
+                case GOTE: sentePlayer.addCapturedPiece(move.capturedPiece().getClass()); break;
+            }
+
+        }
         changeTurn();
         moveCount++;
         history.addMove(move);
@@ -34,8 +51,13 @@ public class Game {
         return board;
     }
 
+    public Variant getVariant() {
+        return variant;
+    }
+
     public Sfen getSfen() {
-        return new Sfen(board.getBoardAsSfen(), turn ? 'b' : 'w', sentePlayer.getHandAsSfen() + gotePlayer.getHandAsSfen(), moveCount);
+        System.out.println(new Sfen(board.getBoardAsSfen(), turn ? 'b' : 'w', getCapturedPiecesAsSfen(), moveCount));
+        return new Sfen(board.getBoardAsSfen(), turn ? 'b' : 'w', getCapturedPiecesAsSfen(), moveCount);
     }
 
     public void undo(){
@@ -54,7 +76,8 @@ public class Game {
     }
 
     public String getCapturedPiecesAsSfen(){
-        return sentePlayer.getHandAsSfen() + gotePlayer.getHandAsSfen().toLowerCase();
+        String sfen = sentePlayer.getHandAsSfen() + gotePlayer.getHandAsSfen();
+        return sfen.isEmpty() ? "-" : sfen;
     }
 
     public void setCapturedPiecesFromSfen(String sfen){
@@ -77,7 +100,17 @@ public class Game {
     }
 
     private void changeTurn(){
-        if(turn){turn = false;}
-        else{turn = true;}
+        turn = !turn;
+    }
+
+    public void playHand(Pos pos, Piece piece) {
+        board.setAtPosition(pos, piece);
+        switch (piece.getSide()) {
+            case GOTE -> gotePlayer.removeCapturedPiece(piece.getClass());
+            case SENTE -> sentePlayer.removeCapturedPiece(piece.getClass());
+        }
+        changeTurn();
+        moveCount++;
+        // TODO: history.addMove(move);
     }
 }

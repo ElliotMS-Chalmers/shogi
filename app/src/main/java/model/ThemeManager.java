@@ -3,7 +3,6 @@ package model;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import util.JsonLoader;
 
 public class ThemeManager {
     private Map<String, BoardTheme> boardThemes;

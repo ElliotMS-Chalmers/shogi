@@ -1,11 +1,13 @@
-package util;
+package model;
+
+import util.Pos;
 
 import java.util.function.BiConsumer;
 
 public class Sfen {
     private String boardPosition;
-    private char turn;             // 'b' for Black, 'w' for White
-    private String capturedPieces; // Captured pieces in SFEN format
+    private char turn;             // 'b' for Black (Sente), 'w' for White (Gote)
+    private String capturedPieces;
     private int moveCount = 1;     // Optional, default to 1 if not specified
 
     public Sfen(String boardPosition, char turn, String capturedPieces, int moveCount) {
@@ -66,7 +68,7 @@ public class Sfen {
         return this.getBoardPosition().split("/");
     }
 
-    public void forEachPiece(BiConsumer<String, Pos> pieceHandler) {
+    public void forEachPiece(BiConsumer<String, Pos> handler) {
         String[] rows = getRows();
         for (int row = 0; row < rows.length; row++) {
             int col = 0;
@@ -76,13 +78,28 @@ public class Sfen {
                     col += Character.getNumericValue(ch);
                 } else if (ch == '+') {
                     char nextCh = rows[row].charAt(++i);
-                    pieceHandler.accept("+" + nextCh, new Pos(row, col));
+                    handler.accept("+" + nextCh, new Pos(row, col));
                     col += 2;
                 } else {
-                    pieceHandler.accept(Character.toString(ch), new Pos(row, col));
+                    handler.accept(Character.toString(ch), new Pos(row, col));
                     col += 1;
                 }
             }
+        }
+    }
+
+    public void forEachCapturedPiece(BiConsumer<Character, Integer> handler) {
+        if (capturedPieces.equals("-")) return;
+
+        for (int i = 0; i < capturedPieces.length(); i++) {
+            char ch = capturedPieces.charAt(i);
+            int count = 1;
+            if (Character.isDigit(ch)) {
+                count = Character.getNumericValue(ch);
+                char nextCh = capturedPieces.charAt(++i);
+                ch = nextCh;
+            }
+            handler.accept(ch, count);
         }
     }
 }

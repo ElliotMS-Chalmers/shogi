@@ -18,21 +18,18 @@ public abstract class Piece {
         if (letter == 'K') {
             letter = this.getClass().getSimpleName().equals("King") ? 'K' : 'N';
         }
-        char abbr = '.';
-        switch(side){
-            case GOTE: abbr = letter; break;
-            case SENTE: abbr = Character.toLowerCase(letter);
-        }
-        return abbr;
+        return switch(side){
+            case SENTE -> letter;
+            case GOTE -> Character.toLowerCase(letter);
+        };
     }
 
     protected abstract String getImageAbbreviationLetters();
 
     public String getImageAbbreviation() {
-        String abbr = switch (side) {
-            case GOTE -> "0" + getImageAbbreviationLetters();
-            case SENTE -> "1" + getImageAbbreviationLetters();
+        return switch (side) {
+            case GOTE -> "1" + getImageAbbreviationLetters();
+            case SENTE -> "0" + getImageAbbreviationLetters();
         };
-        return abbr;
     };
 }

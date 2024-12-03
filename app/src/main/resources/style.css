@@ -14,7 +14,7 @@ BorderPane .dark {
 
 .board-square {
     -fx-border-color: black;
-    -fx-border-width: 0.5;
+    -fx-border-width: 1;
     -fx-padding: 0;
 }
 
@@ -23,7 +23,7 @@ BorderPane .dark {
 }
 
 #board {
-    -fx-border-width: 0.5;
+    -fx-border-width: 1;
     -fx-border-color: black;
     -fx-padding: 0;
 }

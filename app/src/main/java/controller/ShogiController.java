@@ -6,12 +6,13 @@ import model.PieceFactory;
 import model.Settings;
 // import util.Piece;
 import util.Pos;
-import util.Sfen;
+import model.Sfen;
 import util.Side;
 import view.*;
 import model.pieces.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class ShogiController {
     Settings settings;
@@ -36,27 +37,28 @@ public class ShogiController {
         sentePieceStandView.setClickHandler(this::processHandClick);
 
         setBackground();
-        render();
+        drawHands();
+        redraw();
     }
 
     private void setBackground() {
         boardView.setBackground(settings.getBoardTheme().getImage());
     }
 
-    private void movePiece(Pos from, Pos to) {
-        game.getBoard().move(from, to);
-        boardView.clearHighlightedSquares();
-        lastSquareClicked = null;
-        render();
-    }
-
-    private void render() {
-        boardView.clearBoard();
+    private void redraw() {
+        boardView.clearPieces();
         Sfen sfen = game.getSfen();
         drawBoard(sfen);
-        drawHands(sfen);
         updateHands(sfen);
     }
+
+    private void movePiece(Pos from, Pos to) {
+        game.move(from, to);
+        boardView.clearHighlightedSquares();
+        lastSquareClicked = null;
+        redraw();
+    }
+
 
     private void drawBoard(Sfen sfen) {
         sfen.forEachPiece((abbr, pos) -> {
@@ -66,59 +68,51 @@ public class ShogiController {
         });
     }
 
-    private void drawHands(Sfen sfen) {
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Pawn(Side.GOTE)), 0);
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Lance(Side.GOTE)), 1);
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Knight(Side.GOTE)), 2);
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new SilverGeneral(Side.GOTE)), 3);
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new GoldGeneral(Side.GOTE)), 4);
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Bishop(Side.GOTE)), 5);
-        gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Rook(Side.GOTE)), 6);
-
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Rook(Side.SENTE)), 0);
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Bishop(Side.SENTE)), 1);
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new GoldGeneral(Side.SENTE)), 2);
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new SilverGeneral(Side.SENTE)), 3);
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Knight(Side.SENTE)), 4);
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Lance(Side.SENTE)), 5);
-        sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(new Pawn(Side.SENTE)), 6);
+    private void drawHands() {
+        List<Class<? extends Piece>> hand = game.getVariant().getHand();
+        int i = 0;
+        int j = hand.size()-1;
+        for (Class<? extends Piece> pieceClass : hand) {
+            Piece gotePiece = PieceFactory.fromClass(pieceClass, Side.GOTE);
+            Piece sentePiece = PieceFactory.fromClass(pieceClass, Side.SENTE);
+            gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(gotePiece), i);
+            sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(sentePiece), j);
+            i++; j--;
+        }
     }
 
     private void updateHands(Sfen sfen) {
-        Character[] gotePieceList = new Character[] {'p', 'l', 'n', 's', 'g', 'b', 'r'}; // TEMPORARY
-        Character[] sentePieceList = new Character[] {'R', 'B', 'G', 'S', 'N', 'L', 'P'}; // TEMPORARY
+        for (int i = 0; i < 7; i++) {
+            sentePieceStandView.setCountAt(0, i);
+            gotePieceStandView.setCountAt(0, i);
+        }
 
-        String capturedPieces = sfen.getCapturedPieces();
-        for (int i = 0; i < capturedPieces.length()-1; i++) {
-            char ch = capturedPieces.charAt(i);
-            int count = 1;
-            if (Character.isDigit(ch)) {
-                count = Character.getNumericValue(ch);
-                char nextCh = capturedPieces.charAt(++i);
-                ch = nextCh;
-            }
-            if (Character.isUpperCase(ch)) {
-                int index = Arrays.asList(sentePieceList).indexOf(ch);
+        List<Class<? extends Piece>> hand = game.getVariant().getHand();
+        sfen.forEachCapturedPiece((abbr, count) -> {
+            Piece piece = PieceFactory.fromSfenAbbreviation(String.valueOf(abbr));
+            if (Character.isUpperCase(abbr)) {
+                int index = game.getVariant().getHand().size() - hand.indexOf(piece.getClass()) - 1;
                 sentePieceStandView.setCountAt(count, index);
             } else {
-                int index = Arrays.asList(gotePieceList).indexOf(ch);
+                int index = hand.indexOf(piece.getClass());
                 gotePieceStandView.setCountAt(count, index);
             }
-        }
+        });
     }
 
     public void processBoardClick(BoardView.SquareView square) {
         Pos pos = square.getPos();
+        List<Class<? extends Piece>> hand = game.getVariant().getHand();
         if (lastSquareClicked instanceof PieceStandView.SquareView) {
-            Character[] gotePieceList = new Character[] {'p', 'l', 'n', 's', 'g', 'b', 'r'}; // TEMPORARY
-            Character[] sentePieceList = new Character[] {'R', 'B', 'G', 'S', 'N', 'L', 'P'}; // TEMPORARY
             Side side = ((PieceStandView.SquareView) lastSquareClicked).getSide();
             int index = ((PieceStandView.SquareView) lastSquareClicked).getIndex();
             switch (side) {
-                case GOTE: /* play hand */ break;
-                case SENTE: /* play hand */ break;
+                case GOTE -> game.playHand(pos, PieceFactory.fromClass(hand.get(index), side));
+                case SENTE -> game.playHand(pos, PieceFactory.fromClass(hand.get(game.getVariant().getHand().size() - index - 1), side));
             }
-
+            lastSquareClicked.unHighlight();
+            lastSquareClicked = null;
+            redraw();
 
         } else if (lastSquareClicked instanceof BoardView.SquareView) {
             Pos lastPos = ((BoardView.SquareView) lastSquareClicked).getPos();
@@ -141,12 +135,11 @@ public class ShogiController {
         if (square.equals(lastSquareClicked)) {
             lastSquareClicked = null;
             square.unHighlight();
-            return;
-        }
-        if (lastSquareClicked != null) {
+        } else if (lastSquareClicked != null) {
             lastSquareClicked.unHighlight();
+        } else if (square.getCount() > 0) {
+            lastSquareClicked = square;
+            square.highlight();
         }
-        lastSquareClicked = square;
-        square.highlight();
     }
 }

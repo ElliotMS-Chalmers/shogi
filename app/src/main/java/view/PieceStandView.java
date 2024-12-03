@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 public class PieceStandView extends VBox {
     private final Side side;
-    private final SquareView[] squares = new SquareView[7];
+    private final SquareView[] squares = new SquareView[7]; // TODO: dont hard code this
     private final VBox squareWrapper = new VBox(); // Needed to we can align squares to top or bottom of piece stand depending on side
 
     public class SquareView extends view.SquareView {
@@ -62,6 +62,10 @@ public class PieceStandView extends VBox {
         public Side getSide() {
             return side;
         }
+
+        public Integer getCount() {
+            return count;
+        }
     }
 
     public PieceStandView(Side side) {
@@ -80,7 +84,7 @@ public class PieceStandView extends VBox {
     private void populateGrid() {
         for (int i = 0; i < squares.length; i++) {
             SquareView square = new SquareView(side, i);
-            squares[i] = (square);
+            squares[i] = square;
             squareWrapper.getChildren().add(square);
         }
     }
