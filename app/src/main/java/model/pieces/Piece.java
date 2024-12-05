@@ -3,6 +3,8 @@ package model.pieces;
 import util.Side;
 import util.Pos;
 
+import java.util.ArrayList;
+
 public abstract class Piece {
     protected Side side;
 
@@ -27,7 +29,7 @@ public abstract class Piece {
 
     protected abstract String getImageAbbreviationLetters();
 
-    //public abstract int[][] getAvailableMoves(Pos pos, Side side);
+    public abstract ArrayList<ArrayList<Integer>> getAvailableMoves(Pos pos, Side side);
 
     public String getImageAbbreviation() {
         return switch (side) {
