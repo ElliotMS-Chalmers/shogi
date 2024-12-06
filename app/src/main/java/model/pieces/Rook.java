@@ -24,8 +24,8 @@ public class Rook extends Promotable {
     }
 
     @Override
-    public ArrayList<ArrayList<Integer>> getAvailableMoves(Pos pos, Side side) {
-        ArrayList<ArrayList<Integer>> availableMoves = new ArrayList<>();
+    public ArrayList<Pos> getAvailableMoves(Pos pos) {
+        ArrayList<Pos> availableMoves = new ArrayList<>();
         int availableCol;
         int availableRow;
         int movesLength;
@@ -44,10 +44,7 @@ public class Rook extends Promotable {
                 availableRow = pos.row() + moves[i][1];
             }
             if (availableCol >= 0 && availableCol <= 8 && availableRow >= 0 && availableRow <= 8) {
-                ArrayList<Integer> move = new ArrayList<>();
-                move.add(availableCol);
-                move.add(availableRow);
-                availableMoves.add(move);
+                availableMoves.add(new Pos(availableRow,availableCol));
             }
         }
         return availableMoves;
