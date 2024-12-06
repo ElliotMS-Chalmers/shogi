@@ -16,6 +16,6 @@ public class ShogiRuleSet {
         if (piece instanceof King){
             return false;
         }
-        return (piece.getAvailableMoves(posFrom).contains(move));
+        return (piece.getAvailableMoves(posFrom,piece.getSide()).contains(move));
     }
 }

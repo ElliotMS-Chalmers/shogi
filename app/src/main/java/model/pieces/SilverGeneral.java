@@ -24,7 +24,7 @@ public class SilverGeneral extends Promotable {
     }
 
     @Override
-    public ArrayList<ArrayList<Integer>> getAvailableMoves(Pos pos){
+    public ArrayList<ArrayList<Integer>> getAvailableMoves(Pos pos, Side side){
         ArrayList<ArrayList<Integer>> availableMoves = new ArrayList<>();
         int team = 0;
         int availableCol;
