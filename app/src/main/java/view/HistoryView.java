@@ -12,18 +12,19 @@ import java.util.Stack;
 public class HistoryView extends VBox {
     private Stack<String> moveList = new Stack<>();
 
-    private final String imagePath = "/image/historyBackground.png"; //Kanske inte ska hårdkodas här
+    private final String backgroundImagePath = "/image/historyBackground.png"; //Kanske inte ska hårdkodas här
 
     public HistoryView(){
         super();
         this.setId("History");
         this.setAlignment(Pos.CENTER_RIGHT);
-        this.setBackground(imagePath);
+        this.setBackground(backgroundImagePath);
         VBox.setVgrow(this,Priority.ALWAYS);
+
     }
 
     public void setBackground(String imageName) {
-        Image image = getImage(imageName);
+        Image image = getBackgroundImage();
         //Kopierat från BoardView
         BackgroundImage backgroundImage = new BackgroundImage(
                 image,
@@ -36,9 +37,8 @@ public class HistoryView extends VBox {
         Background background = new Background(backgroundImage);
         this.setBackground(background);
     }
-    public Image getImage(String imageName) {
-        //Kopierad från BoardTheme
-        String path = String.format(imageName);
+    public Image getBackgroundImage() {
+        String path = String.format(backgroundImagePath);
         InputStream inputStream = getClass().getResourceAsStream(path);
         if (inputStream == null) {
             throw new IllegalArgumentException("Resource not found: " + path);

@@ -10,6 +10,4 @@ public class HistoryController {
     public HistoryController(HistoryView view){
         this.view = view;
     }
-
-    //public
 }
