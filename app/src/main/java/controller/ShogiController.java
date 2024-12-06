@@ -16,7 +16,7 @@ import javafx.scene.input.MouseButton;
 import java.util.List;
 
 public class ShogiController {
-    Settings settings;
+    private final Settings settings;
     private final Game game;
     private final ShogiView shogiView;
     private final BoardView boardView;

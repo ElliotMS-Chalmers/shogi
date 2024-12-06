@@ -1,11 +1,10 @@
 package model;
 
 import model.pieces.*;
+import model.variants.RuleSet;
 import model.variants.Variant;
 import util.Pos;
 import util.Side;
-
-import java.lang.runtime.SwitchBootstraps;
 
 public class Game {
     private boolean turn = false;
@@ -15,10 +14,11 @@ public class Game {
     private Player gotePlayer;
     private int moveCount = 1;
     private History history;
-    private ShogiRuleSet ruleSet;
+    private RuleSet ruleSet;
 
     public Game(Variant variant){
         this.variant = variant;
+        this.ruleSet = variant.getRuleSet();
 
         this.board = new Board(variant.getWidth(), variant.getHeight());
         this.board.initializeBoard(variant.getStartSfen());
@@ -30,8 +30,6 @@ public class Game {
 
         this.gotePlayer = new Player(Side.GOTE);
         this.gotePlayer.intializeHand(variant.getHand());
-
-        this.ruleSet = new ShogiRuleSet();
     }
 
     public void move(Pos from, Pos to){
@@ -120,6 +118,6 @@ public class Game {
         }
         changeTurn();
         moveCount++;
-        // TODO: history.addMove(move);
+        history.addMove(new Move(null,pos,piece,null));
     }
 }

@@ -10,6 +10,7 @@ public abstract class Variant {
     protected int width;
     protected int height;
     protected Sfen startSfen;
+    protected RuleSet ruleSet;
 
     public int getWidth(){
         return width;
@@ -20,6 +21,8 @@ public abstract class Variant {
     }
 
     public Sfen getStartSfen() { return startSfen; }
+
+    public RuleSet getRuleSet(){return ruleSet;}
 
     public abstract List<Class<? extends Piece>> getHand();
 }

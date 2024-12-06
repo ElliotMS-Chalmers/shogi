@@ -20,6 +20,7 @@ public class Standard extends Variant {
     public Standard(){
         width = 9;
         height = 9;
+        ruleSet = new ShogiRuleSet();
     }
 
     public Sfen getStartSfen() {
