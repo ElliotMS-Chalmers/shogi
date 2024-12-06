@@ -1,18 +1,19 @@
 package model;
 
-import java.io.InputStream;
-import javafx.scene.image.Image;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javafx.scene.image.Image;
 
-public class BoardTheme {
+import java.io.InputStream;
+
+public class BoardTheme{
     private final String imageName;
     private final String thumbnailName;
-
+    private final String imagePath = "/image/boards/";
     @JsonCreator
-    public BoardTheme(@JsonProperty("image") String image, @JsonProperty("thumbnail") String thumbnail) {
-        this.imageName = image;
+    public BoardTheme(@JsonProperty("image") String image, @JsonProperty("thumbnail") String thumbnail){
         this.thumbnailName = thumbnail;
+        this.imageName = image;
     }
     public String getImageName() {
         return imageName;
@@ -23,7 +24,7 @@ public class BoardTheme {
     }
 
     public Image getImage() {
-        String path = String.format("/image/boards/%s", imageName);
+        String path = String.format(imagePath+"%s", imageName);
         InputStream inputStream = getClass().getResourceAsStream(path);
         if (inputStream == null) {
             throw new IllegalArgumentException("Resource not found: " + path);

@@ -42,3 +42,18 @@ BorderPane .dark {
     -fx-background-radius: 3;
     -fx-padding: -3 3 -3 3;
 }
+
+.square.marked {
+    /* -fx-background-color: radial-gradient(
+        focus-angle 0deg,
+        focus-distance 0%,
+        center 50% 50%,
+        radius 20%,
+        red 100%,
+        red 100%
+    ); */
+    -fx-background-color: #9bb95780;
+}
+
+
+.history-view {}

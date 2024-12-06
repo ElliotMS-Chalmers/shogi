@@ -23,6 +23,8 @@ public class ShogiController {
     private final PieceStandView gotePieceStandView;
     private final PieceStandView sentePieceStandView;
 
+    private final HistoryView historyView;
+
     private SquareView lastSquareClicked;
 
     public ShogiController(Settings settings, Game game, ShogiView shogiView) {
@@ -33,6 +35,7 @@ public class ShogiController {
         this.boardView = shogiView.getBoardView();
         this.gotePieceStandView = shogiView.getGotePieceStandView();
         this.sentePieceStandView = shogiView.getSentePieceStandView();
+        this.historyView = shogiView.getHistoryView();
 
         boardView.setClickHandler(this::processBoardClick);
         gotePieceStandView.setClickHandler(this::processHandClick);

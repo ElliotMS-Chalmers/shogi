@@ -8,15 +8,16 @@ public class ShogiView extends HBox {
     private final BoardView boardView;
     private final PieceStandView gotePieceStandView;
     private final PieceStandView sentePieceStandView;
-    //private final HistoryView historyView;
+    private final HistoryView historyView;
 
     public ShogiView() {
         this.boardView = new BoardView(9); // size hard coded for now
         this.gotePieceStandView = new PieceStandView(Side.GOTE);
         this.sentePieceStandView = new PieceStandView(Side.SENTE);
+        this.historyView = new HistoryView();
         this.setAlignment(Pos.CENTER);
         this.setSpacing(10);
-        this.getChildren().addAll(gotePieceStandView, boardView, sentePieceStandView);
+        this.getChildren().addAll(gotePieceStandView, boardView, sentePieceStandView,historyView);
     }
 
     public BoardView getBoardView() {
@@ -30,4 +31,6 @@ public class ShogiView extends HBox {
     public PieceStandView getSentePieceStandView() {
         return sentePieceStandView;
     }
+
+    public HistoryView getHistoryView(){return historyView;}
 }

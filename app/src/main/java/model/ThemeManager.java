@@ -3,6 +3,7 @@ package model;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import javafx.scene.image.Image;
 
 public class ThemeManager {
     private Map<String, BoardTheme> boardThemes;
@@ -40,4 +41,5 @@ public class ThemeManager {
         if (pieceSet == null) { throw new IllegalArgumentException(String.format("Piece set %s not found.", name)); }
         return pieceSet;
     }
+
 }
