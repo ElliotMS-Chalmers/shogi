@@ -29,7 +29,7 @@ public abstract class Piece {
 
     protected abstract String getImageAbbreviationLetters();
 
-    public abstract ArrayList<ArrayList<Integer>> getAvailableMoves(Pos pos, Side side);
+    public abstract ArrayList<ArrayList<Integer>> getAvailableMoves(Pos pos);
 
     public String getImageAbbreviation() {
         return switch (side) {

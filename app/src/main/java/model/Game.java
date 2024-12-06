@@ -15,6 +15,7 @@ public class Game {
     private Player gotePlayer;
     private int moveCount = 1;
     private History history;
+    private ShogiRuleSet ruleSet;
 
     public Game(Variant variant){
         this.variant = variant;
@@ -29,22 +30,30 @@ public class Game {
 
         this.gotePlayer = new Player(Side.GOTE);
         this.gotePlayer.intializeHand(variant.getHand());
+
+        this.ruleSet = new ShogiRuleSet();
     }
 
     public void move(Pos from, Pos to){
         if(board.getPieceAt(from) == null){return;}
-        Move move = board.move(from, to);
-        Piece capturedPiece = move.capturedPiece();
-        if (capturedPiece != null) {
-            switch (capturedPiece.getSide()) {
-                case SENTE: gotePlayer.addCapturedPiece(move.capturedPiece().getClass()); break;
-                case GOTE: sentePlayer.addCapturedPiece(move.capturedPiece().getClass()); break;
-            }
+        if(ruleSet.validMove(from, to, board.getPieceAt(from))) {
+            Move move = board.move(from, to);
+            Piece capturedPiece = move.capturedPiece();
+            if (capturedPiece != null) {
+                switch (capturedPiece.getSide()) {
+                    case SENTE:
+                        gotePlayer.addCapturedPiece(move.capturedPiece().getClass());
+                        break;
+                    case GOTE:
+                        sentePlayer.addCapturedPiece(move.capturedPiece().getClass());
+                        break;
+                }
 
+            }
+            changeTurn();
+            moveCount++;
+            history.addMove(move);
         }
-        changeTurn();
-        moveCount++;
-        history.addMove(move);
     }
 
     public Board getBoard() {

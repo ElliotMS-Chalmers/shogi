@@ -3,7 +3,7 @@ package model.pieces;
 import util.Side;
 
 public abstract class Promotable extends Piece {
-    private boolean isPromoted = false;
+    protected boolean isPromoted = false;
 
     public Promotable(Side side) {
         super(side);
@@ -29,4 +29,6 @@ public abstract class Promotable extends Piece {
     public void promote() {
         isPromoted = true;
     };
+
+    public boolean getIsPromoted(){return isPromoted;}
 }

@@ -65,7 +65,7 @@ public class ShogiController {
     private void drawBoard(Sfen sfen) {
         sfen.forEachPiece((abbr, pos) -> {
             Piece piece =  PieceFactory.fromSfenAbbreviation(abbr);
-            System.out.println(pos.row() + ", " + pos.col());
+            // System.out.println(pos.row() + ", " + pos.col());
             Image image = settings.getPieceSet().getImage(piece);
             boardView.drawImageAt(image, pos);
         });

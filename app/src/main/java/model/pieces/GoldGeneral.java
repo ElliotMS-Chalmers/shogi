@@ -18,11 +18,11 @@ public class GoldGeneral extends Piece {
     }
 
     @Override
-    public ArrayList<ArrayList<Integer>> getAvailableMoves(Pos pos, Side side){
+    public ArrayList<ArrayList<Integer>> getAvailableMoves(Pos pos){
         ArrayList<ArrayList<Integer>> availableMoves = new ArrayList<>();
-        int team = 1;
+        int team = 0;
         if (side == Side.SENTE){
-            team = 0;
+            team = 1;
         }
         for (int i = 0; i < (moves.length/2); i ++) {
             int availableCol = pos.col() + moves[i*2 + team][0];
