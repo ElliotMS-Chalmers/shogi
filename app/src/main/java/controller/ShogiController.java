@@ -52,6 +52,17 @@ public class ShogiController {
         Sfen sfen = game.getSfen();
         drawBoard(sfen);
         updateHands(sfen);
+        // testing
+        /* boardView.clearMarkedSquares();
+        if (lastSquareClicked != null && lastSquareClicked instanceof BoardView.SquareView) {
+            Pos pos = ((BoardView.SquareView) lastSquareClicked).getPos();
+            Piece piece = game.getBoard().getPieceAt(pos);
+            // fix side
+            piece.getAvailableMoves(pos, Side.SENTE).forEach((list) -> {
+                Pos posToMark = new Pos(list.getFirst(), list.getLast());
+                boardView.markSquare(posToMark);
+            });
+        } */
     }
 
     private void movePiece(Pos from, Pos to) {

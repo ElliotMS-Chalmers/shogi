@@ -28,4 +28,12 @@ public class SquareView extends StackPane {
     public void unHighlight() {
         this.getStyleClass().remove("selected");
     }
+
+    public void mark() {
+        this.getStyleClass().add("marked");
+    }
+
+    public void unMark() {
+        this.getStyleClass().remove("marked");
+    }
 }

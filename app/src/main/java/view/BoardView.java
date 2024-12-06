@@ -109,4 +109,16 @@ public class BoardView extends GridPane {
             }
         }
     }
+
+    public void markSquare(Pos pos) {
+        squares[pos.row()][pos.col()].mark();
+    }
+
+    public void clearMarkedSquares() {
+        for (SquareView[] row : squares) {
+            for (SquareView square : row) {
+                square.unMark();
+            }
+        }
+    }
 }
