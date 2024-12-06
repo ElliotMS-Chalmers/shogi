@@ -24,16 +24,22 @@ public class SilverGeneral extends Promotable {
     }
 
     @Override
-    public ArrayList<ArrayList<Integer>> getAvailableMoves(Pos pos, Side side){
+    public ArrayList<ArrayList<Integer>> getAvailableMoves(Pos pos){
         ArrayList<ArrayList<Integer>> availableMoves = new ArrayList<>();
         int team = 0;
         int availableCol;
         int availableRow;
+        int movesLength;
         if (side == Side.SENTE){
             team = 1;
         }
-        for (int i = 0; i < (moves.length/2); i ++) {
-            if (this.getIsPromoted()){
+        if (isPromoted){
+            movesLength = promotedMoves.length;
+        } else {
+            movesLength = moves.length;
+        }
+        for (int i = 0; i < (movesLength/2); i ++) {
+            if (isPromoted){
                 availableCol = pos.col() + promotedMoves[i*2 + team][0];
                 availableRow = pos.row() + promotedMoves[i*2 + team][1];
             } else {

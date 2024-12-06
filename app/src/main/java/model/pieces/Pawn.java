@@ -34,14 +34,14 @@ public class Pawn extends Promotable {
         if (side == Side.SENTE){
             team = 1;
         }
-        if (this.getIsPromoted()){
+        if (isPromoted){
             movesLength = promotedMoves.length;
         } else {
             movesLength = moves.length;
         }
 
         for (int i = 0; i < (movesLength/2); i ++) {
-            if (this.getIsPromoted()){
+            if (isPromoted){
                 availableCol = pos.col() + promotedMoves[i * 2 + team][0];
                 availableRow = pos.row() + promotedMoves[i * 2 + team][1];
             } else {
