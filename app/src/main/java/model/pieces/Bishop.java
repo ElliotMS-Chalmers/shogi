@@ -28,9 +28,15 @@ public class Bishop extends Promotable {
         ArrayList<ArrayList<Integer>> availableMoves = new ArrayList<>();
         int availableRow;
         int availableCol;
+        int movesLength;
+        if (isPromoted){
+            movesLength = promotedMoves.length;
+        } else {
+            movesLength = moves.length;
+        }
 
-        for (int i = 0; i < (moves.length); i ++) {
-            if (this.getIsPromoted()){
+        for (int i = 0; i < (movesLength); i ++) {
+            if (isPromoted){
                 availableCol = pos.col() + promotedMoves[i][0];
                 availableRow = pos.row() + promotedMoves[i][1];
             } else {

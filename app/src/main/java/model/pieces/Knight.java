@@ -24,7 +24,7 @@ public class Knight extends Promotable {
     }
 
     @Override
-    public ArrayList<ArrayList<Integer>> getAvailableMoves(Pos pos, Side side){
+    public ArrayList<ArrayList<Integer>> getAvailableMoves(Pos pos){
         ArrayList<ArrayList<Integer>> availableMoves = new ArrayList<>();
         int team = 0;
         int availableCol;
