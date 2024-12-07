@@ -1,8 +1,6 @@
 package controller;
 
 import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import model.*;
 // import util.Piece;
@@ -109,27 +107,27 @@ public class ShogiController {
 
         boolean isRightClick = event.getButton() == MouseButton.SECONDARY;
         if (isRightClick) {
-            handleRightClick(pos);
+            handleBoardRightClick(pos);
             return;
         }
 
         if (lastSquareClicked instanceof PieceStandView.SquareView) {
-            handlePieceStandClick(pos);
+            handleHandToBoardClick(pos);
         } else if (lastSquareClicked instanceof BoardView.SquareView) {
-            handleBoardSquareClick(pos);
+            handleBoardToBoardClick(pos);
         } else {
             handleFirstClick(square, pos);
         }
     }
 
-    private void handleRightClick(Pos pos) {
+    private void handleBoardRightClick(Pos pos) {
         Piece piece = game.getBoard().getPieceAt(pos);
         if (piece instanceof Promotable) {
             ((Promotable) piece).promote();
         }
     }
 
-    private void handlePieceStandClick(Pos pos) {
+    private void handleHandToBoardClick(Pos pos) {
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
         Side side = ((PieceStandView.SquareView) lastSquareClicked).getSide();
         int index = ((PieceStandView.SquareView) lastSquareClicked).getIndex();
@@ -142,7 +140,7 @@ public class ShogiController {
         lastSquareClicked = null;
     }
 
-    private void handleBoardSquareClick(Pos pos) {
+    private void handleBoardToBoardClick(Pos pos) {
         Pos lastPos = ((BoardView.SquareView) lastSquareClicked).getPos();
         if (lastPos.equals(pos)) {
             boardView.clearHighlightedSquares();
