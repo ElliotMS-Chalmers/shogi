@@ -52,20 +52,10 @@ public class ShogiController {
 
     private void redraw() {
         boardView.clearPieces();
+        boardView.clearMarkedSquares();
         Sfen sfen = game.getSfen();
         drawBoard(sfen);
         updateHands(sfen);
-        // testing
-        /* boardView.clearMarkedSquares();
-        if (lastSquareClicked != null && lastSquareClicked instanceof BoardView.SquareView) {
-            Pos pos = ((BoardView.SquareView) lastSquareClicked).getPos();
-            Piece piece = game.getBoard().getPieceAt(pos);
-            // fix side
-            piece.getAvailableMoves(pos, Side.SENTE).forEach((list) -> {
-                Pos posToMark = new Pos(list.getFirst(), list.getLast());
-                boardView.markSquare(posToMark);
-            });
-        } */
     }
 
     private void movePiece(Pos from, Pos to) {
@@ -137,6 +127,7 @@ public class ShogiController {
                 case SENTE -> game.playHand(pos, PieceFactory.fromClass(hand.get(game.getVariant().getHand().size() - index - 1), side));
             }
             lastSquareClicked.unHighlight();
+            boardView.clearMarkedSquares();
             lastSquareClicked = null;
             redraw();
 
@@ -144,6 +135,7 @@ public class ShogiController {
             Pos lastPos = ((BoardView.SquareView) lastSquareClicked).getPos();
             if (lastPos.equals(pos)) {
                 boardView.clearHighlightedSquares();
+                boardView.clearMarkedSquares();
                 lastSquareClicked = null;
                 return;
             }
@@ -153,6 +145,8 @@ public class ShogiController {
             if (pieceClicked) {
                 lastSquareClicked = square;
                 boardView.highlightSquare(pos);
+                Piece piece = game.getBoard().getPieceAt(pos);
+                piece.getAvailableMoves(pos).forEach(boardView::markSquare);
             }
         }
     }
