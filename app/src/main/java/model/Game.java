@@ -5,11 +5,15 @@ import model.variants.RuleSet;
 import model.variants.Variant;
 import util.Pos;
 import util.Side;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 public class Game {
     private boolean turn = false;
     private Variant variant;
     private Board board;
+    private BooleanProperty boardChanged = new SimpleBooleanProperty(false);
     private Player sentePlayer;
     private Player gotePlayer;
     private int moveCount = 1;
@@ -52,10 +56,15 @@ public class Game {
             moveCount++;
             history.addMove(move);
         }
+        boardChanged();
     }
 
     public Board getBoard() {
         return board;
+    }
+
+    public BooleanProperty boardChangedProperty() {
+        return boardChanged;
     }
 
     public Variant getVariant() {
@@ -80,6 +89,7 @@ public class Game {
             (turn ? sentePlayer : gotePlayer).removeCapturedPiece(lastMove.capturedPiece().getClass());
             board.setAtPosition(lastMove.to(),lastMove.capturedPiece());
         }
+        boardChanged();
     }
 
     public String getCapturedPiecesAsSfen(){
@@ -119,5 +129,10 @@ public class Game {
         changeTurn();
         moveCount++;
         history.addMove(new Move(null,pos,piece,null));
+        boardChanged();
+    }
+
+    private void boardChanged() {
+        boardChanged.set(!boardChanged.get());
     }
 }

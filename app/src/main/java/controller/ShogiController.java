@@ -1,12 +1,12 @@
 package controller;
 
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
-import model.Game;
-import model.PieceFactory;
-import model.Settings;
+import model.*;
 // import util.Piece;
 import util.Pos;
-import model.Sfen;
 import util.Side;
 import view.*;
 import model.pieces.*;
@@ -23,53 +23,48 @@ public class ShogiController {
     private final PieceStandView gotePieceStandView;
     private final PieceStandView sentePieceStandView;
 
-    private final HistoryView historyView;
-
     private SquareView lastSquareClicked;
 
     public ShogiController(Settings settings, Game game, ShogiView shogiView) {
         this.settings = settings;
         this.game = game;
-
         this.shogiView = shogiView;
         this.boardView = shogiView.getBoardView();
         this.gotePieceStandView = shogiView.getGotePieceStandView();
         this.sentePieceStandView = shogiView.getSentePieceStandView();
-        this.historyView = shogiView.getHistoryView();
 
+        // Handle user interaction
         boardView.setClickHandler(this::processBoardClick);
         gotePieceStandView.setClickHandler(this::processHandClick);
         sentePieceStandView.setClickHandler(this::processHandClick);
 
+        // Handle change to board
+        game.boardChangedProperty().addListener(this::onBoardChanged);
+
+        // Handle change in settings
+        settings.boardThemeProperty().addListener(this::onBoardThemeChanged);
+        settings.pieceSetProperty().addListener(this::onPieceSetChanged);
+
+        // Setup
         setBackground();
         drawHands();
-        redraw();
+        Sfen sfen = game.getSfen();
+        drawBoard(sfen);
+        updateHands(sfen);
     }
 
     private void setBackground() {
         boardView.setBackground(settings.getBoardTheme().getImage());
     }
 
-    private void redraw() {
-        boardView.clearPieces();
-        boardView.clearMarkedSquares();
-        Sfen sfen = game.getSfen();
-        drawBoard(sfen);
-        updateHands(sfen);
-    }
-
     private void movePiece(Pos from, Pos to) {
         game.move(from, to);
-        boardView.clearHighlightedSquares();
         lastSquareClicked = null;
-        redraw();
     }
-
 
     private void drawBoard(Sfen sfen) {
         sfen.forEachPiece((abbr, pos) -> {
             Piece piece =  PieceFactory.fromSfenAbbreviation(abbr);
-            // System.out.println(pos.row() + ", " + pos.col());
             Image image = settings.getPieceSet().getImage(piece);
             boardView.drawImageAt(image, pos);
         });
@@ -89,12 +84,14 @@ public class ShogiController {
     }
 
     private void updateHands(Sfen sfen) {
+        // Clear piece counts
         for (int i = 0; i < 7; i++) {
             sentePieceStandView.setCountAt(0, i);
             gotePieceStandView.setCountAt(0, i);
         }
 
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
+        // Set new piece counts
         sfen.forEachCapturedPiece((abbr, count) -> {
             Piece piece = PieceFactory.fromSfenAbbreviation(String.valueOf(abbr));
             if (Character.isUpperCase(abbr)) {
@@ -109,45 +106,60 @@ public class ShogiController {
 
     public void processBoardClick(BoardView.SquareView square, MouseEvent event) {
         Pos pos = square.getPos();
-        if (event.getButton() == MouseButton.SECONDARY) {
-            Piece piece = game.getBoard().getPieceAt(pos);
-            if (piece instanceof Promotable) {
-                ((Promotable) piece).promote();
-            }
-            redraw();
+
+        boolean isRightClick = event.getButton() == MouseButton.SECONDARY;
+        if (isRightClick) {
+            handleRightClick(pos);
             return;
         }
 
-        List<Class<? extends Piece>> hand = game.getVariant().getHand();
         if (lastSquareClicked instanceof PieceStandView.SquareView) {
-            Side side = ((PieceStandView.SquareView) lastSquareClicked).getSide();
-            int index = ((PieceStandView.SquareView) lastSquareClicked).getIndex();
-            switch (side) {
-                case GOTE -> game.playHand(pos, PieceFactory.fromClass(hand.get(index), side));
-                case SENTE -> game.playHand(pos, PieceFactory.fromClass(hand.get(game.getVariant().getHand().size() - index - 1), side));
-            }
-            lastSquareClicked.unHighlight();
+            handlePieceStandClick(pos);
+        } else if (lastSquareClicked instanceof BoardView.SquareView) {
+            handleBoardSquareClick(pos);
+        } else {
+            handleFirstClick(square, pos);
+        }
+    }
+
+    private void handleRightClick(Pos pos) {
+        Piece piece = game.getBoard().getPieceAt(pos);
+        if (piece instanceof Promotable) {
+            ((Promotable) piece).promote();
+        }
+    }
+
+    private void handlePieceStandClick(Pos pos) {
+        List<Class<? extends Piece>> hand = game.getVariant().getHand();
+        Side side = ((PieceStandView.SquareView) lastSquareClicked).getSide();
+        int index = ((PieceStandView.SquareView) lastSquareClicked).getIndex();
+        switch (side) {
+            case GOTE -> game.playHand(pos, PieceFactory.fromClass(hand.get(index), side));
+            case SENTE -> game.playHand(pos, PieceFactory.fromClass(hand.get(hand.size() - index - 1), side));
+        }
+        lastSquareClicked.unHighlight();
+        boardView.clearMarkedSquares();
+        lastSquareClicked = null;
+    }
+
+    private void handleBoardSquareClick(Pos pos) {
+        Pos lastPos = ((BoardView.SquareView) lastSquareClicked).getPos();
+        if (lastPos.equals(pos)) {
+            boardView.clearHighlightedSquares();
             boardView.clearMarkedSquares();
             lastSquareClicked = null;
-            redraw();
+            return;
+        }
+        movePiece(lastPos, pos);
+    }
 
-        } else if (lastSquareClicked instanceof BoardView.SquareView) {
-            Pos lastPos = ((BoardView.SquareView) lastSquareClicked).getPos();
-            if (lastPos.equals(pos)) {
-                boardView.clearHighlightedSquares();
-                boardView.clearMarkedSquares();
-                lastSquareClicked = null;
-                return;
-            }
-            movePiece(lastPos, pos);
-        } else { // == null
-            boolean pieceClicked = game.getBoard().getPieceAt(pos) != null;
-            if (pieceClicked) {
-                lastSquareClicked = square;
-                boardView.highlightSquare(pos);
-                Piece piece = game.getBoard().getPieceAt(pos);
-                piece.getAvailableMoves(pos).forEach(boardView::markSquare);
-            }
+    private void handleFirstClick(BoardView.SquareView square, Pos pos) {
+        boolean pieceClicked = game.getBoard().getPieceAt(pos) != null;
+        if (pieceClicked) {
+            lastSquareClicked = square;
+            boardView.highlightSquare(pos);
+            Piece piece = game.getBoard().getPieceAt(pos);
+            piece.getAvailableMoves(pos).forEach(boardView::markSquare);
         }
     }
 
@@ -161,5 +173,24 @@ public class ShogiController {
             lastSquareClicked = square;
             square.highlight();
         }
+    }
+
+    private void onBoardChanged(Observable observable) {
+        boardView.clearPieces();
+        boardView.clearHighlightedSquares();
+        boardView.clearMarkedSquares();
+        Sfen sfen = game.getSfen();
+        drawBoard(sfen);
+        updateHands(sfen); // the only time we change piece counts in hand is when capture pieces (ie board changed) so this is fine for now but not ideal
+    }
+
+    private void onBoardThemeChanged(Observable observable) {
+        setBackground();
+    }
+
+    private void onPieceSetChanged(Observable observable) {
+        drawHands();
+        boardView.clearPieces();
+        drawBoard(game.getSfen());
     }
 }

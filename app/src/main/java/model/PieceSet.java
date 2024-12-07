@@ -11,16 +11,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import model.pieces.Piece;
 
 public class PieceSet {
-    private final String folder;
+    private final String directory;
     private final Map<String, byte[]> imageCache = new HashMap<>() {};
 
     @JsonCreator
-    public PieceSet(@JsonProperty("folder") String folder) {
-        this.folder = folder;
+    public PieceSet(@JsonProperty("directory") String directory) {
+        this.directory = directory;
     }
 
-    public String getFolder() {
-        return folder;
+    public String getDirectory() {
+        return directory;
     }
 
     public Image getImage(Piece piece) {
@@ -29,7 +29,7 @@ public class PieceSet {
             return new Image(new ByteArrayInputStream(imageCache.get(abbr)));
         }
 
-        String path = String.format("/image/pieces/%s/%s.png", folder, abbr);
+        String path = String.format("/image/pieces/%s/%s.png", directory, abbr);
         try (InputStream inputStream = getClass().getResourceAsStream(path)) {
             if (inputStream != null) {
                 byte[] imageData = inputStream.readAllBytes();

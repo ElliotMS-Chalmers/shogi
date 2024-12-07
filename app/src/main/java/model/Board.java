@@ -17,10 +17,6 @@ public class Board {
         return move;
     }
 
-    public Piece[][] getCurrentBoard(){
-        return grid;
-    }
-
     public void setAtPosition(Pos pos, Piece piece){
         grid[pos.row()][pos.col()] = piece;
     }
@@ -29,6 +25,7 @@ public class Board {
         grid = new Piece[grid.length][grid[0].length];
         initializeBoard(sfen);
     }
+
     public String getBoardAsSfen() {
         StringBuilder sfen = new StringBuilder();
 

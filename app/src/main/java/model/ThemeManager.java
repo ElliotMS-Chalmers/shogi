@@ -42,4 +42,19 @@ public class ThemeManager {
         return pieceSet;
     }
 
+    public String getBoardThemeName(BoardTheme boardTheme) {
+        return getKeyFromValue(boardThemes, boardTheme);
+    }
+
+    public String getPieceSetName(PieceSet pieceSet) {
+        return getKeyFromValue(pieceSets, pieceSet);
+    }
+
+    private <T> String getKeyFromValue(Map<String, T> map, T value) {
+        return map.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(value))
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(null); // Handle case where value is not found
+    }
 }

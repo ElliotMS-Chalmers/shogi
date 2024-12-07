@@ -1,92 +1,92 @@
 {
   "RYOKO_1_KANJI": {
-    "folder": "Ryoko_1Kanji"
+    "directory": "Ryoko_1Kanji"
   },
   "KANJI_LIGHT": {
-    "folder": "kanji_light"
+    "directory": "kanji_light"
   },
   "KANJI_BROWN": {
-    "folder": "kanji_brown"
+    "directory": "kanji_brown"
   },
   "ORANGAIN": {
-    "folder": "orangain"
+    "directory": "orangain"
   },
   "KANJI_RED_WOOD": {
-    "folder": "kanji_red_wood"
+    "directory": "kanji_red_wood"
   },
   "POTELLA": {
-    "folder": "Portella"
+    "directory": "Portella"
   },
   "PORTELLA_2_KANJI": {
-    "folder": "Portella_2Kanji"
+    "directory": "Portella_2Kanji"
   },
   "KANJI_3D": {
-    "folder": "1Kanji_3D"
+    "directory": "1Kanji_3D"
   },
   "KANJI_2_3D": {
-    "folder": "2Kanji_3D"
+    "directory": "2Kanji_3D"
   },
   "SHOGI_CZ": {
-    "folder": "Shogi_cz"
+    "directory": "Shogi_cz"
   },
   "CZECH": {
-    "folder": "Shogi_FCZ"
+    "directory": "Shogi_FCZ"
   },
   "ENGRAVED_SHOGI_CZ": {
-    "folder": "Engraved_cz"
+    "directory": "Engraved_cz"
   },
   "ENGRAVED_SHOGI_CZ_BNW": {
-    "folder": "Engraved_cz_BnW"
+    "directory": "Engraved_cz_BnW"
   },
   "KANJI_GUIDE_SHADOWED": {
-    "folder": "Kanji_Guide_Shadowed"
+    "directory": "Kanji_Guide_Shadowed"
   },
   "VALDIVIA": {
-    "folder": "Valdivia"
+    "directory": "Valdivia"
   },
   "VALDIVIA_2": {
-    "folder": "Vald_opt"
+    "directory": "Vald_opt"
   },
   "SHOGI_BNW": {
-    "folder": "shogi_BnW"
+    "directory": "shogi_BnW"
   },
   "PIXEL_8BIT": {
-    "folder": "pixel"
+    "directory": "pixel"
   },
   "INTERNATIONAL_COLORED_2D": {
-    "folder": "Intl_Colored_2D"
+    "directory": "Intl_Colored_2D"
   },
   "INTERNATIONAL_COLORED_3D": {
-    "folder": "Intl_Colored_3D"
+    "directory": "Intl_Colored_3D"
   },
   "INTERNATIONAL_SHADOWED": {
-    "folder": "Intl_Shadowed"
+    "directory": "Intl_Shadowed"
   },
   "INTERNATIONAL_MONOCHROME_2D": {
-    "folder": "Intl_Monochrome_2D"
+    "directory": "Intl_Monochrome_2D"
   },
   "INTERNATIONAL_WOODEN_3D": {
-    "folder": "Intl_Wooden_3D"
+    "directory": "Intl_Wooden_3D"
   },
   "INTERNATIONAL_PORTELLA": {
-    "folder": "Intl_Portella"
+    "directory": "Intl_Portella"
   },
   "INTERNATIONAL": {
-    "folder": "international"
+    "directory": "international"
   },
   "JOYFUL": {
-    "folder": "joyful"
+    "directory": "joyful"
   },
   "SIMPLE_KANJI": {
-    "folder": "simple_kanji"
+    "directory": "simple_kanji"
   },
   "DOUBUTSU": {
-    "folder": "doubutsu"
+    "directory": "doubutsu"
   },
   "LOGY_GAMES": {
-    "folder": "Logy_Games"
+    "directory": "Logy_Games"
   },
   "WESTERN": {
-    "folder": "western"
+    "directory": "western"
   }
 }

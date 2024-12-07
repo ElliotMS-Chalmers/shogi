@@ -1,0 +1,11 @@
+{
+  "CHESS": {
+    "directory": "chess"
+  },
+  "SHOGI": {
+    "directory": "shogi"
+  },
+  "SHOGI_ALT": {
+    "directory": "shogialt"
+  }
+}

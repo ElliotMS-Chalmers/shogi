@@ -1,7 +1,7 @@
 * {
     -fx-dark-base: #131210;
     -fx-light-base: #EDEBE9;
-    -fx-accent: #9bb957;
+    /* -fx-accent: #9bb957; */
 }
 
 BorderPane {
@@ -44,15 +44,7 @@ BorderPane .dark {
 }
 
 .square.marked {
-    /* -fx-background-color: radial-gradient(
-        focus-angle 0deg,
-        focus-distance 0%,
-        center 50% 50%,
-        radius 20%,
-        red 100%,
-        red 100%
-    ); */
-    -fx-background-color: #9bb95780;
+    -fx-background-color: rgba(255, 91, 83, 0.5);
 }
 
 
