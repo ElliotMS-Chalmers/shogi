@@ -27,6 +27,9 @@ public class ShogiController {
 
     private Clock senteClock;
     private Clock goteClock;
+    private Thread senteth;
+    private Thread goteth;
+    private AtomicBoolean gameRunning;
     private String selected = "1 min"; //test
 
     private SquareView lastSquareClicked;
@@ -35,6 +38,7 @@ public class ShogiController {
         this.settings = settings;
         this.game = game;
         this.shogiView = shogiView;
+        gameRunning = new AtomicBoolean(false);
         this.boardView = shogiView.getBoardView();
         this.gotePieceStandView = shogiView.getGotePieceStandView();
         this.sentePieceStandView = shogiView.getSentePieceStandView();
@@ -59,8 +63,17 @@ public class ShogiController {
         drawBoard(sfen);
         updateHands(sfen);
         startClock();
+        shutdownHook();
     }
 
+
+    private void shutdownHook() { //Maybe remove this
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (gameRunning != null && gameRunning.get()) {
+                stopClock();
+            }
+        }));
+    }
     private void setBackground() {
         boardView.setBackground(settings.getBoardTheme().getImage());
     }
@@ -203,17 +216,38 @@ public class ShogiController {
         drawBoard(game.getSfen());
     }
 
+    //CLock
+
     private void setClock() {
         int timeChosen = Integer.parseInt(selected.split(" ")[0]) * 60;
-        AtomicBoolean gameRunning = new AtomicBoolean(true);
+        gameRunning.set(true);
         this.senteClock = new Clock(timeChosen + 2, Side.SENTE, gameRunning);
         this.goteClock = new Clock(timeChosen, Side.GOTE, gameRunning);
     }
 
     private void startClock(){
-        Thread senteth = new Thread(this.senteClock);
-        Thread goteth = new Thread(this.goteClock);
+        senteth = new Thread(this.senteClock);
+        goteth = new Thread(this.goteClock);
         senteth.start();
         goteth.start();
+    }
+
+    public void stopClock() {
+        // Signal threads to stop
+        gameRunning.set(false);
+    
+        // Interrupt threads in case they are sleeping
+        senteth.interrupt();
+        goteth.interrupt();
+    
+        try {
+            // Wait for threads to finish
+            senteth.join();
+            goteth.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore interrupted status
+        }
+    
+        System.out.println("Clocks stopped.");
     }
 }

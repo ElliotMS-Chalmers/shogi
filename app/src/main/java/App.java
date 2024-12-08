@@ -24,6 +24,7 @@ public class App extends Application {
         SettingsMenu settingsMenu = new SettingsMenu();
         GameView gameView = new GameView(shogiView, settingsMenu);
         Scene scene = new Scene(gameView, 1280, 1000);
+        
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setTitle("Shogi v1.0");
         stage.setScene(scene);
@@ -34,6 +35,13 @@ public class App extends Application {
         // Initialize controller
         ShogiController shogiController = new ShogiController(settings, game, shogiView);
         SettingsController settingsController = new SettingsController(settings, settingsMenu);
+
+        // Handle window close event
+        stage.setOnCloseRequest(event -> {
+          System.out.println("Closing the application...");
+          shogiController.stopClock();
+          
+        });
     }
 
     public static void main(String[] args) {
