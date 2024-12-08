@@ -36,27 +36,25 @@ public class Game {
         this.gotePlayer.intializeHand(variant.getHand());
     }
 
-    public void move(Pos from, Pos to){
-        if(board.getPieceAt(from) == null){return;}
-        if(ruleSet.validMove(from, to, board.getPieceAt(from))) {
-            Move move = board.move(from, to);
-            Piece capturedPiece = move.capturedPiece();
-            if (capturedPiece != null) {
-                switch (capturedPiece.getSide()) {
-                    case SENTE:
-                        gotePlayer.addCapturedPiece(move.capturedPiece().getClass());
-                        break;
-                    case GOTE:
-                        sentePlayer.addCapturedPiece(move.capturedPiece().getClass());
-                        break;
-                }
-
+    public Move move(Pos from, Pos to){
+        if (board.getPieceAt(from) == null || !ruleSet.validMove(from, to, board.getPieceAt(from))) { return null; }
+        Move move = board.move(from, to);
+        Piece capturedPiece = move.capturedPiece();
+        if (capturedPiece != null) {
+            switch (capturedPiece.getSide()) {
+                case SENTE:
+                    gotePlayer.addCapturedPiece(move.capturedPiece().getClass());
+                    break;
+                case GOTE:
+                    sentePlayer.addCapturedPiece(move.capturedPiece().getClass());
+                    break;
             }
-            changeTurn();
-            moveCount++;
-            history.addMove(move);
         }
+        changeTurn();
+        moveCount++;
+        history.addMove(move);
         boardChanged();
+        return move;
     }
 
     public Board getBoard() {

@@ -3,7 +3,6 @@ package controller;
 import javafx.beans.Observable;
 import javafx.scene.image.Image;
 import model.*;
-// import util.Piece;
 import util.Pos;
 import util.Side;
 import view.*;
@@ -23,15 +22,15 @@ public class ShogiController {
 
     private SquareView lastSquareClicked;
 
-    public ShogiController(Settings settings, Game game, ShogiView shogiView) {
+    public ShogiController(Settings settings, Game game) {
         this.settings = settings;
         this.game = game;
-        this.shogiView = shogiView;
+        this.shogiView = new ShogiView(game.getVariant().getWidth(), game.getVariant().getHand().size());
         this.boardView = shogiView.getBoardView();
         this.gotePieceStandView = shogiView.getGotePieceStandView();
         this.sentePieceStandView = shogiView.getSentePieceStandView();
 
-        // Handle user interaction
+        // Handle user input
         boardView.setClickHandler(this::processBoardClick);
         gotePieceStandView.setClickHandler(this::processHandClick);
         sentePieceStandView.setClickHandler(this::processHandClick);
@@ -56,8 +55,17 @@ public class ShogiController {
     }
 
     private void movePiece(Pos from, Pos to) {
-        game.move(from, to);
+        Move move = game.move(from, to);
+        lastSquareClicked.unHighlight();
         lastSquareClicked = null;
+        boardView.clearMarkedSquares();
+        if (move != null) {
+            if (move.capturedPiece() != null) {
+                SoundPlayer.playCaptureSound(settings.getSoundSet());
+            } else {
+                SoundPlayer.playMoveSound(settings.getSoundSet());
+            }
+        }
     }
 
     private void drawBoard(Sfen sfen) {
@@ -83,7 +91,7 @@ public class ShogiController {
 
     private void updateHands(Sfen sfen) {
         // Clear piece counts
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < sentePieceStandView.getSize(); i++) {
             sentePieceStandView.setCountAt(0, i);
             gotePieceStandView.setCountAt(0, i);
         }
@@ -124,6 +132,7 @@ public class ShogiController {
         Piece piece = game.getBoard().getPieceAt(pos);
         if (piece instanceof Promotable) {
             ((Promotable) piece).promote();
+            onBoardChanged(null); // temp fix to redraw board on piece promotion
         }
     }
 
@@ -136,8 +145,9 @@ public class ShogiController {
             case SENTE -> game.playHand(pos, PieceFactory.fromClass(hand.get(hand.size() - index - 1), side));
         }
         lastSquareClicked.unHighlight();
-        boardView.clearMarkedSquares();
         lastSquareClicked = null;
+        boardView.clearMarkedSquares();
+        SoundPlayer.playMoveSound(settings.getSoundSet());
     }
 
     private void handleBoardToBoardClick(Pos pos) {
@@ -190,5 +200,9 @@ public class ShogiController {
         drawHands();
         boardView.clearPieces();
         drawBoard(game.getSfen());
+    }
+
+    public ShogiView getView() {
+        return shogiView;
     }
 }

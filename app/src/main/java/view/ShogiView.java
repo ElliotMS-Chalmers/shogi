@@ -10,10 +10,10 @@ public class ShogiView extends HBox {
     private final PieceStandView sentePieceStandView;
     private final HistoryView historyView;
 
-    public ShogiView() {
-        this.boardView = new BoardView(9); // size hard coded for now
-        this.gotePieceStandView = new PieceStandView(Side.GOTE);
-        this.sentePieceStandView = new PieceStandView(Side.SENTE);
+    public ShogiView(int boardSize, int handSize) {
+        this.boardView = new BoardView(boardSize);
+        this.gotePieceStandView = new PieceStandView(Side.GOTE, handSize, boardSize);
+        this.sentePieceStandView = new PieceStandView(Side.SENTE, handSize, boardSize);
         this.historyView = new HistoryView();
         this.setAlignment(Pos.CENTER);
         this.setSpacing(10);

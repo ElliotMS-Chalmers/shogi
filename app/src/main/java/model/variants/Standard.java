@@ -13,8 +13,8 @@ public class Standard extends Variant {
             Knight.class,
             SilverGeneral.class,
             GoldGeneral.class,
-            Bishop.class,
-            Rook.class
+            Bishop.class
+            //Rook.class
     );
 
     public Standard(){

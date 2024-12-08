@@ -1,5 +1,4 @@
 plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
     application
 	jacoco
 	id("org.openjfx.javafxplugin") version "0.1.0"
@@ -55,5 +54,5 @@ tasks.jacocoTestReport {
 
 javafx {
 	version = "20"
-	modules = listOf("javafx.controls")
+	modules = listOf("javafx.controls", "javafx.media")
 }

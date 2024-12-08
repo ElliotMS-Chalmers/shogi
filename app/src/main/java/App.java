@@ -19,10 +19,12 @@ public class App extends Application {
         Variant variant = new Standard();
         Game game = new Game(variant);
 
+        // Initialize controller (which also respective subviews)
+        ShogiController shogiController = new ShogiController(settings, game);
+        SettingsController settingsController = new SettingsController(settings);
+
         // Initialize view
-        ShogiView shogiView = new ShogiView();
-        SettingsMenu settingsMenu = new SettingsMenu();
-        GameView gameView = new GameView(shogiView, settingsMenu);
+        GameView gameView = new GameView(shogiController.getView(), settingsController.getMenu());
         Scene scene = new Scene(gameView, 1280, 1000);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setTitle("Shogi v1.0");
@@ -30,10 +32,6 @@ public class App extends Application {
         stage.setMinHeight(480);
         stage.setMinWidth(720);
         stage.show();
-
-        // Initialize controller
-        ShogiController shogiController = new ShogiController(settings, game, shogiView);
-        SettingsController settingsController = new SettingsController(settings, settingsMenu);
     }
 
     public static void main(String[] args) {

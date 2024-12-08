@@ -37,7 +37,8 @@ public class Player {
     }
 
     public void addCapturedPiece(Class<? extends Piece> pieceClass, int amount){
-        capturedPieces.put(pieceClass, capturedPieces.get(pieceClass) + amount);
+        if (capturedPieces.get(pieceClass) != null)
+            capturedPieces.put(pieceClass, capturedPieces.get(pieceClass) + amount);
     }
 
     public void addCapturedPiece(Class<? extends Piece> pieceClass){

@@ -13,8 +13,9 @@ import java.util.function.Consumer;
 
 public class PieceStandView extends VBox {
     private final Side side;
-    private final SquareView[] squares = new SquareView[7]; // TODO: dont hard code this
+    private final SquareView[] squares;
     private final VBox squareWrapper = new VBox(); // Needed to we can align squares to top or bottom of piece stand depending on side
+    private final int scaleFactor;
 
     public class SquareView extends view.SquareView {
         private final int index;
@@ -29,7 +30,7 @@ public class PieceStandView extends VBox {
             this.getStyleClass().add("piece-stand-square");
             createLabel();
             this.prefHeightProperty().bind(
-                PieceStandView.this.heightProperty().divide(9)
+                PieceStandView.this.heightProperty().divide(scaleFactor)
             );
             this.prefWidthProperty().bind(this.heightProperty());
             setCount(0);
@@ -68,8 +69,10 @@ public class PieceStandView extends VBox {
         }
     }
 
-    public PieceStandView(Side side) {
+    public PieceStandView(Side side, int size, int scaleFactor) {
         this.side = side;
+        this.squares = new SquareView[size];
+        this.scaleFactor = scaleFactor;
         this.getChildren().add(squareWrapper);
         this.prefHeight(Double.MAX_VALUE);
 
@@ -97,6 +100,10 @@ public class PieceStandView extends VBox {
     public void drawImageAt(Image image, int index) {
         SquareView square = squares[index];
         square.setImage(image);
+    }
+
+    public int getSize() {
+        return squares.length;
     }
 
     public void setClickHandler(Consumer<SquareView> clickHandler) {

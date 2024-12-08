@@ -17,6 +17,7 @@ public class Settings {
     private final ThemeManager themeManager = new ThemeManager();
     private final ObjectProperty<BoardTheme> boardTheme = new SimpleObjectProperty<>();
     private final ObjectProperty<PieceSet> pieceSet = new SimpleObjectProperty<>();
+    private SoundSet soundSet;
 
     public Settings() {
         loadSettings();
@@ -54,8 +55,10 @@ public class Settings {
         // Set attributes
         String pieceSetName = properties.getProperty("piece_set");
         String boardThemeName = properties.getProperty("board_theme");
+        String soundSetName = properties.getProperty("sound_set");
         pieceSet.set(themeManager.getPieceSet(pieceSetName));
         boardTheme.set(themeManager.getBoardTheme(boardThemeName));
+        soundSet = themeManager.getSoundSet(soundSetName);
     }
 
     private void saveSettings() {
@@ -110,6 +113,8 @@ public class Settings {
         return boardTheme.get();
     }
 
+    public SoundSet getSoundSet() { return soundSet; }
+
     public Map<String, PieceSet> getPieceSets() {
         return themeManager.getPieceSets();
     }
@@ -124,5 +129,13 @@ public class Settings {
 
     public void setPieceSet(String name) {
         this.pieceSet.set(themeManager.getPieceSet(name));
+    }
+
+    public Map<String, SoundSet> getSoundSets() {
+        return themeManager.getSoundSets();
+    }
+
+    public void setSoundSet(String name) {
+        soundSet = themeManager.getSoundSet(name);
     }
 }
