@@ -32,6 +32,13 @@ public class App extends Application {
         stage.setMinHeight(480);
         stage.setMinWidth(720);
         stage.show();
+
+        // Handle window close event
+        stage.setOnCloseRequest(event -> {
+          System.out.println("Closing the application...");
+          shogiController.stopClock();
+
+        });
     }
 
     public static void main(String[] args) {

@@ -1,8 +1,11 @@
 package controller;
 
 import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import model.*;
+// import util.Piece;
 import util.Pos;
 import util.Side;
 import view.*;
@@ -11,6 +14,8 @@ import model.pieces.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 
 public class ShogiController {
     private final Settings settings;
@@ -20,11 +25,19 @@ public class ShogiController {
     private final PieceStandView gotePieceStandView;
     private final PieceStandView sentePieceStandView;
 
+    private Clock senteClock;
+    private Clock goteClock;
+    private Thread senteth;
+    private Thread goteth;
+    private AtomicBoolean gameRunning;
+    private String selected = "1 min"; //test
+
     private SquareView lastSquareClicked;
 
     public ShogiController(Settings settings, Game game) {
         this.settings = settings;
         this.game = game;
+        gameRunning = new AtomicBoolean(false);
         this.shogiView = new ShogiView(game.getVariant().getWidth(), game.getVariant().getHand().size());
         this.boardView = shogiView.getBoardView();
         this.gotePieceStandView = shogiView.getGotePieceStandView();
@@ -43,13 +56,24 @@ public class ShogiController {
         settings.pieceSetProperty().addListener(this::onPieceSetChanged);
 
         // Setup
+        setClock();
         setBackground();
         drawHands();
         Sfen sfen = game.getSfen();
         drawBoard(sfen);
         updateHands(sfen);
+        startClock();
+        shutdownHook();
     }
 
+
+    private void shutdownHook() { //Maybe remove this
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (gameRunning != null && gameRunning.get()) {
+                stopClock();
+            }
+        }));
+    }
     private void setBackground() {
         boardView.setBackground(settings.getBoardTheme().getImage());
     }
@@ -75,6 +99,7 @@ public class ShogiController {
             boardView.drawImageAt(image, pos);
         });
     }
+
 
     private void drawHands() {
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
@@ -204,5 +229,40 @@ public class ShogiController {
 
     public ShogiView getView() {
         return shogiView;
+    }
+
+    //CLock
+
+    private void setClock() {
+        int timeChosen = Integer.parseInt(selected.split(" ")[0]) * 60;
+        gameRunning.set(true);
+        this.senteClock = new Clock(timeChosen + 2, Side.SENTE, gameRunning);
+        this.goteClock = new Clock(timeChosen, Side.GOTE, gameRunning);
+    }
+
+    private void startClock(){
+        senteth = new Thread(this.senteClock);
+        goteth = new Thread(this.goteClock);
+        senteth.start();
+        goteth.start();
+    }
+
+    public void stopClock() {
+        // Signal threads to stop
+        gameRunning.set(false);
+
+        // Interrupt threads in case they are sleeping
+        senteth.interrupt();
+        goteth.interrupt();
+
+        try {
+            // Wait for threads to finish
+            senteth.join();
+            goteth.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore interrupted status
+        }
+
+        System.out.println("Clocks stopped.");
     }
 }
