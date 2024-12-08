@@ -34,6 +34,7 @@ public class Game {
 
         this.gotePlayer = new Player(Side.GOTE);
         this.gotePlayer.intializeHand(variant.getHand());
+
     }
 
     public void move(Pos from, Pos to){

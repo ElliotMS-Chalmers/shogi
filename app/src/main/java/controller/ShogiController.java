@@ -14,6 +14,8 @@ import model.pieces.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 
 public class ShogiController {
     private final Settings settings;
@@ -23,7 +25,8 @@ public class ShogiController {
     private final PieceStandView gotePieceStandView;
     private final PieceStandView sentePieceStandView;
 
-    private Clock clock;
+    private Clock senteClock;
+    private Clock goteClock;
     private String selected = "1 min"; //test
 
     private SquareView lastSquareClicked;
@@ -202,11 +205,15 @@ public class ShogiController {
 
     private void setClock() {
         int timeChosen = Integer.parseInt(selected.split(" ")[0]) * 60;
-        this.clock = new Clock(timeChosen);
+        AtomicBoolean gameRunning = new AtomicBoolean(true);
+        this.senteClock = new Clock(timeChosen + 2, Side.SENTE, gameRunning);
+        this.goteClock = new Clock(timeChosen, Side.GOTE, gameRunning);
     }
 
     private void startClock(){
-        Thread th = new Thread(this.clock);
-        th.start();
+        Thread senteth = new Thread(this.senteClock);
+        Thread goteth = new Thread(this.goteClock);
+        senteth.start();
+        goteth.start();
     }
 }

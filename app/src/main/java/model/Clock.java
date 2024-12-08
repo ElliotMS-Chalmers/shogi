@@ -1,18 +1,40 @@
 package model;
 
+import util.Side;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+
 
 public class Clock implements Runnable{
     private int seconds;
+    private Side side;
+    private AtomicBoolean gameRunning;
 
-    public Clock (int seconds) {
+    public Clock (int seconds, Side side, AtomicBoolean gameRunning) {
         this.seconds = seconds;
+        this.side = side;
+        this.gameRunning = gameRunning;
     }
 
     @Override
     public void run() {
-        boolean stop = false;
-        while(!stop){
-            System.out.println(seconds);
+        while(gameRunning.get()){
+
+            if (seconds == 0) {
+                synchronized (gameRunning) {
+                    if (gameRunning.get()) {
+                        switch (this.side) {
+                            case GOTE -> System.out.println("GOTE LOST BECAUSE OF TIME");
+                            case SENTE -> System.out.println("SENTE LOST BECAUSE OF TIME");
+                        }
+                        gameRunning.set(false);
+                    }
+                }
+                break;
+            }
+
+            System.out.println(this.seconds);
             this.seconds -= 1;
 
             try {
@@ -22,10 +44,6 @@ public class Clock implements Runnable{
                 e.printStackTrace();
             }
 
-            if (seconds == 0){
-                System.out.println("CLOCK HITS ZERO");
-                stop = true;
-            }
         }
 
     }
