@@ -23,6 +23,9 @@ public class ShogiController {
     private final PieceStandView gotePieceStandView;
     private final PieceStandView sentePieceStandView;
 
+    private Clock clock;
+    private String selected = "1 min"; //test
+
     private SquareView lastSquareClicked;
 
     public ShogiController(Settings settings, Game game, ShogiView shogiView) {
@@ -46,11 +49,13 @@ public class ShogiController {
         settings.pieceSetProperty().addListener(this::onPieceSetChanged);
 
         // Setup
+        setClock();
         setBackground();
         drawHands();
         Sfen sfen = game.getSfen();
         drawBoard(sfen);
         updateHands(sfen);
+        startClock();
     }
 
     private void setBackground() {
@@ -69,6 +74,7 @@ public class ShogiController {
             boardView.drawImageAt(image, pos);
         });
     }
+
 
     private void drawHands() {
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
@@ -192,5 +198,15 @@ public class ShogiController {
         drawHands();
         boardView.clearPieces();
         drawBoard(game.getSfen());
+    }
+
+    private void setClock() {
+        int timeChosen = Integer.parseInt(selected.split(" ")[0]) * 60;
+        this.clock = new Clock(timeChosen);
+    }
+
+    private void startClock(){
+        Thread th = new Thread(this.clock);
+        th.start();
     }
 }
