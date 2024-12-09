@@ -1,5 +1,6 @@
 package model.variants;
 
+import model.PieceSetType;
 import model.pieces.*;
 import model.Sfen;
 
@@ -13,8 +14,8 @@ public class Standard extends Variant {
             Knight.class,
             SilverGeneral.class,
             GoldGeneral.class,
-            Bishop.class
-            //Rook.class
+            Bishop.class,
+            Rook.class
     );
 
     public Standard(){
@@ -29,5 +30,9 @@ public class Standard extends Variant {
 
     public List<Class<? extends Piece>> getHand() {
         return hand;
+    }
+
+    public PieceSetType getPieceSetType() {
+        return PieceSetType.STANDARD;
     }
 }

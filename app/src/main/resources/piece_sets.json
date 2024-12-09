@@ -1,92 +1,143 @@
 {
-  "RYOKO_1_KANJI": {
-    "directory": "Ryoko_1Kanji"
+  "STANDARD" : {
+    "RYOKO_1_KANJI": {
+      "directory": "Ryoko_1Kanji"
+    },
+    "KANJI_LIGHT": {
+      "directory": "kanji_light"
+    },
+    "KANJI_BROWN": {
+      "directory": "kanji_brown"
+    },
+    "ORANGAIN": {
+      "directory": "orangain"
+    },
+    "KANJI_RED_WOOD": {
+      "directory": "kanji_red_wood"
+    },
+    "POTELLA": {
+      "directory": "Portella"
+    },
+    "PORTELLA_2_KANJI": {
+      "directory": "Portella_2Kanji"
+    },
+    "KANJI_3D": {
+      "directory": "1Kanji_3D"
+    },
+    "KANJI_2_3D": {
+      "directory": "2Kanji_3D"
+    },
+    "SHOGI_CZ": {
+      "directory": "Shogi_cz"
+    },
+    "CZECH": {
+      "directory": "Shogi_FCZ"
+    },
+    "ENGRAVED_SHOGI_CZ": {
+      "directory": "Engraved_cz"
+    },
+    "ENGRAVED_SHOGI_CZ_BNW": {
+      "directory": "Engraved_cz_BnW"
+    },
+    "KANJI_GUIDE_SHADOWED": {
+      "directory": "Kanji_Guide_Shadowed"
+    },
+    "VALDIVIA": {
+      "directory": "Valdivia"
+    },
+    "VALDIVIA_2": {
+      "directory": "Vald_opt"
+    },
+    "SHOGI_BNW": {
+      "directory": "shogi_BnW"
+    },
+    "PIXEL_8BIT": {
+      "directory": "pixel"
+    },
+    "INTERNATIONAL_COLORED_2D": {
+      "directory": "Intl_Colored_2D"
+    },
+    "INTERNATIONAL_COLORED_3D": {
+      "directory": "Intl_Colored_3D"
+    },
+    "INTERNATIONAL_SHADOWED": {
+      "directory": "Intl_Shadowed"
+    },
+    "INTERNATIONAL_MONOCHROME_2D": {
+      "directory": "Intl_Monochrome_2D"
+    },
+    "INTERNATIONAL_WOODEN_3D": {
+      "directory": "Intl_Wooden_3D"
+    },
+    "INTERNATIONAL_PORTELLA": {
+      "directory": "Intl_Portella"
+    },
+    "INTERNATIONAL": {
+      "directory": "international"
+    },
+    "JOYFUL": {
+      "directory": "joyful"
+    },
+    "SIMPLE_KANJI": {
+      "directory": "simple_kanji"
+    },
+    "DOUBUTSU": {
+      "directory": "doubutsu"
+    },
+    "LOGY_GAMES": {
+      "directory": "Logy_Games"
+    },
+    "WESTERN": {
+      "directory": "western"
+    }
   },
-  "KANJI_LIGHT": {
-    "directory": "kanji_light"
+  "CHU" : {
+    "EIGUTSU_GRORYU": {
+      "directory": "Chu_Eigetsu_Gyoryu"
+    },
+    "Chu_FCZ": {
+      "directory": "Chu_FCZ"
+    },
+    "Chu_Intl": {
+      "directory": "Chu_Intl"
+    },
+    "Chu_Intl_BnW": {
+      "directory": "Chu_Intl_BnW"
+    },
+    "Chu_Mnemonic": {
+      "directory": "Chu_Mnemonic"
+    },
+    "Chu_Ryoko_1Kanji": {
+      "directory": "Chu_Ryoko_1Kanji"
+    }
   },
-  "KANJI_BROWN": {
-    "directory": "kanji_brown"
-  },
-  "ORANGAIN": {
-    "directory": "orangain"
-  },
-  "KANJI_RED_WOOD": {
-    "directory": "kanji_red_wood"
-  },
-  "POTELLA": {
-    "directory": "Portella"
-  },
-  "PORTELLA_2_KANJI": {
-    "directory": "Portella_2Kanji"
-  },
-  "KANJI_3D": {
-    "directory": "1Kanji_3D"
-  },
-  "KANJI_2_3D": {
-    "directory": "2Kanji_3D"
-  },
-  "SHOGI_CZ": {
-    "directory": "Shogi_cz"
-  },
-  "CZECH": {
-    "directory": "Shogi_FCZ"
-  },
-  "ENGRAVED_SHOGI_CZ": {
-    "directory": "Engraved_cz"
-  },
-  "ENGRAVED_SHOGI_CZ_BNW": {
-    "directory": "Engraved_cz_BnW"
-  },
-  "KANJI_GUIDE_SHADOWED": {
-    "directory": "Kanji_Guide_Shadowed"
-  },
-  "VALDIVIA": {
-    "directory": "Valdivia"
-  },
-  "VALDIVIA_2": {
-    "directory": "Vald_opt"
-  },
-  "SHOGI_BNW": {
-    "directory": "shogi_BnW"
-  },
-  "PIXEL_8BIT": {
-    "directory": "pixel"
-  },
-  "INTERNATIONAL_COLORED_2D": {
-    "directory": "Intl_Colored_2D"
-  },
-  "INTERNATIONAL_COLORED_3D": {
-    "directory": "Intl_Colored_3D"
-  },
-  "INTERNATIONAL_SHADOWED": {
-    "directory": "Intl_Shadowed"
-  },
-  "INTERNATIONAL_MONOCHROME_2D": {
-    "directory": "Intl_Monochrome_2D"
-  },
-  "INTERNATIONAL_WOODEN_3D": {
-    "directory": "Intl_Wooden_3D"
-  },
-  "INTERNATIONAL_PORTELLA": {
-    "directory": "Intl_Portella"
-  },
-  "INTERNATIONAL": {
-    "directory": "international"
-  },
-  "JOYFUL": {
-    "directory": "joyful"
-  },
-  "SIMPLE_KANJI": {
-    "directory": "simple_kanji"
-  },
-  "DOUBUTSU": {
-    "directory": "doubutsu"
-  },
-  "LOGY_GAMES": {
-    "directory": "Logy_Games"
-  },
-  "WESTERN": {
-    "directory": "western"
+  "KYO" : {
+    "DOUBUTSU" : {
+      "directory" : "Kyo_doubutsu"
+    },
+    "Kyo_international" : {
+      "directory" : "Kyo_international"
+    },
+    "Kyo_Intl" :  {
+      "directory" : "Kyo_Intl"
+    },
+    "Kyo_joyful" : {
+      "directory" : "Kyo_joyful"
+    },
+    "Kyo_Kanji" :  {
+      "directory" : "Kyo_Kanji"
+    },
+    "Kyo_Logy_Games" : {
+      "directory" : "Kyo_Logy_Games"
+    },
+    "Kyo_orangain" :  {
+      "directory" : "Kyo_orangain"
+    },
+    "Kyo_Ryoko_1Kanji" : {
+      "directory" : "Kyo_Ryoko_1Kanji"
+    },
+    "Kyo_simple_kanji" : {
+      "directory": "Kyo_simple_kanji"
+    }
   }
 }

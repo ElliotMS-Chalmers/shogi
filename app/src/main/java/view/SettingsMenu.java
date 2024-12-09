@@ -30,7 +30,7 @@ public class SettingsMenu extends Menu {
         boardThemeMenu.getItems().add(item);
     }
 
-    public void addPieceSetMenuItem(MenuItem item) {
+    public void addPieceSetMenuMenu(Menu item) {
         pieceSetMenu.getItems().add(item);
     }
 

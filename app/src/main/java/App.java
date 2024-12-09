@@ -9,8 +9,6 @@ import model.Settings;
 import model.variants.Standard;
 import model.variants.Variant;
 import view.GameView;
-import view.SettingsMenu;
-import view.ShogiView;
 
 public class App extends Application {
 	public void start(Stage stage) {
@@ -19,7 +17,7 @@ public class App extends Application {
         Variant variant = new Standard();
         Game game = new Game(variant);
 
-        // Initialize controller (which also respective subviews)
+        // Initialize controller (which also initializes respective subviews)
         ShogiController shogiController = new ShogiController(settings, game);
         SettingsController settingsController = new SettingsController(settings);
 
@@ -37,7 +35,6 @@ public class App extends Application {
         stage.setOnCloseRequest(event -> {
           System.out.println("Closing the application...");
           shogiController.stopClock();
-
         });
     }
 
