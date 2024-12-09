@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.beans.Observable;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
@@ -10,6 +11,7 @@ import util.Pos;
 import util.Side;
 import view.*;
 import model.pieces.*;
+import model.PieceSetType;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
@@ -55,7 +57,7 @@ public class ShogiController {
 
         // Handle change in settings
         settings.boardThemeProperty().addListener(this::onBoardThemeChanged);
-        settings.pieceSetProperty().addListener(this::onPieceSetChanged);
+        getPieceSetProperty().addListener(this::onPieceSetChanged);
 
         historyController = new HistoryController(this,game,shogiView.getHistoryView());
 
@@ -99,7 +101,7 @@ public class ShogiController {
     private void drawBoard(Sfen sfen) {
         sfen.forEachPiece((abbr, pos) -> {
             Piece piece =  PieceFactory.fromSfenAbbreviation(abbr);
-            Image image = settings.getPieceSet().getImage(piece);
+            Image image = getPieceSet().getImage(piece);
             boardView.drawImageAt(image, pos);
         });
     }
@@ -112,8 +114,8 @@ public class ShogiController {
         for (Class<? extends Piece> pieceClass : hand) {
             Piece gotePiece = PieceFactory.fromClass(pieceClass, Side.GOTE);
             Piece sentePiece = PieceFactory.fromClass(pieceClass, Side.SENTE);
-            gotePieceStandView.drawImageAt(settings.getPieceSet().getImage(gotePiece), i);
-            sentePieceStandView.drawImageAt(settings.getPieceSet().getImage(sentePiece), j);
+            gotePieceStandView.drawImageAt(getPieceSet().getImage(gotePiece), i);
+            sentePieceStandView.drawImageAt(getPieceSet().getImage(sentePiece), j);
             i++; j--;
         }
     }
@@ -258,6 +260,22 @@ public class ShogiController {
         //This is used by HistoryController to prevent moving while viewing a past state
         lastSquareClicked = null;
         boardView.clearMarkedSquares();
+    }
+
+    private PieceSet getPieceSet() {
+        return switch (game.getVariant().getPieceSetType()) {
+            case PieceSetType.STANDARD -> settings.getStandardPieceSet();
+            case PieceSetType.CHU -> settings.getChuPieceSet();
+            case PieceSetType.KYO -> settings.getKyoPieceSet();
+        };
+    }
+
+    private ObjectProperty<PieceSet> getPieceSetProperty() {
+        return switch (game.getVariant().getPieceSetType()) {
+            case PieceSetType.STANDARD -> settings.standardPieceSetProperty();
+            case PieceSetType.CHU -> settings.chuPieceSetProperty();
+            case PieceSetType.KYO -> settings.kyoPieceSetProperty();
+        };
     }
 
     //CLock

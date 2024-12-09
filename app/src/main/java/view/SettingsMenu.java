@@ -4,8 +4,8 @@ import javafx.scene.control.*;
 
 public class SettingsMenu extends Menu {
     // private final Menu backgroundMenu = new Menu("Background");
-    private final Menu boardThemeMenu = new Menu("Board theme");
-    private final Menu pieceSetMenu = new Menu("Piece set");
+    private final Menu boardThemeMenu = new Menu("Board Theme");
+    private final Menu pieceSetMenu = new Menu("Piece Set");
     private final Menu soundMenu = new Menu("Sound");
     // private final Menu notationMenu = new Menu("Notation");
 
@@ -30,7 +30,7 @@ public class SettingsMenu extends Menu {
         boardThemeMenu.getItems().add(item);
     }
 
-    public void addPieceSetMenuItem(MenuItem item) {
+    public void addPieceSetMenuMenu(Menu item) {
         pieceSetMenu.getItems().add(item);
     }
 

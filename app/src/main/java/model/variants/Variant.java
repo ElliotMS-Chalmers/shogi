@@ -1,5 +1,7 @@
 package model.variants;
 
+import model.PieceSet;
+import model.PieceSetType;
 import model.pieces.Piece;
 import model.Sfen;
 import util.Side;
@@ -24,5 +26,8 @@ public abstract class Variant {
 
     public RuleSet getRuleSet(){return ruleSet;}
 
+    public abstract PieceSetType getPieceSetType();
+
     public abstract List<Class<? extends Piece>> getHand();
+
 }

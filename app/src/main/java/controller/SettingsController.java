@@ -1,11 +1,14 @@
 package controller;
 
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import model.PieceSetType;
 import model.Settings;
 import model.pieces.GoldGeneral;
 import model.pieces.King;
+import model.pieces.Lance;
 import model.pieces.Piece;
 import util.Side;
 import view.SettingsMenu;
@@ -34,13 +37,22 @@ public class SettingsController {
     }
 
     private void populatePieceSetMenu() {
-        Piece piece = new GoldGeneral(Side.SENTE);
-        settings.getPieceSets().forEach((name, set) -> {
-            MenuItem menuItem = createMenuItem(name, set.getImage(piece));
-            settingsMenu.addPieceSetMenuItem(menuItem);
-            menuItem.setOnAction(e -> {
-                settings.setPieceSet(name);
+        // Piece piece = new GoldGeneral(Side.SENTE);
+        settings.getPieceSets().forEach((type, sets) -> {
+            Piece piece = switch (type) {
+                case PieceSetType.STANDARD -> new GoldGeneral(Side.SENTE);
+                case PieceSetType.CHU -> null;
+                case PieceSetType.KYO -> new Lance(Side.SENTE);
+            };
+            Menu menu = new Menu(type.toString());
+            sets.forEach((name, set) -> {
+                MenuItem menuItem = createMenuItem(name, set.getImage(piece)); //
+                menu.getItems().add(menuItem);
+                menuItem.setOnAction(e -> {
+                    settings.setPieceSet(type, name);
+                });
             });
+            settingsMenu.addPieceSetMenuMenu(menu);
         });
     }
 

@@ -6,21 +6,19 @@ import model.Sfen;
 
 import java.util.List;
 
-public class Standard extends Variant {
-    private final Sfen startSfen = new Sfen("lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1");
+public class Mini extends Variant {
+    private final Sfen startSfen = new Sfen("rbsgk/4p/5/P4/KGSBR b - 1");
     private final List<Class<? extends Piece>> hand = List.of(
             Pawn.class,
-            Lance.class,
-            Knight.class,
             SilverGeneral.class,
             GoldGeneral.class,
             Bishop.class,
             Rook.class
     );
 
-    public Standard(){
-        width = 9;
-        height = 9;
+    public Mini(){
+        width = 5;
+        height = 5;
         ruleSet = new ShogiRuleSet();
     }
 
@@ -32,6 +30,7 @@ public class Standard extends Variant {
         return hand;
     }
 
+    @Override
     public PieceSetType getPieceSetType() {
         return PieceSetType.STANDARD;
     }

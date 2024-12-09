@@ -6,20 +6,20 @@ import javafx.stage.Stage;
 
 import model.Game;
 import model.Settings;
+import model.variants.Mini;
 import model.variants.Standard;
 import model.variants.Variant;
 import view.GameView;
-import view.SettingsMenu;
-import view.ShogiView;
 
 public class App extends Application {
 	public void start(Stage stage) {
         // Initialize model
         Settings settings = new Settings();
-        Variant variant = new Standard();
+        // Variant variant = new Standard();
+        Variant variant = new Mini();
         Game game = new Game(variant);
 
-        // Initialize controller (which also respective subviews)
+        // Initialize controller (which also initializes respective subviews)
         ShogiController shogiController = new ShogiController(settings, game);
         SettingsController settingsController = new SettingsController(settings);
 
@@ -37,7 +37,6 @@ public class App extends Application {
         stage.setOnCloseRequest(event -> {
           System.out.println("Closing the application...");
           shogiController.stopClock();
-
         });
     }
 

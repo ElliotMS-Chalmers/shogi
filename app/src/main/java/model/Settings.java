@@ -16,7 +16,9 @@ public class Settings {
     private final Properties properties = new Properties();
     private final ThemeManager themeManager = new ThemeManager();
     private final ObjectProperty<BoardTheme> boardTheme = new SimpleObjectProperty<>();
-    private final ObjectProperty<PieceSet> pieceSet = new SimpleObjectProperty<>();
+    private final ObjectProperty<PieceSet> standardPieceSet = new SimpleObjectProperty<>();
+    private final ObjectProperty<PieceSet> chuPieceSet = new SimpleObjectProperty<>();
+    private final ObjectProperty<PieceSet> kyoPieceSet = new SimpleObjectProperty<>();
     private SoundSet soundSet;
 
     public Settings() {
@@ -53,10 +55,14 @@ public class Settings {
         }
 
         // Set attributes
-        String pieceSetName = properties.getProperty("piece_set");
+        String standardPieceSetName = properties.getProperty("standard_piece_set");
+        String chuPieceSetName = properties.getProperty("chu_piece_set");
+        String kyoPieceSetName = properties.getProperty("kyo_piece_set");
         String boardThemeName = properties.getProperty("board_theme");
         String soundSetName = properties.getProperty("sound_set");
-        pieceSet.set(themeManager.getPieceSet(pieceSetName));
+        standardPieceSet.set(themeManager.getPieceSet(PieceSetType.STANDARD, standardPieceSetName));
+        chuPieceSet.set(themeManager.getPieceSet(PieceSetType.CHU, chuPieceSetName));
+        kyoPieceSet.set(themeManager.getPieceSet(PieceSetType.KYO, kyoPieceSetName));
         boardTheme.set(themeManager.getBoardTheme(boardThemeName));
         soundSet = themeManager.getSoundSet(soundSetName);
     }
@@ -67,7 +73,9 @@ public class Settings {
         try {
             Files.createDirectories(userSettingsFilePath.getParent());
             try (FileOutputStream outputStream = new FileOutputStream(userSettingsFilePath.toFile())) {
-                properties.setProperty("piece_set", themeManager.getPieceSetName(pieceSet.get()));
+                properties.setProperty("standard_piece_set", themeManager.getPieceSetName(PieceSetType.STANDARD, standardPieceSet.get()));
+                properties.setProperty("chu_piece_set", themeManager.getPieceSetName(PieceSetType.CHU, chuPieceSet.get()));
+                properties.setProperty("kyo_piece_set", themeManager.getPieceSetName(PieceSetType.KYO, kyoPieceSet.get()));
                 properties.setProperty("board_theme", themeManager.getBoardThemeName(boardTheme.get()));
 
                 properties.store(outputStream, "Settings");
@@ -101,12 +109,24 @@ public class Settings {
         return boardTheme;
     }
 
-    public ObjectProperty<PieceSet> pieceSetProperty() {
-        return pieceSet;
+    public ObjectProperty<PieceSet> standardPieceSetProperty() {
+        return standardPieceSet;
+    }
+    public ObjectProperty<PieceSet> chuPieceSetProperty() {
+        return chuPieceSet;
+    }
+    public ObjectProperty<PieceSet> kyoPieceSetProperty() {
+        return kyoPieceSet;
     }
 
-    public PieceSet getPieceSet() {
-        return pieceSet.get();
+    public PieceSet getStandardPieceSet() {
+        return standardPieceSet.get();
+    }
+    public PieceSet getChuPieceSet() {
+        return chuPieceSet.get();
+    }
+    public PieceSet getKyoPieceSet() {
+        return kyoPieceSet.get();
     }
 
     public BoardTheme getBoardTheme() {
@@ -115,7 +135,7 @@ public class Settings {
 
     public SoundSet getSoundSet() { return soundSet; }
 
-    public Map<String, PieceSet> getPieceSets() {
+    public Map<PieceSetType, Map<String, PieceSet>> getPieceSets() {
         return themeManager.getPieceSets();
     }
 
@@ -127,8 +147,12 @@ public class Settings {
         this.boardTheme.set(themeManager.getBoardTheme(name));
     }
 
-    public void setPieceSet(String name) {
-        this.pieceSet.set(themeManager.getPieceSet(name));
+    public void setPieceSet(PieceSetType type, String name) {
+        switch (type) {
+            case STANDARD -> standardPieceSet.set(themeManager.getPieceSet(PieceSetType.STANDARD, name));
+            case CHU -> chuPieceSet.set(themeManager.getPieceSet(PieceSetType.CHU, name));
+            case KYO -> kyoPieceSet.set(themeManager.getPieceSet(PieceSetType.KYO, name));
+        }
     }
 
     public Map<String, SoundSet> getSoundSets() {

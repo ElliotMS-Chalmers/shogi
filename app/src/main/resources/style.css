@@ -4,14 +4,6 @@
     /* -fx-accent: #9bb957; */
 }
 
-BorderPane {
-    -fx-background-color: -fx-light-base;
-}
-
-BorderPane .dark {
-    -fx-background-color: -fx-dark-base;
-}
-
 .board-square {
     -fx-border-color: black;
     -fx-border-width: 1;

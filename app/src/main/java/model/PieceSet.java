@@ -24,6 +24,7 @@ public class PieceSet {
     }
 
     public Image getImage(Piece piece) {
+        if (piece == null) { return null; } // temporary while CHU and KYO pieces dont exist
         String abbr = piece.getImageAbbreviation();
         if (imageCache.containsKey(abbr)) {
             return new Image(new ByteArrayInputStream(imageCache.get(abbr)));

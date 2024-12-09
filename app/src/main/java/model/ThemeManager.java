@@ -3,11 +3,10 @@ package model;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import javafx.scene.image.Image;
 
 public class ThemeManager {
     private Map<String, BoardTheme> boardThemes;
-    private Map<String, PieceSet> pieceSets;
+    private Map<PieceSetType, Map<String, PieceSet>> pieceSets;
     private Map<String, SoundSet> soundSets;
 
     public ThemeManager() {
@@ -21,7 +20,7 @@ public class ThemeManager {
     }
 
     private void loadPieceSets() {
-        this.pieceSets = JsonLoader.load("/piece_sets.json", new TypeReference<Map<String, PieceSet>>() {});
+        this.pieceSets = JsonLoader.load("/piece_sets.json", new TypeReference<Map<PieceSetType, Map<String, PieceSet>>>() {});
     }
 
     private void loadSoundSets() {
@@ -32,7 +31,7 @@ public class ThemeManager {
         return boardThemes;
     }
 
-    public Map<String, PieceSet> getPieceSets() {
+    public Map<PieceSetType, Map<String, PieceSet>> getPieceSets() {
         return pieceSets;
     }
 
@@ -46,8 +45,8 @@ public class ThemeManager {
         return boardTheme;
     }
 
-    public PieceSet getPieceSet(String name) {
-        PieceSet pieceSet = pieceSets.get(name);
+    public PieceSet getPieceSet(PieceSetType type, String name) {
+        PieceSet pieceSet = pieceSets.get(type).get(name);
         if (pieceSet == null) { throw new IllegalArgumentException(String.format("Piece set %s not found.", name)); }
         return pieceSet;
     }
@@ -62,8 +61,8 @@ public class ThemeManager {
         return getKeyFromValue(boardThemes, boardTheme);
     }
 
-    public String getPieceSetName(PieceSet pieceSet) {
-        return getKeyFromValue(pieceSets, pieceSet);
+    public String getPieceSetName(PieceSetType type, PieceSet pieceSet) {
+        return getKeyFromValue(pieceSets.get(type), pieceSet);
     }
 
     private <T> String getKeyFromValue(Map<String, T> map, T value) {
@@ -71,7 +70,6 @@ public class ThemeManager {
                 .filter(entry -> entry.getValue().equals(value))
                 .map(Map.Entry::getKey)
                 .findFirst()
-                .orElse(null); // Handle case where value is not found
+                .orElse(null);
     }
-
 }
