@@ -1,5 +1,6 @@
 package model.variants;
 
+import model.PieceSetType;
 import model.pieces.*;
 import model.Sfen;
 
@@ -29,4 +30,8 @@ public class Mini extends Variant {
         return hand;
     }
 
+    @Override
+    public PieceSetType getPieceSetType() {
+        return PieceSetType.STANDARD;
+    }
 }

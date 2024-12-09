@@ -111,6 +111,7 @@ public class BoardView extends GridPane {
     }
 
     public void markSquare(Pos pos) {
+        if (pos.row() > squares.length - 1 || pos.col() > squares[0].length - 1) { return; }
         squares[pos.row()][pos.col()].mark();
     }
 

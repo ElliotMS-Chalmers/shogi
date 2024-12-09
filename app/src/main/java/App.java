@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 
 import model.Game;
 import model.Settings;
+import model.variants.Mini;
 import model.variants.Standard;
 import model.variants.Variant;
 import view.GameView;
@@ -14,7 +15,8 @@ public class App extends Application {
 	public void start(Stage stage) {
         // Initialize model
         Settings settings = new Settings();
-        Variant variant = new Standard();
+        // Variant variant = new Standard();
+        Variant variant = new Mini();
         Game game = new Game(variant);
 
         // Initialize controller (which also initializes respective subviews)

@@ -8,6 +8,7 @@ import model.PieceSetType;
 import model.Settings;
 import model.pieces.GoldGeneral;
 import model.pieces.King;
+import model.pieces.Lance;
 import model.pieces.Piece;
 import util.Side;
 import view.SettingsMenu;
@@ -41,7 +42,7 @@ public class SettingsController {
             Piece piece = switch (type) {
                 case PieceSetType.STANDARD -> new GoldGeneral(Side.SENTE);
                 case PieceSetType.CHU -> null;
-                case PieceSetType.KYO -> null;
+                case PieceSetType.KYO -> new Lance(Side.SENTE);
             };
             Menu menu = new Menu(type.toString());
             sets.forEach((name, set) -> {
