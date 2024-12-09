@@ -49,8 +49,14 @@ public class HistoryController {
         shogiController.unselectsSquare();
 
         boolean reverse = index < lastHighlightIndex;
-        //An iterator of all moves between the current and former highlightedIndex
-        Iterator<Move> moveIterator = history.getMoves(lastHighlightIndex,index);
+
+        int iteratorIndex1 = lastHighlightIndex;
+        /*Draget som redan är highlightats ska inte vara med i iteratorn om den kör framlänges
+        eftersom det draget redan har gjorts i viewn*/
+        if(!reverse){iteratorIndex1 += 1;}
+
+        //En iterator av alla drag mellan index och lastHighlightIndex
+        Iterator<Move> moveIterator = history.getMoves(iteratorIndex1,index);
         Move move = null;
         while(moveIterator.hasNext()){
             move = moveIterator.next();

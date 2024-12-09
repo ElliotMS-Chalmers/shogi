@@ -242,7 +242,7 @@ public class ShogiController {
     public void setBoardViewSquare(Piece piece,Pos pos){
         Image image;
         if(piece == null){image = null;}
-        else{image = settings.getPieceSet().getImage(piece);}
+        else{image = getPieceSet().getImage(piece);}
         boardView.drawImageAt(image,pos);
     }
     public void clearHighlightedSquares(){boardView.clearHighlightedSquares();}
