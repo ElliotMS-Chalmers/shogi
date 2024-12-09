@@ -5,7 +5,6 @@ import model.variants.RuleSet;
 import model.variants.Variant;
 import util.Pos;
 import util.Side;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -61,6 +60,8 @@ public class Game {
     public Board getBoard() {
         return board;
     }
+
+    public History getHistory() {return history;}
 
     public BooleanProperty boardChangedProperty() {
         return boardChanged;

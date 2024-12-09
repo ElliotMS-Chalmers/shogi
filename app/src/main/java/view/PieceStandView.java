@@ -97,6 +97,11 @@ public class PieceStandView extends VBox {
         square.setCount(count);
     }
 
+    public void changeCountAt(int index, int change){
+        SquareView square = squares[index];
+        square.setCount(square.getCount()+change);
+    }
+
     public void drawImageAt(Image image, int index) {
         SquareView square = squares[index];
         square.setImage(image);

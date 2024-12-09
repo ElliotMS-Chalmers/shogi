@@ -1,26 +1,28 @@
 package view;
 
-import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import java.io.InputStream;
-import java.util.List;
-import java.util.Stack;
+import java.util.function.BiConsumer;
 
 public class HistoryView extends VBox {
-    private Stack<String> moveList = new Stack<>();
-
     private final String backgroundImagePath = "/image/historyBackground.png"; //Kanske inte ska hårdkodas här
+    private final MoveList moveList;
 
     public HistoryView(){
         super();
         this.setId("History");
-        this.setAlignment(Pos.CENTER_RIGHT);
         this.setBackground(backgroundImagePath);
-        VBox.setVgrow(this,Priority.ALWAYS);
+        this.getStyleClass().add("history-view");
+        this.setPrefHeight(this.prefHeight(Double.MAX_VALUE));
+        this.prefWidthProperty().bind(this.heightProperty().multiply(0.5));
 
+        moveList = new MoveList();
+        moveList.prefHeightProperty().bind(this.heightProperty().multiply(0.8));
+        this.getChildren().add(moveList);
     }
 
     public void setBackground(String imageName) {
@@ -47,14 +49,15 @@ public class HistoryView extends VBox {
     }
 
     public void addMove(String move){
-        moveList.push(move);
+        moveList.add(move);
     }
-    public String removeLastMove(){
-        return moveList.pop();
+    public void highlight(int index){
+        moveList.highlight(index);
     }
-    public void setMoveList(List<String> moves){
-        moveList.clear();
-        moveList.addAll(moves);
+    public int getHighlightIndex(){return moveList.getHighlightIndex();}
+    public void setMoveClickHandler(BiConsumer<MoveListItem, MouseEvent> clickHandler){
+        moveList.setClickHandler(clickHandler);
     }
+    public void setButtonClickHandler(){}
 
 }

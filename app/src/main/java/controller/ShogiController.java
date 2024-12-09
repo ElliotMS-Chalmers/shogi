@@ -34,6 +34,8 @@ public class ShogiController {
 
     private SquareView lastSquareClicked;
 
+    private HistoryController historyController;
+
     public ShogiController(Settings settings, Game game) {
         this.settings = settings;
         this.game = game;
@@ -54,6 +56,8 @@ public class ShogiController {
         // Handle change in settings
         settings.boardThemeProperty().addListener(this::onBoardThemeChanged);
         settings.pieceSetProperty().addListener(this::onPieceSetChanged);
+
+        historyController = new HistoryController(this,game,shogiView.getHistoryView());
 
         // Setup
         setClock();
@@ -194,6 +198,7 @@ public class ShogiController {
             Piece piece = game.getBoard().getPieceAt(pos);
             piece.getAvailableMoves(pos).forEach(boardView::markSquare);
         }
+        historyController.highlightLastMove();
     }
 
     public void processHandClick(PieceStandView.SquareView square) {
@@ -206,6 +211,7 @@ public class ShogiController {
             lastSquareClicked = square;
             square.highlight();
         }
+        historyController.highlightLastMove();
     }
 
     private void onBoardChanged(Observable observable) {
@@ -229,6 +235,29 @@ public class ShogiController {
 
     public ShogiView getView() {
         return shogiView;
+    }
+
+    public void setBoardViewSquare(Piece piece,Pos pos){
+        Image image;
+        if(piece == null){image = null;}
+        else{image = settings.getPieceSet().getImage(piece);}
+        boardView.drawImageAt(image,pos);
+    }
+    public void clearHighlightedSquares(){boardView.clearHighlightedSquares();}
+    public void highlightSquare(Pos pos){boardView.highlightSquare(pos);}
+    public void changeCountAtPieceStandView(Class<?extends Piece> pieceClass,Side side,int change){
+        List<Class<? extends Piece>> hand = game.getVariant().getHand();
+        int index;
+        //Pjäserna i PieceStandView är i omvänd ordning för sente
+        if(side == Side.GOTE){index = hand.indexOf(pieceClass);}
+        else{index = hand.size() - hand.indexOf(pieceClass) - 1;}
+        PieceStandView pieceStandView = (side == Side.SENTE) ? sentePieceStandView : gotePieceStandView;
+        pieceStandView.changeCountAt(index,change);
+    }
+    public void unselectsSquare(){
+        //This is used by HistoryController to prevent moving while viewing a past state
+        lastSquareClicked = null;
+        boardView.clearMarkedSquares();
     }
 
     //CLock

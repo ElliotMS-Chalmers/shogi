@@ -17,7 +17,7 @@ public class ShogiView extends HBox {
         this.historyView = new HistoryView();
         this.setAlignment(Pos.CENTER);
         this.setSpacing(10);
-        this.getChildren().addAll(gotePieceStandView, boardView, sentePieceStandView,historyView);
+        this.getChildren().addAll(gotePieceStandView, boardView, sentePieceStandView, historyView);
     }
 
     public BoardView getBoardView() {
