@@ -17,7 +17,7 @@ public class GameView extends BorderPane {
 		this.setCenter(vBox);
 
 		MenuBar menuBar = new MenuBar();
-		menuBar.getMenus().add(settingsMenu);
+		menuBar.getMenus().addAll(new GameMenu(), settingsMenu);
 		this.setTop(menuBar);
 
 		// root.getStyleClass().add("dark");
