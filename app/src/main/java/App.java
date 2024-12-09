@@ -15,8 +15,8 @@ public class App extends Application {
 	public void start(Stage stage) {
         // Initialize model
         Settings settings = new Settings();
-        // Variant variant = new Standard();
-        Variant variant = new Mini();
+        Variant variant = new Standard();
+        // Variant variant = new Mini();
         Game game = new Game(variant);
 
         // Initialize controller (which also initializes respective subviews)
@@ -25,7 +25,7 @@ public class App extends Application {
 
         // Initialize view
         GameView gameView = new GameView(shogiController.getView(), settingsController.getMenu());
-        Scene scene = new Scene(gameView, 1280, 1000);
+        Scene scene = new Scene(gameView, 1920, 1080);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setTitle("Shogi v1.0");
         stage.setScene(scene);
