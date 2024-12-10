@@ -1,7 +1,7 @@
 * {
     -fx-dark-base: #131210;
     -fx-light-base: #EDEBE9;
-    /* -fx-accent: #9bb957; */
+    -fx-accent: #2078CB;
 }
 
 .board-square {
@@ -44,26 +44,87 @@
     -fx-padding: 2 5 2 5;
 }
 
+/* History */
 .history-view {
     -fx-padding: 0;
+    -fx-background-color: white;
+    -fx-border-width: 0;
+    -fx-border-color: lightgray;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.40), 2, 0, 0, 1);
 }
-.move-list{
+
+.move-list {
     -fx-background-color:transparent;
 }
+
 .move-list-inner {
-    -fx-padding: 25 0 0 0;
+    /* -fx-padding: 25 0 0 0; */
     -fx-background-color:transparent;
 }
-.scroll-pane > .viewport{
+
+.scroll-pane > .viewport {
     -fx-background-color:transparent;
 }
+
 .move-list-item-text {
     -fx-padding: 0 25 0 25;
     -fx-font-size: 18px;
     -fx-text-fill: #000000;
-}.move-list-item-text: hover {
+}
+
+.move-list-item-text:hover {
     -fx-text-fill: #404040;
 }
-.move-list-item-highlighted{
-    -fx-background-color: rgba(255,255,200,0.3);
+
+.move-list-item-highlighted {
+    -fx-background-color: #D2E4F5;
 }
+
+.move-list-item:hover {
+    -fx-background-color: #2078CB;
+}
+
+.move-list-item:hover .move-list-item-text {
+    -fx-text-fill: white;
+}
+
+/* Srollbar (thanks ChatGPT) */
+.scroll-bar {
+    -fx-background-color: transparent; /* No background for the scrollbar track */
+}
+
+/* Thumb (the draggable part of the scrollbar) */
+.scroll-bar .thumb {
+    -fx-background-color: #c8c8c8; /* Set the color of the thumb */
+    -fx-background-insets: 0; /* Remove any insets/shadows */
+    -fx-background-radius: 0; /* Make it rectangular */
+}
+
+.scroll-bar .thumb:hover, .scroll-bar .thumb:pressed {
+    -fx-background-color: #969696;
+}
+
+/* Buttons  */
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-padding: 0; /* Remove padding */
+    -fx-background-color: transparent; /* Make the buttons invisible */
+    -fx-shape: null; /* Remove any default shapes */
+    -fx-opacity: 0; /* Make them invisible */
+    -fx-pref-width: 0; /* Reduce size to zero */
+    -fx-pref-height: 0;
+}
+
+/* Track (the area behind the thumb) */
+.scroll-bar .track {
+    -fx-background-color: white; /* Set the color of the track */
+    -fx-background-insets: 0; /* Remove any insets */
+    -fx-background-radius: 0; /* Make it rectangular */
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 8px; /* Set the desired width */
+}
+

@@ -20,23 +20,29 @@ public class MoveList extends ScrollPane {
         content.getStyleClass().add("move-list-inner");
         this.setContent(content);
     }
+
     public int size(){return this.content.getChildren().size();}
+
     public void add(String move){
         int index = size();
         content.getChildren().add(new MoveListItem(move,index,clickHandler));
         highlight(index);
         this.setVvalue(1.0);
     }
+
     public void setClickHandler(BiConsumer<MoveListItem, MouseEvent> clickHandler){
         this.clickHandler = clickHandler;
     }
+
     public void highlight(int index){
         unhighlight();
         highlightIndex = index;
         MoveListItem mli = (MoveListItem) content.getChildren().get(index);
         mli.highlight();
     }
+
     public int getHighlightIndex(){return highlightIndex;}
+
     private void unhighlight(){
         if(highlightIndex == -1){return;}
         MoveListItem mli = (MoveListItem) content.getChildren().get(highlightIndex);

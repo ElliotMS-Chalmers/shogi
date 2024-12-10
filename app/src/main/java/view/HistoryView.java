@@ -15,13 +15,15 @@ public class HistoryView extends VBox {
     public HistoryView(){
         super();
         this.setId("History");
-        this.setBackground(backgroundImagePath);
+        // this.setBackground(backgroundImagePath);
         this.getStyleClass().add("history-view");
         this.setPrefHeight(this.prefHeight(Double.MAX_VALUE));
-        this.prefWidthProperty().bind(this.heightProperty().multiply(0.5));
+        // this.prefWidthProperty().bind(this.heightProperty().multiply(0.35));
+        this.setMinWidth(325);
+        this.setPrefWidth(325);
 
         moveList = new MoveList();
-        moveList.prefHeightProperty().bind(this.heightProperty().multiply(0.8));
+        moveList.prefHeightProperty().bind(this.heightProperty().multiply(0.9));
         this.getChildren().add(moveList);
     }
 

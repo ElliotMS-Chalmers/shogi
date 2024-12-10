@@ -15,6 +15,7 @@ public class MoveListItem extends Pane {
         this.move = move;
         this.index = index;
         this.setPrefWidth(Double.MAX_VALUE);
+        this.getStyleClass().add("move-list-item");
 
         Label label = new Label((index+1)+": "+move);
         label.getStyleClass().add("move-list-item-text");
@@ -23,12 +24,15 @@ public class MoveListItem extends Pane {
         setClickHandler(clickHandler);
     }
     public int getIndex(){return index;}
+
     public void highlight(){
         this.getStyleClass().add("move-list-item-highlighted");
     }
+
     public void unhighlight(){
         this.getStyleClass().remove("move-list-item-highlighted");
     }
+
     private void setClickHandler(BiConsumer<MoveListItem,MouseEvent> clickHandler){
         this.setOnMousePressed(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
