@@ -260,6 +260,8 @@ public class ShogiController {
         //This is used by HistoryController to prevent moving while viewing a past state
         lastSquareClicked = null;
         boardView.clearMarkedSquares();
+        sentePieceStandView.unHighlightSquares();
+        gotePieceStandView.unHighlightSquares();
     }
 
     private PieceSet getPieceSet() {

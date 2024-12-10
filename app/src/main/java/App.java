@@ -25,7 +25,7 @@ public class App extends Application {
 
         // Initialize view
         GameView gameView = new GameView(shogiController.getView(), settingsController.getMenu());
-        Scene scene = new Scene(gameView, 1920, 1080);
+        Scene scene = new Scene(gameView, 1200, 675);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setTitle("Shogi v1.0");
         stage.setScene(scene);
