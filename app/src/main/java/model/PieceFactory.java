@@ -2,6 +2,7 @@ package model;
 
 import model.pieces.*;
 import model.pieces.Piece;
+import model.pieces.chu.CopperGeneral;
 import util.Side;
 
 public class PieceFactory {
@@ -29,6 +30,11 @@ public class PieceFactory {
                 piece = new Lance(side); break;
             case 'p':
                 piece = new Pawn(side); break;
+            /*//ChuShogi
+            case 'c':
+                piece = new CopperGeneral(side); break;
+
+             */
             default:
                 throw new IllegalArgumentException("Invalid sfen abbreviation: " + sfen);
         }
