@@ -179,6 +179,7 @@ public class Game {
 
     private void changeTurn(){
         turn = !turn;
+        if (senteClock != null && goteClock != null)
         changeActiveClock();
     }
 
