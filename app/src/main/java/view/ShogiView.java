@@ -1,6 +1,7 @@
 package view;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
@@ -20,25 +21,21 @@ public class ShogiView extends HBox {
         this.sentePieceStandView = new PieceStandView(Side.SENTE, handSize, boardSize);
         this.historyView = new HistoryView();
         this.setAlignment(Pos.CENTER);
-        this.setSpacing(10);
+        this.setSpacing(15);
         this.setPadding(new Insets(0, 25, 0, 25));
 
-        HBox centerGroup = new HBox(10);
-        centerGroup.setAlignment(Pos.CENTER);
-        centerGroup.getChildren().addAll(gotePieceStandView, boardView, sentePieceStandView);
-        // centerGroup.setStyle("-fx-background-color: blue;");
+        // HBox centerGroup = new HBox(10);
+        // centerGroup.setAlignment(Pos.CENTER);
+        // centerGroup.getChildren().addAll(gotePieceStandView, boardView, sentePieceStandView);
 
-        Region leftSpacer = new Region();
-        HBox.setHgrow(leftSpacer, Priority.NEVER);
+        // Region leftSpacer = new Region();
+        // HBox.setHgrow(leftSpacer, Priority.NEVER);
         // leftSpacer.setStyle("-fx-background-color: red;");
-        leftSpacer.prefWidthProperty().bind(historyView.widthProperty());
+        // leftSpacer.prefWidthProperty().bind(historyView.widthProperty());
 
-        boardView.minWidthProperty().bind(boardView.heightProperty());
         gotePieceStandView.minWidthProperty().bind(boardView.widthProperty().divide(boardSize));
         sentePieceStandView.minWidthProperty().bind(boardView.widthProperty().divide(boardSize));
-
-
-        this.getChildren().addAll(leftSpacer, centerGroup, historyView);
+        this.getChildren().addAll(gotePieceStandView, boardView, sentePieceStandView, historyView);
     }
 
     public BoardView getBoardView() {

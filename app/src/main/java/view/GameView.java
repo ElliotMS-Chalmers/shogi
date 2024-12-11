@@ -13,7 +13,8 @@ public class GameView extends BorderPane {
 		vBox.setAlignment(Pos.CENTER);
 		VBox.setVgrow(shogiView, Priority.ALWAYS);
 		vBox.getChildren().add(shogiView);
-		VBox.setMargin(shogiView, new Insets(100, 0, 100, 0)); // TODO: replace with regions for more dynamic scaling
+		shogiView.maxHeightProperty().bind(vBox.heightProperty().multiply(0.8));
+
 		this.setCenter(vBox);
 
 		MenuBar menuBar = new MenuBar();
