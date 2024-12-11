@@ -11,8 +11,6 @@ import util.Pos;
 import util.Side;
 import view.*;
 import model.pieces.*;
-import model.PieceSetType;
-
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
 import java.util.List;
@@ -26,22 +24,16 @@ public class ShogiController {
     private final BoardView boardView;
     private final PieceStandView gotePieceStandView;
     private final PieceStandView sentePieceStandView;
-
-    private Clock senteClock;
-    private Clock goteClock;
-    private Thread senteth;
-    private Thread goteth;
-    private AtomicBoolean gameRunning;
-    private String selected = "1 min"; //test
+    private Integer selected;
 
     private SquareView lastSquareClicked;
 
     private HistoryController historyController;
+    private ClockController clockController;
 
     public ShogiController(Settings settings, Game game) {
         this.settings = settings;
         this.game = game;
-        gameRunning = new AtomicBoolean(false);
         this.shogiView = new ShogiView(game.getVariant().getWidth(), game.getVariant().getHand().size());
         this.boardView = shogiView.getBoardView();
         this.gotePieceStandView = shogiView.getGotePieceStandView();
@@ -60,28 +52,22 @@ public class ShogiController {
         getPieceSetProperty().addListener(this::onPieceSetChanged);
 
         historyController = new HistoryController(this,game,shogiView.getHistoryView());
+        clockController = new ClockController(game, shogiView.getGameMenuView());
 
         // Setup
-        setClock();
         setBackground();
         drawHands();
         Sfen sfen = game.getSfen();
         drawBoard(sfen);
         updateHands(sfen);
-        startClock();
-        shutdownHook();
     }
 
-
-    private void shutdownHook() { //Maybe remove this
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (gameRunning != null && gameRunning.get()) {
-                stopClock();
-            }
-        }));
-    }
     private void setBackground() {
         boardView.setBackground(settings.getBoardTheme().getImage());
+    }
+
+    public ClockController getClockController() {
+        return clockController;
     }
 
     private void movePiece(Pos from, Pos to) {
@@ -278,40 +264,5 @@ public class ShogiController {
             case PieceSetType.CHU -> settings.chuPieceSetProperty();
             case PieceSetType.KYO -> settings.kyoPieceSetProperty();
         };
-    }
-
-    //CLock
-
-    private void setClock() {
-        int timeChosen = Integer.parseInt(selected.split(" ")[0]) * 60;
-        gameRunning.set(true);
-        this.senteClock = new Clock(timeChosen + 2, Side.SENTE, gameRunning);
-        this.goteClock = new Clock(timeChosen, Side.GOTE, gameRunning);
-    }
-
-    private void startClock(){
-        senteth = new Thread(this.senteClock);
-        goteth = new Thread(this.goteClock);
-        senteth.start();
-        goteth.start();
-    }
-
-    public void stopClock() {
-        // Signal threads to stop
-        gameRunning.set(false);
-
-        // Interrupt threads in case they are sleeping
-        senteth.interrupt();
-        goteth.interrupt();
-
-        try {
-            // Wait for threads to finish
-            senteth.join();
-            goteth.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restore interrupted status
-        }
-
-        System.out.println("Clocks stopped.");
     }
 }

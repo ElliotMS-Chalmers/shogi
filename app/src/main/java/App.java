@@ -36,7 +36,7 @@ public class App extends Application {
         // Handle window close event
         stage.setOnCloseRequest(event -> {
           System.out.println("Closing the application...");
-          shogiController.stopClock();
+          game.stopClock();
         });
     }
 
