@@ -12,6 +12,7 @@ import java.lang.reflect.Constructor;
 public class Player {
     private Side side;
     private int timeLeft;
+    // private Clock clock;
     private Map<Class<? extends Piece>, Integer> capturedPieces = new LinkedHashMap<>() {};
 
     public Player(Side side){

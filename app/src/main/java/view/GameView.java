@@ -18,7 +18,7 @@ public class GameView extends BorderPane {
 		this.setCenter(vBox);
 
 		MenuBar menuBar = new MenuBar();
-		menuBar.getMenus().addAll(new GameMenu(), settingsMenu);
+		menuBar.getMenus().addAll(shogiView.getGameMenuView(), settingsMenu);
 		this.setTop(menuBar);
 	}
 }

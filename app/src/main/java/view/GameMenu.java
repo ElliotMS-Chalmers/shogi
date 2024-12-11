@@ -3,8 +3,10 @@ package view;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import java.util.function.Consumer;
 
 public class GameMenu extends Menu {
+    private Consumer<String> onDialogResult; //callback for dialog result
     public GameMenu() {
         this.setText("Game");
 
@@ -23,6 +25,10 @@ public class GameMenu extends Menu {
         );
     }
 
+    public void setOnDialogResult(Consumer<String> callback) {
+        this.onDialogResult = callback;
+    }
+
     private void showDialog() {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Advanced Dialog");
@@ -35,14 +41,14 @@ public class GameMenu extends Menu {
         option1.setToggleGroup(group);
         option2.setToggleGroup(group);
 
-        Slider slider = new Slider(0, 100, 50);
-        slider.setShowTickLabels(true);
-        slider.setShowTickMarks(true);
+        Spinner<Integer> spinner = new Spinner<>();
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,20,0,1);
+        spinner.setValueFactory(valueFactory);
 
         CheckBox checkBox = new CheckBox("Enable feature");
 
         // Layout the controls in a grid
-        VBox content = new VBox(10, option1, option2, slider, checkBox);
+        VBox content = new VBox(10, option1, option2, spinner, checkBox);
         dialog.getDialogPane().setContent(content);
 
         // Add OK and Cancel buttons
@@ -53,7 +59,7 @@ public class GameMenu extends Menu {
             if (dialogButton == ButtonType.OK) {
                 return "Selected: " +
                         (option1.isSelected() ? "Option 1" : "Option 2") +
-                        ", Slider: " + (int) slider.getValue() +
+                        ", Spinner: " + (int) spinner.getValue() +
                         ", Feature Enabled: " + checkBox.isSelected();
             }
             return null;
@@ -61,7 +67,9 @@ public class GameMenu extends Menu {
 
         // Show the dialog and process the result
         dialog.showAndWait().ifPresent(result -> {
-            System.out.println("Result: " + result);
+            if (onDialogResult != null) {
+                onDialogResult.accept(result); //Notify the controller
+            }
         });
     }
 }

@@ -107,6 +107,12 @@ public class PieceStandView extends VBox {
         square.setImage(image);
     }
 
+    public void unHighlightSquares(){
+        for(PieceStandView.SquareView square : squares){
+            square.unHighlight();
+        }
+    }
+
     public int getSize() {
         return squares.length;
     }

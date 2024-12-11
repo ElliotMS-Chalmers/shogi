@@ -14,12 +14,14 @@ public class ShogiView extends HBox {
     private final PieceStandView gotePieceStandView;
     private final PieceStandView sentePieceStandView;
     private final HistoryView historyView;
+    private final GameMenu gameMenuView;
 
     public ShogiView(int boardSize, int handSize) {
         this.boardView = new BoardView(boardSize);
         this.gotePieceStandView = new PieceStandView(Side.GOTE, handSize, boardSize);
         this.sentePieceStandView = new PieceStandView(Side.SENTE, handSize, boardSize);
         this.historyView = new HistoryView();
+        this.gameMenuView = new GameMenu();
         this.setAlignment(Pos.CENTER);
         this.setSpacing(15);
         this.setPadding(new Insets(0, 25, 0, 25));
@@ -40,6 +42,10 @@ public class ShogiView extends HBox {
 
     public BoardView getBoardView() {
         return boardView;
+    }
+
+    public GameMenu getGameMenuView() {
+        return gameMenuView;
     }
 
     public PieceStandView getGotePieceStandView() {
