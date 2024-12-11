@@ -31,24 +31,38 @@ public class GameMenu extends Menu {
 
     private void showDialog() {
         Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Advanced Dialog");
-        dialog.setHeaderText("Select your options:");
+        dialog.setTitle("Create new game");
+        // dialog.setHeaderText("Create new game");
 
-        // Create the form controls
-        RadioButton option1 = new RadioButton("Option 1");
-        RadioButton option2 = new RadioButton("Option 2");
-        ToggleGroup group = new ToggleGroup();
-        option1.setToggleGroup(group);
-        option2.setToggleGroup(group);
+        MenuButton variantMenuButton = new MenuButton("Variant");
+        MenuItem standard = new MenuItem("Standard");
+        MenuItem minishogi = new MenuItem("Minishogi");
+        MenuItem chushogi = new MenuItem("Chushogi (todo)");
+        MenuItem annanshogi = new MenuItem("Annanshogi (todo)");
+        MenuItem kyotoshogi = new MenuItem("Kyotoshogi (todo)");
+        MenuItem checkshogi = new MenuItem("Checkshogi (todo)");
+        variantMenuButton.getItems().addAll(standard, minishogi, chushogi, annanshogi, kyotoshogi, checkshogi);
+        for (MenuItem item : variantMenuButton.getItems()) {
+            item.setOnAction(event -> {
+                variantMenuButton.setText(item.getText());
+            });
+        }
 
         Spinner<Integer> spinner = new Spinner<>();
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,20,0,1);
         spinner.setValueFactory(valueFactory);
 
-        CheckBox checkBox = new CheckBox("Enable feature");
+        ToggleGroup sideToggleGroup = new ToggleGroup();
+        ToggleButton sente = new ToggleButton("Sente");
+        ToggleButton random = new ToggleButton("Random");
+        ToggleButton gote = new ToggleButton("Gote");
+        sente.setToggleGroup(sideToggleGroup);
+        random.setToggleGroup(sideToggleGroup);
+        gote.setToggleGroup(sideToggleGroup);
+        random.setSelected(true);
 
         // Layout the controls in a grid
-        VBox content = new VBox(10, option1, option2, spinner, checkBox);
+        VBox content = new VBox(10, variantMenuButton, spinner, sente, random, gote);
         dialog.getDialogPane().setContent(content);
 
         // Add OK and Cancel buttons
@@ -57,10 +71,9 @@ public class GameMenu extends Menu {
         // Handle the result
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
-                return "Selected: " +
-                        (option1.isSelected() ? "Option 1" : "Option 2") +
-                        ", Spinner: " + (int) spinner.getValue() +
-                        ", Feature Enabled: " + checkBox.isSelected();
+                return "Variant: " + variantMenuButton.getText() +
+                       ", Spinner: " + (int) spinner.getValue() +
+                        ", Side: " + ((ToggleButton) sideToggleGroup.getSelectedToggle()).getText();
             }
             return null;
         });

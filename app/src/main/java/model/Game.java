@@ -25,7 +25,7 @@ public class Game {
     private History history;
     private RuleSet ruleSet;
 
-    public Game(Variant variant){ // Add int time when we are fixing Game.java
+    public Game(Variant variant, Integer time){ // Add int time when we are fixing Game.java
         this.variant = variant;
         this.ruleSet = variant.getRuleSet();
 
@@ -39,6 +39,11 @@ public class Game {
 
         this.gotePlayer = new Player(Side.GOTE);
         this.gotePlayer.intializeHand(variant.getHand());
+
+        if (time != null) {
+            setClocks(time);
+            startClocks();
+        }
 
         shutdownHook();
     }
@@ -208,4 +213,5 @@ public class Game {
     private void boardChanged() {
         boardChanged.set(!boardChanged.get());
     }
+
 }

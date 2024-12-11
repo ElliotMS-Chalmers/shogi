@@ -2,8 +2,6 @@ package controller;
 
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import model.*;
 // import util.Piece;
@@ -14,22 +12,17 @@ import model.pieces.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class ShogiController {
-    private final Settings settings;
-    private final Game game;
-    private final ShogiView shogiView;
-    private final BoardView boardView;
-    private final PieceStandView gotePieceStandView;
-    private final PieceStandView sentePieceStandView;
-    private Integer selected;
-
-    private SquareView lastSquareClicked;
-
+    private Settings settings;
+    private Game game;
+    private ShogiView shogiView;
+    private BoardView boardView;
+    private PieceStandView gotePieceStandView;
+    private PieceStandView sentePieceStandView;
     private HistoryController historyController;
-    private ClockController clockController;
+    private SquareView lastSquareClicked;
 
     public ShogiController(Settings settings, Game game) {
         this.settings = settings;
@@ -44,15 +37,14 @@ public class ShogiController {
         gotePieceStandView.setClickHandler(this::processHandClick);
         sentePieceStandView.setClickHandler(this::processHandClick);
 
-        // Handle change to board
+        // Handle change to board and game
         game.boardChangedProperty().addListener(this::onBoardChanged);
 
         // Handle change in settings
         settings.boardThemeProperty().addListener(this::onBoardThemeChanged);
         getPieceSetProperty().addListener(this::onPieceSetChanged);
 
-        historyController = new HistoryController(this,game,shogiView.getHistoryView());
-        clockController = new ClockController(game, shogiView.getGameMenuView());
+        historyController = new HistoryController(this, game, shogiView.getHistoryView());
 
         // Setup
         setBackground();
@@ -64,10 +56,6 @@ public class ShogiController {
 
     private void setBackground() {
         boardView.setBackground(settings.getBoardTheme().getImage());
-    }
-
-    public ClockController getClockController() {
-        return clockController;
     }
 
     private void movePiece(Pos from, Pos to) {
@@ -91,7 +79,6 @@ public class ShogiController {
             boardView.drawImageAt(image, pos);
         });
     }
-
 
     private void drawHands() {
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
@@ -231,8 +218,11 @@ public class ShogiController {
         else{image = getPieceSet().getImage(piece);}
         boardView.drawImageAt(image,pos);
     }
+
     public void clearHighlightedSquares(){boardView.clearHighlightedSquares();}
+
     public void highlightSquare(Pos pos){boardView.highlightSquare(pos);}
+
     public void changeCountAtPieceStandView(Class<?extends Piece> pieceClass,Side side,int change){
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
         int index;
@@ -242,6 +232,7 @@ public class ShogiController {
         PieceStandView pieceStandView = (side == Side.SENTE) ? sentePieceStandView : gotePieceStandView;
         pieceStandView.changeCountAt(index,change);
     }
+
     public void unselectsSquare(){
         //This is used by HistoryController to prevent moving while viewing a past state
         lastSquareClicked = null;

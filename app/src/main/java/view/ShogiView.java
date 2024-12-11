@@ -7,9 +7,10 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import util.Side;
 
-public class ShogiView extends HBox {
+public class ShogiView extends VBox {
     private final BoardView boardView;
     private final PieceStandView gotePieceStandView;
     private final PieceStandView sentePieceStandView;
@@ -17,14 +18,21 @@ public class ShogiView extends HBox {
     private final GameMenu gameMenuView;
 
     public ShogiView(int boardSize, int handSize) {
+        this.setAlignment(Pos.CENTER);
+        HBox hBox = new HBox();
+        VBox.setVgrow(hBox, Priority.ALWAYS);
+        this.getChildren().add(hBox);
+        hBox.maxHeightProperty().bind(this.heightProperty().multiply(0.8));
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(15);
+        hBox.setPadding(new Insets(0, 25, 0, 25));
+
         this.boardView = new BoardView(boardSize);
         this.gotePieceStandView = new PieceStandView(Side.GOTE, handSize, boardSize);
         this.sentePieceStandView = new PieceStandView(Side.SENTE, handSize, boardSize);
         this.historyView = new HistoryView();
         this.gameMenuView = new GameMenu();
-        this.setAlignment(Pos.CENTER);
-        this.setSpacing(15);
-        this.setPadding(new Insets(0, 25, 0, 25));
+
 
         // HBox centerGroup = new HBox(10);
         // centerGroup.setAlignment(Pos.CENTER);
@@ -37,15 +45,11 @@ public class ShogiView extends HBox {
 
         gotePieceStandView.minWidthProperty().bind(boardView.widthProperty().divide(boardSize));
         sentePieceStandView.minWidthProperty().bind(boardView.widthProperty().divide(boardSize));
-        this.getChildren().addAll(gotePieceStandView, boardView, sentePieceStandView, historyView);
+        hBox.getChildren().addAll(gotePieceStandView, boardView, sentePieceStandView, historyView);
     }
 
     public BoardView getBoardView() {
         return boardView;
-    }
-
-    public GameMenu getGameMenuView() {
-        return gameMenuView;
     }
 
     public PieceStandView getGotePieceStandView() {
