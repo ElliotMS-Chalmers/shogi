@@ -9,6 +9,7 @@ import util.Side;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 public class Game {
@@ -25,7 +26,7 @@ public class Game {
     private History history;
     private RuleSet ruleSet;
 
-    public Game(Variant variant, Integer time){ // Add int time when we are fixing Game.java
+    public Game(Variant variant, Integer time){
         this.variant = variant;
         this.ruleSet = variant.getRuleSet();
 
@@ -91,6 +92,20 @@ public class Game {
         }));
     }
 
+    public IntegerProperty getClockTime(Side side) {
+        IntegerProperty time = null;
+        if (isClocksInitialized()) {
+            switch (side) {
+                case SENTE -> time = senteClock.getSeconds();
+                case GOTE -> time = goteClock.getSeconds();
+            }
+        }
+        return time;
+    }
+
+    public boolean isClocksInitialized() {
+        return (senteClock != null && goteClock != null);
+    }
     public AtomicBoolean getGameRunning() {
         return gameRunning;
     }

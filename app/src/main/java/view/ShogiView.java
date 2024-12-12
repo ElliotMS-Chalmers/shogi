@@ -16,6 +16,7 @@ public class ShogiView extends VBox {
     private final PieceStandView sentePieceStandView;
     private final HistoryView historyView;
     private final GameMenu gameMenuView;
+    private final ClockView senteClockView, goteClockView;
 
     public ShogiView(int boardSize, int handSize) {
         this.setAlignment(Pos.CENTER);
@@ -32,6 +33,8 @@ public class ShogiView extends VBox {
         this.sentePieceStandView = new PieceStandView(Side.SENTE, handSize, boardSize);
         this.historyView = new HistoryView();
         this.gameMenuView = new GameMenu();
+        this.senteClockView = new ClockView();
+        this.goteClockView = new ClockView();
 
 
         // HBox centerGroup = new HBox(10);
@@ -45,7 +48,16 @@ public class ShogiView extends VBox {
 
         gotePieceStandView.minWidthProperty().bind(boardView.widthProperty().divide(boardSize));
         sentePieceStandView.minWidthProperty().bind(boardView.widthProperty().divide(boardSize));
-        hBox.getChildren().addAll(gotePieceStandView, boardView, sentePieceStandView, historyView);
+        hBox.getChildren().addAll(senteClockView, goteClockView, gotePieceStandView, boardView, sentePieceStandView, historyView);
+    }
+
+
+    public ClockView getGoteClockView() {
+        return goteClockView;
+    }
+
+    public ClockView getSenteClockView() {
+        return senteClockView;
     }
 
     public BoardView getBoardView() {

@@ -1,13 +1,29 @@
 package view;
 
-import javafx.geometry.Pos;
-import javafx.scene.layout.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 
-public class ClockView extends VBox{
-    
+public class ClockView extends VBox {
+    private Label timerLabel;
 
-    public ClockView(){
+    public ClockView() {
         super();
-        //TODO - Implement view for the clocks with a test time
+        this.timerLabel = new Label("Time Left: 0");
+        this.getChildren().add(timerLabel);
     }
+
+    public void bindToTimer(IntegerProperty timerProperty) {
+        // Bind the label to the timer property
+        timerProperty.addListener((observable, oldValue, newValue) ->
+                javafx.application.Platform.runLater(() ->
+                        timerLabel.setText("Time Left: " + newValue)
+                )
+        );
+    }
+
+
+
 }
