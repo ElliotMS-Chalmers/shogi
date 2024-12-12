@@ -198,6 +198,7 @@ public class ShogiController {
         } else if (square.getCount() > 0) {
             lastSquareClicked = square;
             square.highlight();
+            // todo: highlight all available moves from hand
         }
         historyController.highlightLastMove();
     }

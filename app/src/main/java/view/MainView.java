@@ -13,4 +13,9 @@ public class MainView extends BorderPane {
 		menuBar.getMenus().addAll(gameMenu, settingsMenu);
 		this.setTop(menuBar);
 	}
+
+	public void setShogiView(ShogiView shogiView) {
+		this.shogiView = shogiView;
+		this.setCenter(shogiView);
+	}
 }
