@@ -43,6 +43,7 @@ public class Game {
         if (time != null) {
             setClocks(time);
             startClocks();
+            changeActiveClock();
         }
 
         shutdownHook();
