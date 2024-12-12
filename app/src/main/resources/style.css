@@ -79,6 +79,7 @@
 .move-list-item-index .label {
     -fx-font-size: 15;
     -fx-font-weight: 500;
+    -fx-text-fill: #aaaaaa;
 }
 
 .move-list-item-move {
@@ -154,3 +155,41 @@
     -fx-pref-width: 8px; /* Set the desired width */
 }
 
+/* New game dialog */
+DialogPane .menu-button {
+    -fx-background-color: #D2E4F5;
+}
+
+DialogPane .menu-button:hover, DialogPane .menu-button:focused {
+    -fx-background-color:#2078CB;
+}
+
+DialogPane .menu-button:hover > .label, DialogPane .menu-button:focused > .label {
+    -fx-text-fill: white;  /* Change text color to white on hover/focus */
+}
+
+DialogPane .slider {
+    -fx-fill: #D2E4F5;
+}
+
+DialogPane .button {
+    -fx-background-color: #D2E4F5;
+}
+
+DialogPane .button:hover, DialogPane .button:focused {
+    -fx-background-color: #2078CB;
+    -fx-text-fill: white;
+}
+
+DialogPane .toggle-button {
+    -fx-background-color: #D2E4F5;
+}
+
+DialogPane .toggle-button:hover, DialogPane .toggle-button:focused {
+    -fx-background-color: #2078CB;
+    -fx-text-fill: white;
+}
+
+DialogPane .toggle-button:selected {
+    -fx-background-color: #2078CB; /* this is not ideal */
+}

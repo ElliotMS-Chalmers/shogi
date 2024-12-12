@@ -34,7 +34,7 @@ public class DialogController {
                         case "Minishogi" -> new Mini();
                         default -> new Standard();
                     };
-                } else if (part.startsWith("Spinner:")) { // Handle Spinner value for clocks
+                } else if (part.startsWith("Time:")) { // Handle Spinner value for clocks
                     int spinnerValue = Integer.parseInt(part.split(":")[1].trim());
                     time = spinnerValue * 60;
                     System.out.println("Spinner Value: " + spinnerValue);

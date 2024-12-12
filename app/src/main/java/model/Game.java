@@ -13,7 +13,8 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 public class Game {
-    private boolean turn = false;
+    // private boolean turn = false;
+    private Side turn = Side.SENTE;
     private Variant variant;
     private Board board;
     private BooleanProperty boardChanged = new SimpleBooleanProperty(false);
@@ -41,10 +42,9 @@ public class Game {
         this.gotePlayer = new Player(Side.GOTE);
         this.gotePlayer.intializeHand(variant.getHand());
 
-        if (time != null) {
+        if (time != 0) {
             setClocks(time);
             startClocks();
-            changeActiveClock();
         }
 
         shutdownHook();
@@ -126,7 +126,7 @@ public class Game {
 
     public Sfen getSfen() {
         //System.out.println(new Sfen(board.getBoardAsSfen(), turn ? 'b' : 'w', getCapturedPiecesAsSfen(), moveCount));
-        return new Sfen(board.getBoardAsSfen(), turn ? 'b' : 'w', getCapturedPiecesAsSfen(), moveCount);
+        return new Sfen(board.getBoardAsSfen(), turn == Side.SENTE ? 'b' : 'w', getCapturedPiecesAsSfen(), moveCount);
     }
 
     //CLock
@@ -143,6 +143,10 @@ public class Game {
         goteth = new Thread(this.goteClock);
         senteth.start();
         goteth.start();
+        switch (turn) {
+            case SENTE -> goteClock.pause();
+            case GOTE -> senteClock.pause();
+        }
     }
 
     public void stopClock() {
@@ -163,12 +167,12 @@ public class Game {
         changeTurn();
         moveCount--;
         if(lastMove.fromPlayerHand()){
-            (turn ? sentePlayer : gotePlayer).addCapturedPiece(lastMove.movedPiece().getClass());
+            (turn == Side.SENTE ? sentePlayer : gotePlayer).addCapturedPiece(lastMove.movedPiece().getClass());
         }else{
             board.move(lastMove.to(),lastMove.from()); //Plays the last move in reverse.
         }
         if(lastMove.capturedPiece() != null){
-            (turn ? sentePlayer : gotePlayer).removeCapturedPiece(lastMove.capturedPiece().getClass());
+            (turn == Side.SENTE ? sentePlayer : gotePlayer).removeCapturedPiece(lastMove.capturedPiece().getClass());
             board.setAtPosition(lastMove.to(),lastMove.capturedPiece());
         }
         boardChanged();
@@ -199,18 +203,18 @@ public class Game {
     }
 
     private void changeTurn(){
-        turn = !turn;
+        turn = switch(turn) {
+            case SENTE -> Side.GOTE;
+            case GOTE -> Side.SENTE;
+        };
         if (senteClock != null && goteClock != null)
-        changeActiveClock();
+            changeActiveClock();
     }
 
     private void changeActiveClock() {
-        if (turn) {
-            senteClock.resume(); // It was GOTE's turn before changeTurn was called
-            goteClock.pause();
-        } else {
-            goteClock.resume();
-            senteClock.pause();
+        switch (turn) {
+            case SENTE -> { senteClock.resume(); goteClock.pause();}
+            case GOTE -> { goteClock.resume(); senteClock.pause();}
         }
     }
 
@@ -228,6 +232,10 @@ public class Game {
 
     private void boardChanged() {
         boardChanged.set(!boardChanged.get());
+    }
+
+    public Side getTurn() {
+        return turn;
     }
 
 }

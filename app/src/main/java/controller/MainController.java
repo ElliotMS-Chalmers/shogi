@@ -16,7 +16,7 @@ public class MainController {
     private final Scene scene;
 
     public MainController() {
-        this.game = new Game(new Standard(), null); // Default game on launch, should be replaced with saved game
+        this.game = new Game(new Standard(), 0); // Default game on launch, should be replaced with saved game
         this.settings = new Settings();
 
         dialogController = new DialogController();
@@ -24,7 +24,7 @@ public class MainController {
         settingsController = new SettingsController(settings);
 
         mainView = new MainView(shogiController.getView(), dialogController.getMenu(), settingsController.getMenu());
-        scene = new Scene(mainView, 1080, 720);
+        scene = new Scene(mainView, 1280, 720);
 
         dialogController.setNewGameHandler(this::newGame);
     }

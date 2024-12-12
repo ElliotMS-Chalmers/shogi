@@ -177,8 +177,9 @@ public class ShogiController {
     }
 
     private void handleFirstClick(BoardView.SquareView square, Pos pos) {
-        boolean pieceClicked = game.getBoard().getPieceAt(pos) != null;
-        if (pieceClicked) {
+        Piece pieceClicked = game.getBoard().getPieceAt(pos);
+        if (pieceClicked != null) {
+            if (pieceClicked.getSide() != game.getTurn()) return;
             lastSquareClicked = square;
             boardView.highlightSquare(pos);
             Piece piece = game.getBoard().getPieceAt(pos);
@@ -188,6 +189,7 @@ public class ShogiController {
     }
 
     public void processHandClick(PieceStandView.SquareView square) {
+        if (square.getSide() != game.getTurn()) return;
         if (square.equals(lastSquareClicked)) {
             lastSquareClicked = null;
             square.unHighlight();
