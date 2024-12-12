@@ -3,23 +3,35 @@ package view;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 
 import java.util.function.BiConsumer;
 
-public class MoveListItem extends Pane {
+public class MoveListItem extends HBox {
     private final String move;
     private final int index;
 
     public MoveListItem(String move, int index, BiConsumer<MoveListItem, MouseEvent> clickHandler){
         this.move = move;
         this.index = index;
-        this.setPrefWidth(Double.MAX_VALUE);
         this.getStyleClass().add("move-list-item");
 
-        Label label = new Label((index+1)+": "+move);
-        label.getStyleClass().add("move-list-item-text");
-        this.getChildren().add(label);
+        StackPane indexPane = new StackPane(new Label(String.valueOf(index + 1)));
+        indexPane.setMinWidth(15);
+        indexPane.prefWidthProperty().bind(this.widthProperty().multiply(0.125));
+        indexPane.getStyleClass().add("move-list-item-index");
+
+        Pane movePane = new Pane(new Label(move));
+        movePane.getStyleClass().add("move-list-item-move");
+        HBox.setHgrow(movePane, Priority.ALWAYS);
+        // Label label = new Label(move);
+        // label.getStyleClass().add("move-list-item-text");
+        // movePane.getChildren().add(label);
+
+        this.getChildren().addAll(indexPane, movePane);
 
         setClickHandler(clickHandler);
     }
