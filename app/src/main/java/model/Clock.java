@@ -2,21 +2,28 @@ package model;
 
 import util.Side;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
 
 public class Clock implements Runnable{
-    private int seconds;
+    private IntegerProperty seconds;
     private Side side;
     private AtomicBoolean gameRunning;
     private AtomicBoolean paused;
 
     public Clock (int seconds, Side side, AtomicBoolean gameRunning) {
-        this.seconds = seconds;
+        this.seconds = new SimpleIntegerProperty(seconds);
         this.side = side;
         this.gameRunning = gameRunning;
         this.paused = new AtomicBoolean(false);
+    }
+
+    public IntegerProperty getSeconds() {
+        return seconds;
     }
 
     public void pause() {
@@ -45,7 +52,7 @@ public class Clock implements Runnable{
                 }
             }
     
-            if (seconds == 0) {
+            if (seconds.get() == 0) {
                 synchronized (gameRunning) {
                     if (gameRunning.get()) {
                         switch (this.side) {
@@ -59,7 +66,7 @@ public class Clock implements Runnable{
             }
     
             System.out.println(this.side + " - Seconds left: " + this.seconds);
-            this.seconds -= 1;
+            seconds.set(seconds.get() - 1);
     
             try {
                 Thread.sleep(1000);

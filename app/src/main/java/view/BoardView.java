@@ -11,6 +11,7 @@ import java.util.function.BiConsumer;
 
 public class BoardView extends GridPane {
     private final SquareView[][] squares;
+    private ClockView senteClockView, goteClockView;
 
     public class SquareView extends view.SquareView {
         public final Pos pos;

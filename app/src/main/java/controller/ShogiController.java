@@ -21,6 +21,7 @@ public class ShogiController {
     private BoardView boardView;
     private PieceStandView gotePieceStandView;
     private PieceStandView sentePieceStandView;
+    private ClockView senteClockView, goteClockView;
     private HistoryController historyController;
     private SquareView lastSquareClicked;
 
@@ -31,6 +32,8 @@ public class ShogiController {
         this.boardView = shogiView.getBoardView();
         this.gotePieceStandView = shogiView.getGotePieceStandView();
         this.sentePieceStandView = shogiView.getSentePieceStandView();
+        this.senteClockView = shogiView.getSenteClockView();
+        this.goteClockView = shogiView.getGoteClockView();
 
         // Handle user input
         boardView.setClickHandler(this::processBoardClick);
@@ -43,6 +46,14 @@ public class ShogiController {
         // Handle change in settings
         settings.boardThemeProperty().addListener(this::onBoardThemeChanged);
         getPieceSetProperty().addListener(this::onPieceSetChanged);
+
+        // Handle change in clocks
+        if (game.isClocksInitialized()) {
+            senteClockView.bindToTimer(game.getClockTime(Side.SENTE));
+            goteClockView.bindToTimer(game.getClockTime(Side.GOTE));
+            //game.getSenteTime().addListener(this::onSenteClockTimeChanged);
+            //game.getGoteTime().addListener(this::onGoteClockTimeChanged);
+        }
 
         historyController = new HistoryController(this, game, shogiView.getHistoryView());
 
@@ -188,6 +199,14 @@ public class ShogiController {
         }
         historyController.highlightLastMove();
     }
+
+    //private void onSenteClockTimeChanged(Observable observable) { // Change so it can handle both SENTE and GOTE
+      //  senteClockView.update();
+   // }
+
+    //private void onGoteClockTimeChanged(Observable observable) {
+      //  goteClockView.update();
+    //}
 
     private void onBoardChanged(Observable observable) {
         boardView.clearPieces();
