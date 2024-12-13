@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import model.*;
 // import util.Piece;
+import model.variants.Variant;
 import util.Pos;
 import util.Side;
 import view.*;
@@ -198,7 +199,7 @@ public class ShogiController {
             lastSquareClicked = square;
             boardView.highlightSquare(pos);
             Piece piece = game.getBoard().getPieceAt(pos);
-            piece.getAvailableMoves(pos).forEach(boardView::markSquare);
+            piece.getAvailableMoves(pos, game.getBoard(), game.getVariant()).forEach(boardView::markSquare);
         }
         historyController.highlightLastMove();
     }
