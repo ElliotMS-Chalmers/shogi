@@ -1,5 +1,7 @@
 package model.pieces;
 
+import model.Board;
+import model.variants.Variant;
 import util.Pos;
 import util.Side;
 
@@ -18,13 +20,13 @@ public class King extends Piece {
     }
 
     @Override
-    public ArrayList<Pos> getAvailableMoves(Pos pos) {
+    public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant) {
         ArrayList<Pos> availableMoves = new ArrayList<>();
         for (int[] ints : moves) {
             int availableCol = pos.col() + ints[0];
             int availableRow = pos.row() + ints[1];
-            if (availableCol >= 0 && availableCol <= 8 && availableRow >= 0 && availableRow <= 8) {
-                availableMoves.add(new Pos(availableRow,availableCol));
+            if (checkLegalMove(new Pos(availableRow,availableCol), board, variant) != null) {
+                availableMoves.add(new Pos(availableRow, availableCol));
             }
         }
         return availableMoves;
