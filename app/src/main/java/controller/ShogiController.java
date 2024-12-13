@@ -2,8 +2,6 @@ package controller;
 
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import model.*;
 // import util.Piece;
@@ -12,75 +10,62 @@ import util.Pos;
 import util.Side;
 import view.*;
 import model.pieces.*;
-import model.PieceSetType;
-
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class ShogiController {
-    private final Settings settings;
-    private final Game game;
-    private final ShogiView shogiView;
-    private final BoardView boardView;
-    private final PieceStandView gotePieceStandView;
-    private final PieceStandView sentePieceStandView;
-
-    private Clock senteClock;
-    private Clock goteClock;
-    private Thread senteth;
-    private Thread goteth;
-    private AtomicBoolean gameRunning;
-    private String selected = "1 min"; //test
-
-    private SquareView lastSquareClicked;
-
+    private Settings settings;
+    private Game game;
+    private ShogiView shogiView;
+    private BoardView boardView;
+    private PieceStandView gotePieceStandView;
+    private PieceStandView sentePieceStandView;
+    private ClockView senteClockView, goteClockView;
     private HistoryController historyController;
+    private SquareView lastSquareClicked;
 
     public ShogiController(Settings settings, Game game) {
         this.settings = settings;
         this.game = game;
-        gameRunning = new AtomicBoolean(false);
         this.shogiView = new ShogiView(game.getVariant().getWidth(), game.getVariant().getHand().size());
         this.boardView = shogiView.getBoardView();
         this.gotePieceStandView = shogiView.getGotePieceStandView();
         this.sentePieceStandView = shogiView.getSentePieceStandView();
+        this.senteClockView = shogiView.getSenteClockView();
+        this.goteClockView = shogiView.getGoteClockView();
 
         // Handle user input
         boardView.setClickHandler(this::processBoardClick);
         gotePieceStandView.setClickHandler(this::processHandClick);
         sentePieceStandView.setClickHandler(this::processHandClick);
 
-        // Handle change to board
+        // Handle change to board and game
         game.boardChangedProperty().addListener(this::onBoardChanged);
 
         // Handle change in settings
         settings.boardThemeProperty().addListener(this::onBoardThemeChanged);
         getPieceSetProperty().addListener(this::onPieceSetChanged);
 
-        historyController = new HistoryController(this,game,shogiView.getHistoryView());
+        // Handle change in clocks
+        if (game.isClocksInitialized()) {
+            senteClockView.bindToTimer(game.getClockTime(Side.SENTE));
+            goteClockView.bindToTimer(game.getClockTime(Side.GOTE));
+            //game.getSenteTime().addListener(this::onSenteClockTimeChanged);
+            //game.getGoteTime().addListener(this::onGoteClockTimeChanged);
+        }
+
+        historyController = new HistoryController(this, game, shogiView.getHistoryView());
 
         // Setup
-        setClock();
         setBackground();
         drawHands();
         Sfen sfen = game.getSfen();
         drawBoard(sfen);
         updateHands(sfen);
-        startClock();
-        shutdownHook();
     }
 
-
-    private void shutdownHook() { //Maybe remove this
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (gameRunning != null && gameRunning.get()) {
-                stopClock();
-            }
-        }));
-    }
     private void setBackground() {
         boardView.setBackground(settings.getBoardTheme().getImage());
     }
@@ -106,7 +91,6 @@ public class ShogiController {
             boardView.drawImageAt(image, pos);
         });
     }
-
 
     private void drawHands() {
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
@@ -194,8 +178,9 @@ public class ShogiController {
     }
 
     private void handleFirstClick(BoardView.SquareView square, Pos pos) {
-        boolean pieceClicked = game.getBoard().getPieceAt(pos) != null;
-        if (pieceClicked) {
+        Piece pieceClicked = game.getBoard().getPieceAt(pos);
+        if (pieceClicked != null) {
+            if (pieceClicked.getSide() != game.getTurn()) return;
             lastSquareClicked = square;
             boardView.highlightSquare(pos);
             Piece piece = game.getBoard().getPieceAt(pos);
@@ -205,6 +190,7 @@ public class ShogiController {
     }
 
     public void processHandClick(PieceStandView.SquareView square) {
+        if (square.getSide() != game.getTurn()) return;
         if (square.equals(lastSquareClicked)) {
             lastSquareClicked = null;
             square.unHighlight();
@@ -216,6 +202,14 @@ public class ShogiController {
         }
         historyController.highlightLastMove();
     }
+
+    //private void onSenteClockTimeChanged(Observable observable) { // Change so it can handle both SENTE and GOTE
+      //  senteClockView.update();
+   // }
+
+    //private void onGoteClockTimeChanged(Observable observable) {
+      //  goteClockView.update();
+    //}
 
     private void onBoardChanged(Observable observable) {
         boardView.clearPieces();
@@ -246,8 +240,11 @@ public class ShogiController {
         else{image = getPieceSet().getImage(piece);}
         boardView.drawImageAt(image,pos);
     }
+
     public void clearHighlightedSquares(){boardView.clearHighlightedSquares();}
+
     public void highlightSquare(Pos pos){boardView.highlightSquare(pos);}
+
     public void changeCountAtPieceStandView(Class<?extends Piece> pieceClass,Side side,int change){
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
         int index;
@@ -257,6 +254,7 @@ public class ShogiController {
         PieceStandView pieceStandView = (side == Side.SENTE) ? sentePieceStandView : gotePieceStandView;
         pieceStandView.changeCountAt(index,change);
     }
+
     public void unselectsSquare(){
         //This is used by HistoryController to prevent moving while viewing a past state
         lastSquareClicked = null;
@@ -279,40 +277,5 @@ public class ShogiController {
             case PieceSetType.CHU -> settings.chuPieceSetProperty();
             case PieceSetType.KYO -> settings.kyoPieceSetProperty();
         };
-    }
-
-    //CLock
-
-    private void setClock() {
-        int timeChosen = Integer.parseInt(selected.split(" ")[0]) * 60;
-        gameRunning.set(true);
-        this.senteClock = new Clock(timeChosen + 2, Side.SENTE, gameRunning);
-        this.goteClock = new Clock(timeChosen, Side.GOTE, gameRunning);
-    }
-
-    private void startClock(){
-        senteth = new Thread(this.senteClock);
-        goteth = new Thread(this.goteClock);
-        senteth.start();
-        goteth.start();
-    }
-
-    public void stopClock() {
-        // Signal threads to stop
-        gameRunning.set(false);
-
-        // Interrupt threads in case they are sleeping
-        senteth.interrupt();
-        goteth.interrupt();
-
-        try {
-            // Wait for threads to finish
-            senteth.join();
-            goteth.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restore interrupted status
-        }
-
-        System.out.println("Clocks stopped.");
     }
 }

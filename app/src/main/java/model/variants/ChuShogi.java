@@ -16,7 +16,9 @@ public class ChuShogi extends Variant {
             "(SIDE)(VERT)R(HORSE)(DRAGON)(LION)(QUEEN)(DRAGON)(HORSE)R(VERT)(SIDE)/" +
             "(REVCHARIOT)1B1(TIGER)(KIRIN)(PHOENIX)(TIGER)1B1(REVCHARIOT)/" +
             "L(LEO)(COPPER)SGK(ELEPHANT)GS(COPPER)(LEO)L");
+
     private final List<Class<? extends Piece>> hand = List.of(
+            /*
             Pawn.class,
             Lance.class,
             Knight.class,
@@ -24,7 +26,7 @@ public class ChuShogi extends Variant {
             GoldGeneral.class,
             Bishop.class,
             Rook.class
-            /*
+
             Lion.class,
             Queen.class,
             CopperGeneral.class,

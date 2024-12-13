@@ -57,10 +57,12 @@
 
 .move-list {
     -fx-background-color:transparent;
+    -fx-padding: 0;
 }
 
 .move-list-inner {
     /* -fx-padding: 25 0 0 0; */
+    -fx-padding: 0;
     -fx-background-color:transparent;
 }
 
@@ -68,26 +70,51 @@
     -fx-background-color:transparent;
 }
 
-.move-list-item-text {
-    -fx-padding: 0 25 0 25;
+.move-list-item-index {
+    -fx-background-color: #F7F6F5;
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: #D9D9D9;
+}
+
+.move-list-item-index .label {
+    -fx-font-size: 15;
+    -fx-font-weight: 500;
+    -fx-text-fill: #aaaaaa;
+}
+
+.move-list-item-move {
+    -fx-background-color: white;
+}
+
+.move-list-item-move .label {
+    -fx-padding: 0 0 0 10;
     -fx-font-size: 18px;
     -fx-text-fill: #000000;
+    -fx-font-weight: 500;
 }
 
-.move-list-item-text:hover {
+.move-list-item-move:hover .label {
+    -fx-text-fill: white;
+}
+
+/* .move-list-item-move:hover  {
     -fx-text-fill: #404040;
-}
+} */
 
-.move-list-item-highlighted {
-    -fx-background-color: #D2E4F5;
-}
-
-.move-list-item:hover {
+.move-list-item-move:hover {
     -fx-background-color: #2078CB;
 }
 
-.move-list-item:hover .move-list-item-text {
-    -fx-text-fill: white;
+.move-list-item-highlighted .move-list-item-move {
+    -fx-background-color: #D2E4F5;
+}
+
+.move-list-item-highlighted .move-list-item-move .label {
+    -fx-font-weight: bold;
+}
+
+.move-list-item-highlighted:hover .move-list-item-move .label {
+    -fx-text-fill: black;
 }
 
 /* Srollbar (thanks ChatGPT) */
@@ -128,3 +155,41 @@
     -fx-pref-width: 8px; /* Set the desired width */
 }
 
+/* New game dialog */
+DialogPane .menu-button {
+    -fx-background-color: #D2E4F5;
+}
+
+DialogPane .menu-button:hover, DialogPane .menu-button:focused {
+    -fx-background-color:#2078CB;
+}
+
+DialogPane .menu-button:hover > .label, DialogPane .menu-button:focused > .label {
+    -fx-text-fill: white;  /* Change text color to white on hover/focus */
+}
+
+DialogPane .slider {
+    -fx-fill: #D2E4F5;
+}
+
+DialogPane .button {
+    -fx-background-color: #D2E4F5;
+}
+
+DialogPane .button:hover, DialogPane .button:focused {
+    -fx-background-color: #2078CB;
+    -fx-text-fill: white;
+}
+
+DialogPane .toggle-button {
+    -fx-background-color: #D2E4F5;
+}
+
+DialogPane .toggle-button:hover, DialogPane .toggle-button:focused {
+    -fx-background-color: #2078CB;
+    -fx-text-fill: white;
+}
+
+DialogPane .toggle-button:selected {
+    -fx-background-color: #2078CB; /* this is not ideal */
+}

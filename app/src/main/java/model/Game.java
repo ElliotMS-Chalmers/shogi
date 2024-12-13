@@ -5,21 +5,29 @@ import model.variants.RuleSet;
 import model.variants.Variant;
 import util.Pos;
 import util.Side;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 public class Game {
-    private boolean turn = false;
+    // private boolean turn = false;
+    private Side turn = Side.SENTE;
     private Variant variant;
     private Board board;
     private BooleanProperty boardChanged = new SimpleBooleanProperty(false);
     private Player sentePlayer;
     private Player gotePlayer;
+    private Clock senteClock, goteClock;
+    private Thread senteth, goteth;
+    private AtomicBoolean gameRunning = new AtomicBoolean(true);
     private int moveCount = 1;
     private History history;
     private RuleSet ruleSet;
 
-    public Game(Variant variant){
+    public Game(Variant variant, Integer time){
         this.variant = variant;
         this.ruleSet = variant.getRuleSet();
 
@@ -34,6 +42,12 @@ public class Game {
         this.gotePlayer = new Player(Side.GOTE);
         this.gotePlayer.intializeHand(variant.getHand());
 
+        if (time != 0) {
+            setClocks(time);
+            startClocks();
+        }
+
+        shutdownHook();
     }
 
     public Move move(Pos from, Pos to){
@@ -57,6 +71,45 @@ public class Game {
         return move;
     }
 
+    private void shutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (gameRunning != null && gameRunning.get()) {
+                stopClock();  // Stops the clocks
+                // Ensure that clock threads finish before shutdown
+                try {
+                    if (senteth != null && senteth.isAlive()) {
+                        senteth.interrupt();
+                        senteth.join(); // Wait for the thread to finish
+                    }
+                    if (goteth != null && goteth.isAlive()) {
+                        goteth.interrupt();
+                        goteth.join(); // Wait for the thread to finish
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();  // Restore the interrupted status
+                }
+            }
+        }));
+    }
+
+    public IntegerProperty getClockTime(Side side) {
+        IntegerProperty time = null;
+        if (isClocksInitialized()) {
+            switch (side) {
+                case SENTE -> time = senteClock.getSeconds();
+                case GOTE -> time = goteClock.getSeconds();
+            }
+        }
+        return time;
+    }
+
+    public boolean isClocksInitialized() {
+        return (senteClock != null && goteClock != null);
+    }
+    public AtomicBoolean getGameRunning() {
+        return gameRunning;
+    }
+
     public Board getBoard() {
         return board;
     }
@@ -73,7 +126,40 @@ public class Game {
 
     public Sfen getSfen() {
         //System.out.println(new Sfen(board.getBoardAsSfen(), turn ? 'b' : 'w', getCapturedPiecesAsSfen(), moveCount));
-        return new Sfen(board.getBoardAsSfen(), turn ? 'b' : 'w', getCapturedPiecesAsSfen(), moveCount);
+        return new Sfen(board.getBoardAsSfen(), turn == Side.SENTE ? 'b' : 'w', getCapturedPiecesAsSfen(), moveCount);
+    }
+
+    //CLock
+    public void setClocks(int seconds) {
+        if (seconds != 0){
+            gameRunning.set(true);
+            this.senteClock = new Clock(seconds, Side.SENTE, gameRunning);
+            this.goteClock = new Clock(seconds, Side.GOTE, gameRunning);
+        }
+    }
+
+    public void startClocks(){
+        senteth = new Thread(this.senteClock);
+        goteth = new Thread(this.goteClock);
+        senteth.start();
+        goteth.start();
+        switch (turn) {
+            case SENTE -> goteClock.pause();
+            case GOTE -> senteClock.pause();
+        }
+    }
+
+    public void stopClock() {
+        synchronized (gameRunning) {
+            gameRunning.set(false);
+            if (senteth != null && senteth.isAlive()) {
+                senteth.interrupt();
+            }
+            if (goteth != null && goteth.isAlive()) {
+                goteth.interrupt();
+            }
+            System.out.println("Clocks stopped.");
+        }
     }
 
     public void undo(){
@@ -81,12 +167,12 @@ public class Game {
         changeTurn();
         moveCount--;
         if(lastMove.fromPlayerHand()){
-            (turn ? sentePlayer : gotePlayer).addCapturedPiece(lastMove.movedPiece().getClass());
+            (turn == Side.SENTE ? sentePlayer : gotePlayer).addCapturedPiece(lastMove.movedPiece().getClass());
         }else{
             board.move(lastMove.to(),lastMove.from()); //Plays the last move in reverse.
         }
         if(lastMove.capturedPiece() != null){
-            (turn ? sentePlayer : gotePlayer).removeCapturedPiece(lastMove.capturedPiece().getClass());
+            (turn == Side.SENTE ? sentePlayer : gotePlayer).removeCapturedPiece(lastMove.capturedPiece().getClass());
             board.setAtPosition(lastMove.to(),lastMove.capturedPiece());
         }
         boardChanged();
@@ -117,7 +203,19 @@ public class Game {
     }
 
     private void changeTurn(){
-        turn = !turn;
+        turn = switch(turn) {
+            case SENTE -> Side.GOTE;
+            case GOTE -> Side.SENTE;
+        };
+        if (senteClock != null && goteClock != null)
+            changeActiveClock();
+    }
+
+    private void changeActiveClock() {
+        switch (turn) {
+            case SENTE -> { senteClock.resume(); goteClock.pause();}
+            case GOTE -> { goteClock.resume(); senteClock.pause();}
+        }
     }
 
     public void playHand(Pos pos, Piece piece) {
@@ -135,4 +233,9 @@ public class Game {
     private void boardChanged() {
         boardChanged.set(!boardChanged.get());
     }
+
+    public Side getTurn() {
+        return turn;
+    }
+
 }

@@ -1,5 +1,6 @@
 package view;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -10,6 +11,7 @@ import java.util.function.BiConsumer;
 
 public class BoardView extends GridPane {
     private final SquareView[][] squares;
+    private ClockView senteClockView, goteClockView;
 
     public class SquareView extends view.SquareView {
         public final Pos pos;
@@ -28,7 +30,7 @@ public class BoardView extends GridPane {
     public BoardView(Integer size) {
         squares = new SquareView[size][size];
         this.setId("board");
-        this.prefWidthProperty().bind(this.heightProperty());
+        this.minWidthProperty().bind(this.heightProperty());
 		setContraints();
 		populateGrid();
     }

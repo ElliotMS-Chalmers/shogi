@@ -1,10 +1,20 @@
 package view;
 
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
+import java.util.function.Consumer;
+import javafx.event.Event;
 
 public class GameMenu extends Menu {
+    private Consumer<String> onDialogResult; //callback for dialog result
     public GameMenu() {
         this.setText("Game");
 
@@ -12,9 +22,7 @@ public class GameMenu extends Menu {
         MenuItem loadGameMenuItem = new MenuItem("Load Game...");
         MenuItem saveGameMenuItem = new MenuItem("Save Game As...");
 
-        newGameMenuItem.setOnAction(e -> {
-           showDialog();
-        });
+        newGameMenuItem.setOnAction(this::showDialog);
 
         this.getItems().addAll(
                 newGameMenuItem,
@@ -23,26 +31,63 @@ public class GameMenu extends Menu {
         );
     }
 
-    private void showDialog() {
+    public void setOnDialogResult(Consumer<String> callback) {
+        this.onDialogResult = callback;
+    }
+
+    private void showDialog(Event e) {
         Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Advanced Dialog");
-        dialog.setHeaderText("Select your options:");
+        Scene currentScene = ((MenuItem) e.getSource()).getParentPopup().getOwnerWindow().getScene();
+        dialog.getDialogPane().getStylesheets().addAll(currentScene.getStylesheets());
+        dialog.getDialogPane().setPrefSize(250, 150);
+        dialog.setTitle("Create new game");
+        // dialog.setHeaderText("Create new game");
 
-        // Create the form controls
-        RadioButton option1 = new RadioButton("Option 1");
-        RadioButton option2 = new RadioButton("Option 2");
-        ToggleGroup group = new ToggleGroup();
-        option1.setToggleGroup(group);
-        option2.setToggleGroup(group);
 
-        Slider slider = new Slider(0, 100, 50);
-        slider.setShowTickLabels(true);
-        slider.setShowTickMarks(true);
+        Label variantLabel = new Label("Variant:");
+        MenuButton variantMenuButton = new MenuButton("Standard");
+        HBox variantContainer = new HBox(5, variantLabel, variantMenuButton);
+        variantContainer.setAlignment(Pos.CENTER);
+        MenuItem standard = new MenuItem("Standard");
+        MenuItem minishogi = new MenuItem("Minishogi");
+        MenuItem chushogi = new MenuItem("Chushogi (todo)");
+        MenuItem annanshogi = new MenuItem("Annanshogi (todo)");
+        MenuItem kyotoshogi = new MenuItem("Kyotoshogi (todo)");
+        MenuItem checkshogi = new MenuItem("Checkshogi (todo)");
+        variantMenuButton.getItems().addAll(standard, minishogi, chushogi, annanshogi, kyotoshogi, checkshogi);
+        for (MenuItem item : variantMenuButton.getItems()) {
+            item.setOnAction(event -> {
+                variantMenuButton.setText(item.getText());
+            });
+        }
 
-        CheckBox checkBox = new CheckBox("Enable feature");
+        TextFlow timeLabelFlow = new TextFlow();
+        Text timeLabelText = new Text("Minutes per side: ");
+        Text timeNumberText = new Text("0");;
+        timeNumberText.setStyle("-fx-font-weight: bold");
+        timeLabelFlow.getChildren().addAll(timeLabelText, timeNumberText);
+        Slider timePerSideSlider = new Slider(0, 180,0);
+        timePerSideSlider.setBlockIncrement(1);
+        timePerSideSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            timeNumberText.setText(String.format("%.0f", newValue.doubleValue()));
+        });
+        VBox timePerSideContainer = new VBox(5, timeLabelFlow, timePerSideSlider);
+
+//         HBox toggleGroupContainer = new HBox(10);
+//         toggleGroupContainer.setAlignment(Pos.CENTER);
+//         ToggleGroup sideToggleGroup = new ToggleGroup();
+//         ToggleButton sente = new ToggleButton("Sente");
+//         ToggleButton random = new ToggleButton("Random");
+//         ToggleButton gote = new ToggleButton("Gote");
+//         toggleGroupContainer.getChildren().addAll(sente, random, gote);
+//         sente.setToggleGroup(sideToggleGroup);
+//         random.setToggleGroup(sideToggleGroup);
+//         gote.setToggleGroup(sideToggleGroup);
+//         random.setSelected(true);
 
         // Layout the controls in a grid
-        VBox content = new VBox(10, option1, option2, slider, checkBox);
+        VBox content = new VBox(10, variantContainer, timePerSideContainer /*, toggleGroupContainer */);
+        content.setAlignment(Pos.TOP_CENTER);
         dialog.getDialogPane().setContent(content);
 
         // Add OK and Cancel buttons
@@ -51,17 +96,18 @@ public class GameMenu extends Menu {
         // Handle the result
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
-                return "Selected: " +
-                        (option1.isSelected() ? "Option 1" : "Option 2") +
-                        ", Slider: " + (int) slider.getValue() +
-                        ", Feature Enabled: " + checkBox.isSelected();
+                return "Variant: " + variantMenuButton.getText() +
+                       ", Time: " + (int) timePerSideSlider.getValue();
+                        // ", Side: " + ((ToggleButton) sideToggleGroup.getSelectedToggle()).getText();
             }
             return null;
         });
 
         // Show the dialog and process the result
         dialog.showAndWait().ifPresent(result -> {
-            System.out.println("Result: " + result);
+            if (onDialogResult != null) {
+                onDialogResult.accept(result); //Notify the controller
+            }
         });
     }
 }
