@@ -1,6 +1,8 @@
 package model.pieces.chu;
 
+import model.Board;
 import model.pieces.Promotable;
+import model.variants.Variant;
 import util.Pos;
 import util.Side;
 
@@ -23,7 +25,7 @@ public class CopperGeneral extends Promotable {
     }
 
     @Override
-    public ArrayList<Pos> getAvailableMoves(Pos pos) {
+    public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant) {
         ArrayList<Pos> availableMoves = new ArrayList<>();
         int team = 0;
         int availableCol;
@@ -45,8 +47,8 @@ public class CopperGeneral extends Promotable {
                 availableCol = pos.col() + moves[i * 2 + team][0];
                 availableRow = pos.row() + moves[i * 2 + team][1];
             }
-            if (availableCol >= 0 && availableCol <= 8 && availableRow >= 0 && availableRow <= 8){
-                availableMoves.add(new Pos(availableRow,availableCol));
+            if (checkLegalMove(new Pos(availableRow,availableCol), board, variant) != null) {
+                availableMoves.add(new Pos(availableRow, availableCol));
             }
         }
         return availableMoves;

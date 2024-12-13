@@ -37,7 +37,7 @@ public class Game {
     }
 
     public Move move(Pos from, Pos to){
-        if (board.getPieceAt(from) == null || !ruleSet.validMove(from, to, board.getPieceAt(from))) { return null; }
+        if (board.getPieceAt(from) == null || !ruleSet.validMove(from, to, board.getPieceAt(from), board, variant)) { return null; }
         Move move = board.move(from, to);
         Piece capturedPiece = move.capturedPiece();
         if (capturedPiece != null) {

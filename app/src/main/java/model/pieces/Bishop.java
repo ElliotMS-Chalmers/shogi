@@ -1,13 +1,14 @@
 package model.pieces;
 
+import model.Board;
+import model.variants.Variant;
 import util.Pos;
 import util.Side;
 
 import java.util.ArrayList;
 
 public class Bishop extends Promotable {
-    private final int[][] moves = {{1,1},{2,2},{3,3},{4,4},{5,5},{6,6},{7,7},{8,8},{-1,1},{-2,2},{-3,3},{-4,4},{-5,5},{-6,6},{-7,7},{-8,8},{-1,-1},{-2,-2},{-3,-3},{-4,-4},{-5,-5},{-6,-6},{-7,-7},{-8,-8},{1,-1},{2,-2},{3,-3},{4,-4},{5,-5},{6,-6},{7,-7},{8,-8}};
-    private final int[][] promotedMoves = {{1,1},{2,2},{3,3},{4,4},{5,5},{6,6},{7,7},{8,8},{-1,1},{-2,2},{-3,3},{-4,4},{-5,5},{-6,6},{-7,7},{-8,8},{-1,-1},{-2,-2},{-3,-3},{-4,-4},{-5,-5},{-6,-6},{-7,-7},{-8,-8},{1,-1},{2,-2},{3,-3},{4,-4},{5,-5},{6,-6},{7,-7},{8,-8},{1,0},{-1,0},{0,1},{0,-1}};
+    private final int[][] promotedMoves = {{1,0},{-1,0},{0,1},{0,-1}};
 
     public Bishop(Side side) {
         super(side);
@@ -24,27 +25,46 @@ public class Bishop extends Promotable {
     }
 
     @Override
-    public ArrayList<Pos> getAvailableMoves(Pos pos) {
+    public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant) {
         ArrayList<Pos> availableMoves = new ArrayList<>();
         int availableRow;
         int availableCol;
-        int movesLength;
-        if (isPromoted){
-            movesLength = promotedMoves.length;
-        } else {
-            movesLength = moves.length;
+        int movesLength = variant.getHeight();
+        boolean previousPieceEnemy;
+
+        for (int rowI = -1; rowI < 3; rowI = rowI + 2) {
+            for (int colI = -1; colI < 3; colI = colI + 2) {
+                previousPieceEnemy = false;
+                for (int i = 1; i <= (movesLength); i ++) {
+                    availableCol = pos.col() + (i * colI);
+                    availableRow = pos.row() + (i * rowI);
+                    if (previousPieceEnemy){
+                        break;
+                    }
+                    if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null) {
+                        if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
+                            if (board.getPieceAt(new Pos(availableRow, availableCol)).getSide() != side) {
+                                previousPieceEnemy = true;
+                            }
+                        }
+                    }
+                    if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) == null){
+                        break;
+                    } else {
+                        availableMoves.add(new Pos(availableRow, availableCol));
+                    }
+
+                }
+            }
         }
 
-        for (int i = 0; i < (movesLength); i ++) {
-            if (isPromoted){
-                availableCol = pos.col() + promotedMoves[i][0];
-                availableRow = pos.row() + promotedMoves[i][1];
-            } else {
-                availableCol = pos.col() + moves[i][0];
-                availableRow = pos.row() + moves[i][1];
-            }
-            if (availableCol >= 0 && availableCol <= 8 && availableRow >= 0 && availableRow <= 8) {
-                availableMoves.add(new Pos(availableRow,availableCol));
+        if (isPromoted){
+            for (int[] promotedMove : promotedMoves) {
+                availableCol = pos.col() + promotedMove[0];
+                availableRow = pos.row() + promotedMove[1];
+                if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null) {
+                    availableMoves.add(new Pos(availableRow, availableCol));
+                }
             }
         }
         return availableMoves;

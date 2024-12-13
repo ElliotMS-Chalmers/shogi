@@ -1,5 +1,7 @@
 package model.pieces;
 
+import model.Board;
+import model.variants.Variant;
 import util.Side;
 import util.Pos;
 
@@ -29,7 +31,7 @@ public abstract class Piece {
 
     protected abstract String getImageAbbreviationLetters();
 
-    public abstract ArrayList<Pos> getAvailableMoves(Pos pos);
+    public abstract ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant);
 
     public String getImageAbbreviation() {
         return switch (side) {
@@ -37,4 +39,25 @@ public abstract class Piece {
             case SENTE -> "0" + getImageAbbreviationLetters();
         };
     };
+
+
+    // Denna funktionen borde ligga på något bättre ställe i variants men....
+    public Pos checkLegalMove (Pos pos, Board board, Variant variant){
+        boolean valid = true;
+        if (pos.col() >= 0 && pos.col() <= (variant.getWidth()-1) && pos.row() >= 0 && pos.row() <= (variant.getHeight()-1)) {
+            if (board.getPieceAt(pos) != null) {
+                if (board.getPieceAt(pos).getSide() == side) {
+                    valid = false;
+                }
+            }
+            if (valid) {
+                return pos;
+            }
+        }
+        return null;
+    }
+
+    public boolean capturingOwnPiece(Pos pos, Board board, Variant variant){
+        return board.getPieceAt(pos).getSide() != side;
+    }
 }
