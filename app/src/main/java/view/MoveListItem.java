@@ -27,9 +27,6 @@ public class MoveListItem extends HBox {
         Pane movePane = new Pane(new Label(move));
         movePane.getStyleClass().add("move-list-item-move");
         HBox.setHgrow(movePane, Priority.ALWAYS);
-        // Label label = new Label(move);
-        // label.getStyleClass().add("move-list-item-text");
-        // movePane.getChildren().add(label);
 
         this.getChildren().addAll(indexPane, movePane);
 
