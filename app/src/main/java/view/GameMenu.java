@@ -129,7 +129,7 @@ public class GameMenu extends Menu {
 
     private void openFileChooser(Event e) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("", "*.json"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Save file", "*.json"));
         MenuItem menuItem = (MenuItem) e.getSource();
         Window window = menuItem.getParentPopup().getOwnerWindow();
         File selectedFile = fileChooser.showOpenDialog(window);
@@ -145,7 +145,7 @@ public class GameMenu extends Menu {
 
     private void openFileSaver(Event e) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("", "*.json"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Save file", "*.json"));
         fileChooser.setInitialFileName("shogi_game_save.json");
         MenuItem menuItem = (MenuItem) e.getSource();
         Window window = menuItem.getParentPopup().getOwnerWindow();

@@ -72,9 +72,9 @@ public class HistoryView extends VBox {
         }
 
         private void setImages(){
-            forwardImageView.setImage(new Image("image/button_icons/forward.png"));
-            backwardImageView.setImage(new Image("image/button_icons/backward.png"));
-            undoImageView.setImage(new Image("image/button_icons/undo.png"));
+            //forwardImageView.setImage(new Image("image/button_icons/forward.png"));
+            //backwardImageView.setImage(new Image("image/button_icons/backward.png"));
+            //undoImageView.setImage(new Image("image/button_icons/undo.png"));
         }
     }
 
