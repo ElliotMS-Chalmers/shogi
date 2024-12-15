@@ -15,14 +15,23 @@ public class Knight extends Promotable {
         super(side);
     }
 
-    @Override
-    protected String getImageAbbreviationLetters() {
-        return "KE";
-    }
+//    @Override
+//    protected String getImageAbbreviationLetters() {
+//        return "KE";
+//    }
+//
+//    @Override
+//    protected String getPromotedImageAbbreviationLetters() {
+//        return "NK";
+//    }
 
     @Override
-    protected String getPromotedImageAbbreviationLetters() {
-        return "NK";
+    public String getSfenAbbreviation(){
+        char letter = 'N';
+        return switch(side){
+            case SENTE -> String.valueOf(letter);
+            case GOTE -> String.valueOf(letter).toLowerCase();
+        };
     }
 
     @Override

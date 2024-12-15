@@ -5,7 +5,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.image.Image;
 import model.*;
 // import util.Piece;
-import model.variants.Variant;
+import model.settings.PieceSet;
+import model.settings.PieceSetType;
+import model.settings.Settings;
 import util.Pos;
 import util.Side;
 import view.*;
@@ -50,8 +52,8 @@ public class ShogiController {
 
         // Handle change in clocks
         if (game.isClocksInitialized()) {
-            senteClockView.bindToTimer(game.getClockTime(Side.SENTE));
-            goteClockView.bindToTimer(game.getClockTime(Side.GOTE));
+            senteClockView.bindToTimer(game.timeProperty(Side.SENTE));
+            goteClockView.bindToTimer(game.timeProperty(Side.GOTE));
             //game.getSenteTime().addListener(this::onSenteClockTimeChanged);
             //game.getGoteTime().addListener(this::onGoteClockTimeChanged);
         }
@@ -67,7 +69,7 @@ public class ShogiController {
     }
 
     private void setBackground() {
-        boardView.setBackground(settings.getBoardTheme().getImage());
+        boardView.setBackground(new Image(settings.getBoardTheme().getImage()));
     }
 
     private void movePiece(Pos from, Pos to) {
@@ -87,7 +89,7 @@ public class ShogiController {
     private void drawBoard(Sfen sfen) {
         sfen.forEachPiece((abbr, pos) -> {
             Piece piece =  PieceFactory.fromSfenAbbreviation(abbr);
-            Image image = getPieceSet().getImage(piece);
+            Image image = new Image(getPieceSet().getImage(piece));
             boardView.drawImageAt(image, pos);
         });
     }
@@ -99,8 +101,8 @@ public class ShogiController {
         for (Class<? extends Piece> pieceClass : hand) {
             Piece gotePiece = PieceFactory.fromClass(pieceClass, Side.GOTE);
             Piece sentePiece = PieceFactory.fromClass(pieceClass, Side.SENTE);
-            gotePieceStandView.drawImageAt(getPieceSet().getImage(gotePiece), i);
-            sentePieceStandView.drawImageAt(getPieceSet().getImage(sentePiece), j);
+            gotePieceStandView.drawImageAt(new Image(getPieceSet().getImage(gotePiece)), i);
+            sentePieceStandView.drawImageAt(new Image(getPieceSet().getImage(sentePiece)), j);
             i++; j--;
         }
     }
@@ -238,7 +240,7 @@ public class ShogiController {
     public void setBoardViewSquare(Piece piece,Pos pos){
         Image image;
         if(piece == null){image = null;}
-        else{image = getPieceSet().getImage(piece);}
+        else{image = new Image(getPieceSet().getImage(piece));}
         boardView.drawImageAt(image,pos);
     }
 

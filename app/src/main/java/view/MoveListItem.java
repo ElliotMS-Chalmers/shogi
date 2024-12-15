@@ -20,7 +20,7 @@ public class MoveListItem extends HBox {
         this.getStyleClass().add("move-list-item");
 
         StackPane indexPane = new StackPane(new Label(String.valueOf(index + 1)));
-        indexPane.setMinWidth(15);
+        indexPane.setMinWidth(20);
         indexPane.prefWidthProperty().bind(this.widthProperty().multiply(0.125));
         indexPane.getStyleClass().add("move-list-item-index");
 

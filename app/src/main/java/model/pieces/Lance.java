@@ -13,15 +13,13 @@ public class Lance extends Promotable {
         super(side);
     }
 
-    @Override
-    protected String getImageAbbreviationLetters() {
-        return "KY";
-    }
-
-    @Override
-    protected String getPromotedImageAbbreviationLetters() {
-        return "NY";
-    }
+//    @Override
+//    protected String getImageAbbreviationLetters() { return "KY"; }
+//
+//    @Override
+//    protected String getPromotedImageAbbreviationLetters() {
+//        return "NY";
+//    }
 
     @Override
     public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant){

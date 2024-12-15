@@ -18,6 +18,7 @@ public class HistoryView extends VBox {
         this.getStyleClass().add("history-view");
         this.setPrefHeight(this.prefHeight(Double.MAX_VALUE));
         this.prefWidthProperty().bind(this.heightProperty().multiply(0.35));
+        this.setMinWidth(100);
         moveList = new MoveList();
         moveList.prefHeightProperty().bind(this.heightProperty().multiply(0.9));
         this.getChildren().add(moveList);

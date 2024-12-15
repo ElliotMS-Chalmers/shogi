@@ -14,15 +14,15 @@ public class Bishop extends Promotable {
         super(side);
     }
 
-    @Override
-    protected String getImageAbbreviationLetters() {
-        return "KA";
-    }
-
-    @Override
-    protected String getPromotedImageAbbreviationLetters() {
-        return "UM";
-    }
+//    @Override
+//    protected String getImageAbbreviationLetters() {
+//        return "KA";
+//    }
+//
+//    @Override
+//    protected String getPromotedImageAbbreviationLetters() {
+//        return "UM";
+//    }
 
     @Override
     public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant) {

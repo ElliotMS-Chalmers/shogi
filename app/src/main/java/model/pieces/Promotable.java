@@ -15,16 +15,16 @@ public abstract class Promotable extends Piece {
         return isPromoted ? '+' + abbr : abbr;
     }
 
-    @Override
-    public String getImageAbbreviation() {
-        String abbr = isPromoted ? getPromotedImageAbbreviationLetters() : getImageAbbreviationLetters();
-        return switch (side) {
-            case GOTE -> "1" + abbr;
-            case SENTE -> "0" + abbr;
-        };
-    }
+//    @Override
+//    public String getImageAbbreviation() {
+//        String abbr = isPromoted ? getPromotedImageAbbreviationLetters() : getImageAbbreviationLetters();
+//        return switch (side) {
+//            case GOTE -> "1" + abbr;
+//            case SENTE -> "0" + abbr;
+//        };
+//    }
 
-    protected abstract String getPromotedImageAbbreviationLetters();
+//    protected abstract String getPromotedImageAbbreviationLetters();
 
     public void promote() {
         isPromoted = true;

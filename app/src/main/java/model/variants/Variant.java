@@ -1,10 +1,8 @@
 package model.variants;
 
-import model.PieceSet;
-import model.PieceSetType;
+import model.settings.PieceSetType;
 import model.pieces.Piece;
 import model.Sfen;
-import util.Side;
 
 import java.util.List;
 

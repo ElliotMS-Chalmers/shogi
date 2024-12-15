@@ -12,17 +12,17 @@ public class CopperGeneral extends Promotable {
     private final int[][] moves = {{-1,1},{-1,-1}, {0,1},{0,-1}, {1,1},{1,-1}, {0,-1},{0,1}};
     private final int[][] promotedMoves = {};
 
-    public CopperGeneral(Side side) {super(side);}
+    public CopperGeneral(Side side) { super(side); }
 
-    @Override
-    protected String getImageAbbreviationLetters() {
-        return "";
-    }
-
-    @Override
-    protected String getPromotedImageAbbreviationLetters() {
-        return "";
-    }
+//    @Override
+//    protected String getImageAbbreviationLetters() {
+//        return "";
+//    }
+//
+//    @Override
+//    protected String getPromotedImageAbbreviationLetters() {
+//        return "";
+//    }
 
     @Override
     public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant) {

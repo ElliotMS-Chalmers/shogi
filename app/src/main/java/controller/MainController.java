@@ -4,31 +4,38 @@ import javafx.animation.FadeTransition;
 import javafx.scene.Scene;
 import javafx.util.Duration;
 import model.Game;
-import model.Settings;
+import model.SaveFile;
+import model.settings.Settings;
 import model.variants.Standard;
 import view.MainView;
 
 public class MainController {
     Game game;
     private final Settings settings;
-    private final DialogController dialogController;
+    private final MenuController menuController;
     private ShogiController shogiController;
     private final SettingsController settingsController;
     private MainView mainView;
     private final Scene scene;
 
     public MainController() {
-        this.game = new Game(new Standard(), 0); // Default game on launch, should be replaced with saved game
+        SaveFile saveFile = SaveFile.load();
+        if (saveFile != null) {
+            this.game = new Game(saveFile);
+        } else {
+            this.game = new Game(new Standard(), 0);
+        }
         this.settings = new Settings();
 
-        dialogController = new DialogController();
+        menuController = new MenuController();
         shogiController = new ShogiController(settings, game);
         settingsController = new SettingsController(settings);
 
-        mainView = new MainView(shogiController.getView(), dialogController.getMenu(), settingsController.getMenu());
+        mainView = new MainView(shogiController.getView(), menuController.getMenu(), settingsController.getMenu());
         scene = new Scene(mainView, 1280, 720);
 
-        dialogController.setNewGameHandler(this::newGame);
+        menuController.setNewGameHandler(this::newGame);
+        menuController.setSaveGameHandler(this::saveGame);
     }
 
     public Scene getScene() {
@@ -37,6 +44,8 @@ public class MainController {
 
     public void shutdown() {
         game.stopClock();
+        SaveFile saveFile = new SaveFile(game);
+        saveFile.save();
     }
 
     private void newGame(Game game) {
@@ -57,5 +66,10 @@ public class MainController {
         });
 
         fadeOut.play();
+    }
+
+    private void saveGame(String path) {
+        SaveFile saveFile = new SaveFile(game);
+        saveFile.save(path);
     }
 }

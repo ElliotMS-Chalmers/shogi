@@ -14,15 +14,15 @@ public class Rook extends Promotable {
         super(side);
     }
 
-    @Override
-    protected String getImageAbbreviationLetters() {
-        return "HI";
-    }
-
-    @Override
-    protected String getPromotedImageAbbreviationLetters() {
-        return "RY";
-    }
+//    @Override
+//    protected String getImageAbbreviationLetters() {
+//        return "HI";
+//    }
+//
+//    @Override
+//    protected String getPromotedImageAbbreviationLetters() {
+//        return "RY";
+//    }
 
     @Override
     public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant) {
