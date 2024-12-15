@@ -1,7 +1,8 @@
 package controller;
 
 import javafx.beans.Observable;
-import javafx.beans.property.BooleanProperty;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import model.Game;
@@ -18,16 +19,50 @@ public class HistoryController {
     private final HistoryView historyView;
     private final History history;
     private final ShogiController shogiController;
+    private final Game game;
+    private boolean undo = false; //Påverkar vad som ska göras i onBoardChanged beroende på om förändringen kommer från ett drag eller undo
 
     public HistoryController(ShogiController shogiController, Game game, HistoryView view){
+        this.game = game;
         this.history = game.getHistory();
         this.historyView = view;
         this.shogiController = shogiController;
-        game.boardChangedProperty().addListener(this::onBoardChanged);
+        this.game.boardChangedProperty().addListener(this::onBoardChanged);
         this.historyView.setMoveClickHandler(this::processMoveClick);
+        this.historyView.setButtonClickHandler(this::forward,this::backward,this::undo);
+    }
+
+    public void forward(Button button, ActionEvent event){
+        int index = historyView.getHighlightIndex();
+        if(index == history.getNumberOfMoves()-1){return;}
+        highlightMove(index+1);
+    }
+
+    public void backward(Button button, ActionEvent event){
+        int index = historyView.getHighlightIndex();
+        if(index < 1){return;}
+        highlightMove(index-1);
+    }
+
+    public void undo(Button button, ActionEvent event){
+        switch (history.getNumberOfMoves()){
+            case 0:
+                return;
+            case 1:
+                break; //Om det bara finns ett drag ska inget drag highlightas
+            default:
+                highlightMove(history.getNumberOfMoves()-2);
+        }
+        undo = true;
+        game.undo();
+        historyView.removeLastMoves(1);
     }
 
     public void onBoardChanged(Observable observable){
+        if(undo){
+            undo = false;
+            return;
+        }
         Move move = history.getLast();
         String moveString = move.toString();
         historyView.addMove(moveString);

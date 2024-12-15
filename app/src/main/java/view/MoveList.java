@@ -43,6 +43,11 @@ public class MoveList extends ScrollPane {
 
     public int getHighlightIndex(){return highlightIndex;}
 
+    public void removeLastMoves(int number){
+        for(int i = 0; i < number; i++){content.getChildren().removeLast();}
+        if(content.getChildren().size() == 0){highlightIndex = -1;}
+    }
+
     private void unhighlight(){
         if(highlightIndex == -1){return;}
         MoveListItem mli = (MoveListItem) content.getChildren().get(highlightIndex);

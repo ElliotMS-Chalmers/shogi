@@ -222,8 +222,8 @@ public class Game {
         }
         if(lastMove.capturedPiece() != null){
             (turn == Side.SENTE ? sentePlayer : gotePlayer).removeCapturedPiece(lastMove.capturedPiece().getClass());
-            board.setAtPosition(lastMove.to(),lastMove.capturedPiece());
         }
+        board.setAtPosition(lastMove.to(),lastMove.capturedPiece());
         boardChanged();
     }
 

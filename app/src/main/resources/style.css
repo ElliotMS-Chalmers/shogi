@@ -55,6 +55,14 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.40), 2, 0, 0, 1);
 }
 
+.history-button {
+    -fx-background-color: white;
+    -fx-padding: 0;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 3, 0, 0, 1);
+}
+
 .move-list {
     -fx-background-color:transparent;
     -fx-padding: 0;
