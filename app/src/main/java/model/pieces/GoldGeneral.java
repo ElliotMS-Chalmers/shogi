@@ -14,10 +14,10 @@ public class GoldGeneral extends Piece {
         super(side);
     }
 
-    @Override
-    protected String getImageAbbreviationLetters() {
-        return "KI";
-    }
+//    @Override
+//    protected String getImageAbbreviationLetters() {
+//        return "KI";
+//    }
 
     @Override
     public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant){

@@ -72,9 +72,9 @@ public class HistoryView extends VBox {
         }
 
         private void setImages(){
-            forwardImageView.setImage(new Image("image/button_icons/forward.png"));
-            backwardImageView.setImage(new Image("image/button_icons/backward.png"));
-            undoImageView.setImage(new Image("image/button_icons/undo.png"));
+            //forwardImageView.setImage(new Image("image/button_icons/forward.png"));
+            //backwardImageView.setImage(new Image("image/button_icons/backward.png"));
+            //undoImageView.setImage(new Image("image/button_icons/undo.png"));
         }
     }
 
@@ -84,6 +84,7 @@ public class HistoryView extends VBox {
         this.getStyleClass().add("history-view");
         this.setPrefHeight(this.prefHeight(Double.MAX_VALUE));
         this.prefWidthProperty().bind(this.heightProperty().multiply(0.35));
+        this.setMinWidth(100);
         moveList = new MoveList();
         moveList.prefHeightProperty().bind(this.heightProperty().multiply(0.9));
         buttonHBox.prefHeightProperty().bind(this.heightProperty().multiply(0.1));

@@ -15,15 +15,15 @@ public class SilverGeneral extends Promotable {
         super(side);
     }
 
-    @Override
-    protected String getImageAbbreviationLetters() {
-        return "GI";
-    }
-
-    @Override
-    protected String getPromotedImageAbbreviationLetters() {
-        return "NG";
-    }
+//    @Override
+//    protected String getImageAbbreviationLetters() {
+//        return "GI";
+//    }
+//
+//    @Override
+//    protected String getPromotedImageAbbreviationLetters() {
+//        return "NG";
+//    }
 
     @Override
     public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant){

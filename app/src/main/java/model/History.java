@@ -16,6 +16,10 @@ public class History {
     }
     public int getNumberOfMoves(){return moves.size();}
     public Iterator<Move> getMoves(int index1, int index2){
+        if (moves.isEmpty() || index1 < 0 || index2 < 0 || index1 >= moves.size() || index2 >= moves.size()) {
+            return Collections.emptyIterator();
+        }
+
         return new Iterator<Move>() {
             boolean reverse = (index1 > index2);
             int index = index1;

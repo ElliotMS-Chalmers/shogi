@@ -1,6 +1,6 @@
 package model.variants;
 
-import model.PieceSetType;
+import model.settings.PieceSetType;
 import model.pieces.*;
 import model.Sfen;
 

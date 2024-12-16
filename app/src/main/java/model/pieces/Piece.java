@@ -7,6 +7,9 @@ import util.Pos;
 
 import java.util.ArrayList;
 
+/**
+ * Abstract class representing a piece
+ */
 public abstract class Piece {
     protected Side side;
 
@@ -20,25 +23,22 @@ public abstract class Piece {
 
     public String getSfenAbbreviation(){
         char letter = this.getClass().getSimpleName().charAt(0);
-        if (letter == 'K') {
-            letter = this.getClass().getSimpleName().equals("King") ? 'K' : 'N';
-        }
         return switch(side){
             case SENTE -> String.valueOf(letter);
             case GOTE -> String.valueOf(letter).toLowerCase();
         };
     }
 
-    protected abstract String getImageAbbreviationLetters();
+//    protected abstract String getImageAbbreviationLetters();
 
     public abstract ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant);
 
-    public String getImageAbbreviation() {
-        return switch (side) {
-            case GOTE -> "1" + getImageAbbreviationLetters();
-            case SENTE -> "0" + getImageAbbreviationLetters();
-        };
-    };
+//    public String getImageAbbreviation() {
+//        return switch (side) {
+//            case GOTE -> "1" + getImageAbbreviationLetters();
+//            case SENTE -> "0" + getImageAbbreviationLetters();
+//        };
+//    };
 
 
     // Denna funktionen borde ligga på något bättre ställe i variants men....

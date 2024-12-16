@@ -1,6 +1,7 @@
 package view;
 
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -10,11 +11,18 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
+
+import java.io.File;
 import java.util.function.Consumer;
 import javafx.event.Event;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class GameMenu extends Menu {
-    private Consumer<String> onDialogResult; //callback for dialog result
+    private Consumer<String> onDialogResult;
+    private Consumer<String> onFileChooserResult;
+    private Consumer<String> onFileSaverResult;
+
     public GameMenu() {
         this.setText("Game");
 
@@ -23,6 +31,8 @@ public class GameMenu extends Menu {
         MenuItem saveGameMenuItem = new MenuItem("Save Game As...");
 
         newGameMenuItem.setOnAction(this::showDialog);
+        loadGameMenuItem.setOnAction(this::openFileChooser);
+        saveGameMenuItem.setOnAction(this::openFileSaver);
 
         this.getItems().addAll(
                 newGameMenuItem,
@@ -33,6 +43,12 @@ public class GameMenu extends Menu {
 
     public void setOnDialogResult(Consumer<String> callback) {
         this.onDialogResult = callback;
+    }
+    public void setOnFileChooserResult(Consumer<String> callback) {
+        this.onFileChooserResult = callback;
+    }
+    public void setOnFileSaverResult(Consumer<String> callback) {
+        this.onFileSaverResult = callback;
     }
 
     private void showDialog(Event e) {
@@ -109,5 +125,37 @@ public class GameMenu extends Menu {
                 onDialogResult.accept(result); //Notify the controller
             }
         });
+    }
+
+    private void openFileChooser(Event e) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Save file", "*.json"));
+        MenuItem menuItem = (MenuItem) e.getSource();
+        Window window = menuItem.getParentPopup().getOwnerWindow();
+        File selectedFile = fileChooser.showOpenDialog(window);
+
+        if (selectedFile != null) {
+            String filePath = selectedFile.getAbsolutePath();
+            System.out.println("Loaded game from: " + filePath);
+            if (onFileChooserResult != null) {
+                onFileChooserResult.accept(filePath);
+            }
+        }
+    }
+
+    private void openFileSaver(Event e) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Save file", "*.json"));
+        fileChooser.setInitialFileName("shogi_game_save.json");
+        MenuItem menuItem = (MenuItem) e.getSource();
+        Window window = menuItem.getParentPopup().getOwnerWindow();
+        File selectedFile = fileChooser.showSaveDialog(window);
+
+        if (selectedFile != null) {
+            String filePath = selectedFile.getAbsolutePath();
+            if (onFileSaverResult != null) {
+                onFileSaverResult.accept(filePath);
+            }
+        }
     }
 }

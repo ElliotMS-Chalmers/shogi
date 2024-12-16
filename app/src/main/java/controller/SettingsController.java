@@ -4,14 +4,16 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import model.PieceSetType;
-import model.Settings;
+import model.pieces.chu.CopperGeneral;
+import model.settings.PieceSetType;
+import model.settings.Settings;
 import model.pieces.GoldGeneral;
-import model.pieces.King;
 import model.pieces.Lance;
 import model.pieces.Piece;
 import util.Side;
 import view.SettingsMenu;
+
+import java.io.InputStream;
 
 public class SettingsController {
     private final Settings settings;
@@ -28,7 +30,7 @@ public class SettingsController {
 
     private void populateBoardThemeMenu() {
         settings.getBoardThemes().forEach((name, theme) -> {
-            MenuItem menuItem = createMenuItem(name, theme.getImage());
+            MenuItem menuItem = createMenuItem(name, new Image(theme.getImage()));
             settingsMenu.addBoardThemeMenuItem(menuItem);
             menuItem.setOnAction(e -> {
                 settings.setBoardTheme(name);
@@ -41,12 +43,13 @@ public class SettingsController {
         settings.getPieceSets().forEach((type, sets) -> {
             Piece piece = switch (type) {
                 case PieceSetType.STANDARD -> new GoldGeneral(Side.SENTE);
-                case PieceSetType.CHU -> null;
+                case PieceSetType.CHU -> new CopperGeneral(Side.SENTE);
                 case PieceSetType.KYO -> new Lance(Side.SENTE);
             };
             Menu menu = new Menu(type.toString());
             sets.forEach((name, set) -> {
-                MenuItem menuItem = createMenuItem(name, set.getImage(piece)); //
+                InputStream imageStream = set.getImage(piece);
+                MenuItem menuItem = createMenuItem(name, imageStream == null ? null : new Image(imageStream));
                 menu.getItems().add(menuItem);
                 menuItem.setOnAction(e -> {
                     settings.setPieceSet(type, name);

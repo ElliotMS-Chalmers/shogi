@@ -2,6 +2,7 @@ plugins {
     application
 	jacoco
 	id("org.openjfx.javafxplugin") version "0.1.0"
+    java
 }
 
 repositories {
@@ -55,4 +56,13 @@ tasks.jacocoTestReport {
 javafx {
 	version = "20"
 	modules = listOf("javafx.controls", "javafx.media")
+}
+
+tasks.named<Javadoc>("javadoc") {
+    isFailOnError = true // Fail the build on Javadoc errors
+    (options as StandardJavadocDocletOptions).apply {
+        encoding = "UTF-8"
+        charSet = "UTF-8"
+        links("https://docs.oracle.com/en/java/javase/11/docs/api/") // Link to JDK API docs
+    }
 }

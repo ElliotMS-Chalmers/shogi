@@ -16,15 +16,15 @@ public class Pawn extends Promotable {
         super(side);
     }
 
-    @Override
-    protected String getImageAbbreviationLetters() {
-        return "FU";
-    }
-
-    @Override
-    protected String getPromotedImageAbbreviationLetters() {
-        return "TO";
-    }
+//    @Override
+//    protected String getImageAbbreviationLetters() {
+//        return "FU";
+//    }
+//
+//    @Override
+//    protected String getPromotedImageAbbreviationLetters() {
+//        return "TO";
+//    }
 
     @Override
     public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant){

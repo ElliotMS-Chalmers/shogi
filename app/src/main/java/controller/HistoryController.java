@@ -67,15 +67,18 @@ public class HistoryController {
         String moveString = move.toString();
         historyView.addMove(moveString);
     }
+
     public void processMoveClick(MoveListItem moveListItem, MouseEvent event){
         boolean isRightClick = event.getButton() == MouseButton.SECONDARY;
         if(isRightClick){return;}
 
         highlightMove(moveListItem.getIndex());
     }
+
     public void highlightLastMove(){
         highlightMove(history.getNumberOfMoves()-1);
     }
+
     private void highlightMove(int index){
         int lastHighlightIndex = historyView.getHighlightIndex();
         if(index == lastHighlightIndex){return;}
@@ -103,6 +106,7 @@ public class HistoryController {
         shogiController.highlightSquare(move.to());
         if(!move.fromPlayerHand()){shogiController.highlightSquare(move.from());}
     }
+
     //En funktion för att uppdatera BoardView utifrån ett drag
     private void forwardMove(Move move){
         shogiController.setBoardViewSquare(move.movedPiece(),move.to());
@@ -131,6 +135,4 @@ public class HistoryController {
         }
         else{shogiController.setBoardViewSquare(move.movedPiece(),move.from());}
     }
-
-
 }

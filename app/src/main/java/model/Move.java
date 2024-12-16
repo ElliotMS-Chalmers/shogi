@@ -7,6 +7,7 @@ public record Move(Pos from, Pos to, Piece movedPiece, Piece capturedPiece){
     public boolean fromPlayerHand(){
         return (this.from() == null);
     }
+
     public String toString(){
         char moveType;
         if(from == null){moveType = '*';}

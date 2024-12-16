@@ -65,7 +65,7 @@ public class Clock implements Runnable{
                 break; // Exit loop
             }
     
-            System.out.println(this.side + " - Seconds left: " + this.seconds);
+            // System.out.println(this.side + " - Seconds left: " + this.seconds);
             seconds.set(seconds.get() - 1);
     
             try {

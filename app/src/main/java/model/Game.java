@@ -50,6 +50,33 @@ public class Game {
         shutdownHook();
     }
 
+    public Game(SaveFile saveFile){
+        this.variant = saveFile.getVariant();
+        this.ruleSet = variant.getRuleSet();
+
+        this.board = new Board(variant.getWidth(), variant.getHeight());
+        this.board.initializeBoard(saveFile.getSfen());
+
+        this.history = saveFile.getHistory();
+
+        this.sentePlayer = new Player(Side.SENTE);
+        this.sentePlayer.intializeHand(variant.getHand());
+
+        this.gotePlayer = new Player(Side.GOTE);
+        this.gotePlayer.intializeHand(variant.getHand());
+
+        this.moveCount = saveFile.getSfen().getMoveCount();
+        this.turn = saveFile.getSfen().getTurn() == 'b' ? Side.SENTE : Side.GOTE;
+
+        int senteTime = saveFile.getTime(Side.SENTE);
+        int goteTime = saveFile.getTime(Side.GOTE);
+        setClock(Side.SENTE, senteTime);
+        setClock(Side.GOTE, goteTime);
+        startClocks();
+
+        shutdownHook();
+    }
+
     public Move move(Pos from, Pos to){
         if (board.getPieceAt(from) == null || !ruleSet.validMove(from, to, board.getPieceAt(from), board, variant)) { return null; }
         Move move = board.move(from, to);
@@ -92,7 +119,7 @@ public class Game {
         }));
     }
 
-    public IntegerProperty getClockTime(Side side) {
+    public IntegerProperty timeProperty(Side side) {
         IntegerProperty time = null;
         if (isClocksInitialized()) {
             switch (side) {
@@ -101,6 +128,18 @@ public class Game {
             }
         }
         return time;
+    }
+
+    public Integer getTime(Side side) {
+        IntegerProperty time = null;
+        if (isClocksInitialized()) {
+            switch (side) {
+                case SENTE -> time = senteClock.getSeconds();
+                case GOTE -> time = goteClock.getSeconds();
+            }
+        }
+        if (time == null) return 0;
+        return time.get();
     }
 
     public boolean isClocksInitialized() {
@@ -132,13 +171,23 @@ public class Game {
     //CLock
     public void setClocks(int seconds) {
         if (seconds != 0){
-            gameRunning.set(true);
+            // gameRunning.set(true); moved to start clocks
             this.senteClock = new Clock(seconds, Side.SENTE, gameRunning);
             this.goteClock = new Clock(seconds, Side.GOTE, gameRunning);
         }
     }
 
+    public void setClock(Side side, int seconds) {
+        if (seconds != 0){
+            switch (side) {
+                case SENTE: this.senteClock = new Clock(seconds, Side.SENTE, gameRunning); break;
+                case GOTE: this.goteClock = new Clock(seconds, Side.GOTE, gameRunning); break;
+            }
+        }
+    }
+
     public void startClocks(){
+        gameRunning.set(true);
         senteth = new Thread(this.senteClock);
         goteth = new Thread(this.goteClock);
         senteth.start();

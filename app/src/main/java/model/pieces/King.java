@@ -14,10 +14,10 @@ public class King extends Piece {
         super(side);
     }
 
-    @Override
-    protected String getImageAbbreviationLetters() {
-        return "OU";
-    }
+//    @Override
+//    protected String getImageAbbreviationLetters() {
+//        return "OU";
+//    }
 
     @Override
     public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant) {

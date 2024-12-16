@@ -1,6 +1,6 @@
 package model.variants;
 
-import model.PieceSetType;
+import model.settings.PieceSetType;
 import model.pieces.*;
 import model.Sfen;
 
@@ -8,14 +8,7 @@ import java.util.List;
 
 public class ChuShogi extends Variant {
 
-    private final Sfen startSfen = new Sfen("l(leo)(copper)sg(elephant)kgs(copper)(leo)l/" +
-            "(revChariot)1b1(tiger)(phoenix)(kirin)(tiger)1b1(revChariot)/" +
-            "(side)(vert)r(horse)(dragon)(queen)(lion)(dragon)(horse)r(vert)(side)/" +
-            "pppppppppppp/3(goBet)4(goBet)3/12/" +
-            "12/3(GOBET)4(GOBET)3/PPPPPPPPPPPP/" +
-            "(SIDE)(VERT)R(HORSE)(DRAGON)(LION)(QUEEN)(DRAGON)(HORSE)R(VERT)(SIDE)/" +
-            "(REVCHARIOT)1B1(TIGER)(KIRIN)(PHOENIX)(TIGER)1B1(REVCHARIOT)/" +
-            "L(LEO)(COPPER)SGK(ELEPHANT)GS(COPPER)(LEO)L");
+    private final Sfen startSfen = new Sfen("lfcsgekgscfl/a1b1txot1b1a/mvrhdqndhrvm/pppppppppppp/3i4i3/12/12/3I4I3/PPPPPPPPPPPP/MVRHDNQDHRVM/A1B1TOXT1B1A/LFCSGKEGSCFL b - 1");
 
     private final List<Class<? extends Piece>> hand = List.of(
             /*
@@ -64,7 +57,7 @@ public class ChuShogi extends Variant {
     }
 
     public List<Class<? extends Piece>> getHand() {
-        return hand;
+        return List.of();
     }
 
     @Override

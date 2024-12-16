@@ -1,6 +1,6 @@
 package controller;
 
-import model.SoundSet;
+import model.settings.SoundSet;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
