@@ -15,6 +15,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 public class Game {
     // private boolean turn = false;
     private Side turn = Side.SENTE;
+    private Side oppositeTurn = Side.GOTE;
     private Variant variant;
     private Board board;
     private BooleanProperty boardChanged = new SimpleBooleanProperty(false);
@@ -78,7 +79,7 @@ public class Game {
     }
 
     public Move move(Pos from, Pos to){
-        if (board.getPieceAt(from) == null || !ruleSet.validMove(from, to, board.getPieceAt(from), board, variant)) { return null; }
+        if (board.getPieceAt(from) == null || !ruleSet.validMove(from, to, board.getPieceAt(from), board, variant, turn, oppositeTurn)) { return null; }
         Move move = board.move(from, to);
         Piece capturedPiece = move.capturedPiece();
         if (capturedPiece != null) {
@@ -253,6 +254,10 @@ public class Game {
 
     private void changeTurn(){
         turn = switch(turn) {
+            case SENTE -> Side.GOTE;
+            case GOTE -> Side.SENTE;
+        };
+        oppositeTurn = switch(oppositeTurn) {
             case SENTE -> Side.GOTE;
             case GOTE -> Side.SENTE;
         };

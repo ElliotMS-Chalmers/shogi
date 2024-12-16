@@ -41,7 +41,7 @@ public abstract class Piece {
 //    };
 
 
-    // Denna funktionen borde ligga på något bättre ställe i variants men....
+
     public Pos checkLegalMove (Pos pos, Board board, Variant variant){
         boolean valid = true;
         if (pos.col() >= 0 && pos.col() <= (variant.getWidth()-1) && pos.row() >= 0 && pos.row() <= (variant.getHeight()-1)) {
@@ -57,7 +57,8 @@ public abstract class Piece {
         return null;
     }
 
-    public boolean capturingOwnPiece(Pos pos, Board board, Variant variant){
+    //kanske onödig funktion...
+    public boolean capturingOwnPiece(Pos pos, Board board){
         return board.getPieceAt(pos).getSide() != side;
     }
 }
