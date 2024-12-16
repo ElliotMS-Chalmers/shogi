@@ -33,8 +33,8 @@ public class ShogiView extends VBox {
         this.sentePieceStandView = new PieceStandView(Side.SENTE, handSize, boardSize);
         this.historyView = new HistoryView();
         this.gameMenuView = new GameMenu();
-        this.senteClockView = new ClockView();
-        this.goteClockView = new ClockView();
+        this.senteClockView = new ClockView(Side.SENTE);
+        this.goteClockView = new ClockView(Side.GOTE);
 
 
         // HBox centerGroup = new HBox(10);
