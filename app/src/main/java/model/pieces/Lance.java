@@ -65,4 +65,52 @@ public class Lance extends Promotable {
 
         return availableMoves;
     }
+
+    @Override
+    public ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board, Variant variant){
+        ArrayList<Pos> availableMoves = new ArrayList<>();
+        int team = 0;
+        int availableCol;
+        int availableRow;
+        int movesLength = variant.getWidth();
+        boolean previousPieceEnemy;
+        if (side == Side.SENTE){
+            team = 1;
+        }
+        if (isPromoted){
+            for (int i = 0; i < (promotedMoves.length/2); i ++) {
+                availableCol = pos.col() + promotedMoves[i *2 + team][0];
+                availableRow = pos.row() + promotedMoves[i *2 + team][1];
+                if (checkLegalMove(new Pos(availableRow,availableCol), board, variant) != null) {
+                    availableMoves.add(new Pos(availableRow, availableCol));
+                }
+            }
+        } else {
+            previousPieceEnemy = false;
+            for (int i = 1; i <= (movesLength); i ++) {
+                availableCol = (pos.col());
+                availableRow = (pos.row() + (i * -1* (-1+ team*2)));
+                if (previousPieceEnemy){
+                    if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null) {
+                        availableMoves.add(new Pos(availableRow, availableCol));
+                    }
+                    break;
+                }
+                if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null) {
+                    if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
+                        if (board.getPieceAt(new Pos(availableRow, availableCol)).getSide() != side) {
+                            previousPieceEnemy = true;
+                        }
+                    }
+                }
+                if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) == null){
+                    break;
+                } else {
+                    availableMoves.add(new Pos(availableRow, availableCol));
+                }
+            }
+        }
+
+        return availableMoves;
+    }
 }

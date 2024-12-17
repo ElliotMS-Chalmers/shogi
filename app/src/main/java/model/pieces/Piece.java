@@ -33,6 +33,9 @@ public abstract class Piece {
 
     public abstract ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant);
 
+    public abstract ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board, Variant variant);
+
+
 //    public String getImageAbbreviation() {
 //        return switch (side) {
 //            case GOTE -> "1" + getImageAbbreviationLetters();
@@ -41,6 +44,17 @@ public abstract class Piece {
 //    };
 
 
+
+    public boolean checkLegalMoveWithinBounds (Pos pos, Board board, Variant variant){
+        return pos.col() >= 0 && pos.col() <= (variant.getWidth() - 1) && pos.row() >= 0 && pos.row() <= (variant.getHeight() - 1);
+    }
+
+    public boolean checkLegalMoveNotCapturingOwnPiece (Pos pos, Board board, Variant variant){
+        if (board.getPieceAt(pos) != null) {
+            return board.getPieceAt(pos).getSide() != side;
+        }
+        return true;
+    }
 
     public Pos checkLegalMove (Pos pos, Board board, Variant variant){
         boolean valid = true;
@@ -57,8 +71,4 @@ public abstract class Piece {
         return null;
     }
 
-    //kanske onödig funktion...
-    public boolean capturingOwnPiece(Pos pos, Board board){
-        return board.getPieceAt(pos).getSide() != side;
-    }
 }

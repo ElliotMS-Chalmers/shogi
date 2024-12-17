@@ -32,9 +32,9 @@ public class ShogiRuleSet extends RuleSet{
 
         for (int i = 0; i < everyPiece.size(); i ++) {
             if (everyPiece.get(i).getSide() == Side.SENTE) {
-                allPossibleMovesSente.addAll(everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant));
+                allPossibleMovesSente.addAll(everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board, variant));
             } else {
-                allPossibleMovesGote.addAll(everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant));
+                allPossibleMovesGote.addAll(everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board, variant));
             }
         }
 
@@ -58,7 +58,7 @@ public class ShogiRuleSet extends RuleSet{
 
     public boolean isCurrentlyInCheckMate(Board board, Variant variant, Pos kingPos, Side oppositeSide){
         if (!isCurrentlyInCheck(board, variant, kingPos, oppositeSide)){ return false;}
-        for (Pos move : board.getPieceAt(kingPos).getAvailableMoves(kingPos, board, variant)){
+        for (Pos move : board.getPieceAt(kingPos).getAvailableMovesBackend(kingPos, board, variant)){
             if (!isCurrentlyInCheck(board, variant, move, oppositeSide)){return false;}
         }
         ArrayList<Piece> everyPieceSente = new ArrayList<>();
@@ -80,18 +80,17 @@ public class ShogiRuleSet extends RuleSet{
         }
 
         for (int i = 0; i <everyPiece.size(); i++){
-            if (everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant).contains(kingPos)){
-                pieceForcingCheckMoves = everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant);
+            if (everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board, variant).contains(kingPos)){
+                pieceForcingCheckMoves = everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board, variant);
                 pieceForcingCheckMoves.add(everyPiecePos.get(i));
             }
         }
         // kan ta piece men kung även om den går in i schack
-        // kan baka om det står ett torn framför
         if (oppositeSide == Side.GOTE && pieceForcingCheckMoves != null){
             for (int i = 0; i < everyPieceSente.size(); i ++){
                 if (everyPieceSente.get(i).getClass() != King.class) {
                     for (Pos pieceForcingCheckMove : pieceForcingCheckMoves) {
-                        if (everyPieceSente.get(i).getAvailableMoves(everyPieceSentePos.get(i), board, variant).contains(pieceForcingCheckMove)) {
+                        if (everyPieceSente.get(i).getAvailableMovesBackend(everyPieceSentePos.get(i), board, variant).contains(pieceForcingCheckMove)) {
                             return false;
                         }
                     }
@@ -102,7 +101,7 @@ public class ShogiRuleSet extends RuleSet{
                 if (everyPieceGote.get(i).getClass() != King.class) {
                     assert pieceForcingCheckMoves != null;
                     for (Pos pieceForcingCheckMove : pieceForcingCheckMoves) {
-                        if (everyPieceGote.get(i).getAvailableMoves(everyPieceGotePos.get(i), board, variant).contains(pieceForcingCheckMove)) {
+                        if (everyPieceGote.get(i).getAvailableMovesBackend(everyPieceGotePos.get(i), board, variant).contains(pieceForcingCheckMove)) {
                             return false;
                         }
                     }
