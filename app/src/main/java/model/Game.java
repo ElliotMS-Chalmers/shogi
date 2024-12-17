@@ -62,18 +62,26 @@ public class Game {
 
         this.sentePlayer = new Player(Side.SENTE);
         this.sentePlayer.intializeHand(variant.getHand());
-
         this.gotePlayer = new Player(Side.GOTE);
         this.gotePlayer.intializeHand(variant.getHand());
+        saveFile.getSfen().forEachCapturedPiece((abbr, amount) -> {
+            Piece piece = PieceFactory.fromSfenAbbreviation(String.valueOf(abbr));
+            switch (piece.getSide()) {
+                case SENTE: sentePlayer.addCapturedPiece(piece.getClass());
+                case GOTE: gotePlayer.addCapturedPiece(piece.getClass());
+            }
+        });
 
         this.moveCount = saveFile.getSfen().getMoveCount();
         this.turn = saveFile.getSfen().getTurn() == 'b' ? Side.SENTE : Side.GOTE;
 
         int senteTime = saveFile.getTime(Side.SENTE);
         int goteTime = saveFile.getTime(Side.GOTE);
-        setClock(Side.SENTE, senteTime);
-        setClock(Side.GOTE, goteTime);
-        startClocks();
+        if (senteTime != 0 && goteTime != 0) {
+            setClock(Side.SENTE, senteTime);
+            setClock(Side.GOTE, goteTime);
+            startClocks();
+        }
 
         shutdownHook();
     }
@@ -297,7 +305,7 @@ public class Game {
         Side side = piece.getSide();
         if (piece instanceof Promotable && variant.inPromotionZone(pos, side.opposite())) {
             ((Promotable) piece).promote();
-            // boardChanged();
+            // boardChanged(); // this fucks up history right now, workaround in controller atm
         }
     }
 
