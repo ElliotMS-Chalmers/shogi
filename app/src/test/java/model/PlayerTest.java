@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.Side;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
@@ -35,6 +37,9 @@ public class PlayerTest {
         String sfenAbbreviation2 = PieceFactory.fromClass(pieceClass2,Side.SENTE).getSfenAbbreviation();
         String expectedSfen = sfenAbbreviation1+"3"+sfenAbbreviation2;
         assertEquals(player.getHandAsSfen(),expectedSfen);
+
+        player.addCapturedPiece(null);
+        assertEquals(player.getHandAsSfen(),expectedSfen);
     }
 
     @Test
@@ -45,5 +50,15 @@ public class PlayerTest {
         String sfenAbbreviation = PieceFactory.fromClass(pieceClass,Side.SENTE).getSfenAbbreviation();
         String expectedSfen = "2"+sfenAbbreviation;
         assertEquals(player.getHandAsSfen(),expectedSfen);
+    }
+
+    @Test
+    void testGetSfenException(){
+        //Adds null to the list of piece classes in order to cause an exception in getHandAsSfen
+        ArrayList<Class<? extends Piece>> list = new ArrayList();
+        list.add(null);
+        player.intializeHand(list);
+        player.addCapturedPiece(null);
+        assertDoesNotThrow(() -> {player.getHandAsSfen();});
     }
 }
