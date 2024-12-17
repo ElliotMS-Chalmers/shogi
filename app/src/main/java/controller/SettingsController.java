@@ -3,7 +3,6 @@ package controller;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import model.pieces.chu.CopperGeneral;
 import model.settings.PieceSetType;
 import model.settings.Settings;
@@ -30,53 +29,34 @@ public class SettingsController {
 
     private void populateBoardThemeMenu() {
         settings.getBoardThemes().forEach((name, theme) -> {
-            MenuItem menuItem = createMenuItem(name, new Image(theme.getImage()));
-            settingsMenu.addBoardThemeMenuItem(menuItem);
-            menuItem.setOnAction(e -> {
-                settings.setBoardTheme(name);
-            });
+            settingsMenu.addBoardThemeMenuItem(name, new Image(theme.getImage()), (e) -> settings.setBoardTheme(name));
         });
     }
 
     private void populatePieceSetMenu() {
-        // Piece piece = new GoldGeneral(Side.SENTE);
         settings.getPieceSets().forEach((type, sets) -> {
             Piece piece = switch (type) {
                 case PieceSetType.STANDARD -> new GoldGeneral(Side.SENTE);
                 case PieceSetType.CHU -> new CopperGeneral(Side.SENTE);
                 case PieceSetType.KYO -> new Lance(Side.SENTE);
             };
-            Menu menu = new Menu(type.toString());
+            String subMenuName = type.toString();
+            settingsMenu.addPieceSetSubMenu(subMenuName);
             sets.forEach((name, set) -> {
-                InputStream imageStream = set.getImage(piece);
-                MenuItem menuItem = createMenuItem(name, imageStream == null ? null : new Image(imageStream));
-                menu.getItems().add(menuItem);
-                menuItem.setOnAction(e -> {
-                    settings.setPieceSet(type, name);
-                });
+                settingsMenu.addPieceSetSubMenuItem(
+                        subMenuName,
+                        name,
+                        new Image(set.getImage(piece)),
+                        e -> { settings.setPieceSet(type, name); }
+                );
             });
-            settingsMenu.addPieceSetMenuMenu(menu);
         });
     }
 
     private void populateSoundMenu() {
         settings.getSoundSets().forEach((name, set) -> {
-            MenuItem menuItem = new MenuItem(name);
-            settingsMenu.addSoundMenuItem(menuItem);
-            menuItem.setOnAction(e -> {
-                settings.setSoundSet(name);
-            });
+            settingsMenu.addSoundMenuItem(name, (e) -> settings.setSoundSet(name));
         });
-    }
-
-    private MenuItem createMenuItem(String name, Image image) {
-        MenuItem menuItem = new MenuItem(name);
-        ImageView imageView = new ImageView(image);
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(20);
-        imageView.setFitHeight(20);
-        menuItem.setGraphic(imageView);
-        return menuItem;
     }
 
     public SettingsMenu getMenu() {

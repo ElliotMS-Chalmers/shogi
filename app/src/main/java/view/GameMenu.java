@@ -82,7 +82,7 @@ public class GameMenu extends Menu {
         Text timeNumberText = new Text("0");;
         timeNumberText.setStyle("-fx-font-weight: bold");
         timeLabelFlow.getChildren().addAll(timeLabelText, timeNumberText);
-        Slider timePerSideSlider = new Slider(0, 180,0);
+        Slider timePerSideSlider = new Slider(0, 60,0);
         timePerSideSlider.setBlockIncrement(1);
         timePerSideSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             timeNumberText.setText(String.format("%.0f", newValue.doubleValue()));
