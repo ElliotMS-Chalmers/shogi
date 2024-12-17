@@ -147,11 +147,8 @@ public class ShogiController {
     }
 
     private void handleBoardRightClick(Pos pos) {
-        Piece piece = game.getBoard().getPieceAt(pos);
-        if (piece instanceof Promotable) {
-            ((Promotable) piece).promote();
-            onBoardChanged(null); // temp fix to redraw board on piece promotion
-        }
+        game.promotePieceAt(pos);
+        onBoardChanged(null); // temp fix to redraw board on piece promotion
     }
 
     private void handleHandToBoardClick(Pos pos) {

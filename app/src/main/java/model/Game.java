@@ -292,4 +292,13 @@ public class Game {
         return turn;
     }
 
+    public void promotePieceAt(Pos pos) {
+        Piece piece = board.getPieceAt(pos);
+        Side side = piece.getSide();
+        if (piece instanceof Promotable && variant.inPromotionZone(pos, side.opposite())) {
+            ((Promotable) piece).promote();
+            // boardChanged();
+        }
+    }
+
 }
