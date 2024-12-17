@@ -60,7 +60,17 @@
     -fx-padding: 0;
     -fx-border-radius: 6;
     -fx-background-radius: 6;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 3, 0, 0, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 3, 0, 1, 1);
+}
+
+.history-button:armed {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 2, 0, 0.5, 0.5);
+}
+
+.history-button-container {
+    -fx-padding: 0;
+    -fx-border-width: 0.5 0 0 0;
+    -fx-border-color: lightgrey;
 }
 
 .move-list {
