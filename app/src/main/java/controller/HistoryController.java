@@ -30,6 +30,12 @@ public class HistoryController {
         this.game.boardChangedProperty().addListener(this::onBoardChanged);
         this.historyView.setMoveClickHandler(this::processMoveClick);
         this.historyView.setButtonClickHandler(this::forward,this::backward,this::undo);
+
+        Iterator<Move> iterator = history.getMoves();
+        while (iterator.hasNext()) {
+            Move move = iterator.next();
+            historyView.addMove(move.toString());
+        }
     }
 
     public void forward(Button button, ActionEvent event){

@@ -1,5 +1,6 @@
 package model.variants;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import model.settings.PieceSetType;
 import model.pieces.Piece;
 import model.Sfen;
@@ -38,4 +39,8 @@ public abstract class Variant {
         return zoneRows != null && zoneRows.contains(pos.row());
     }
 
+    @JsonValue
+    public String serialize() {
+        return getClass().getSimpleName();
+    }
 }

@@ -64,5 +64,6 @@ tasks.named<Javadoc>("javadoc") {
         encoding = "UTF-8"
         charSet = "UTF-8"
         links("https://docs.oracle.com/en/java/javase/11/docs/api/") // Link to JDK API docs
+        exclude("App.java")
     }
 }

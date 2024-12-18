@@ -27,7 +27,7 @@ public class JsonLoader {
         try (InputStream inputStream = new FileInputStream(path)) {
             return objectMapper.readValue(inputStream, typeReference);
         } catch (IOException e) {
-            System.err.println("Could not load file: " + path);
+            System.err.println("Could not load file: " + path + ": " + e.getMessage());
             return null;
         }
     }

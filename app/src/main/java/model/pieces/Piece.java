@@ -1,5 +1,7 @@
 package model.pieces;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import model.Board;
 import model.variants.Variant;
 import util.Side;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 /**
  * Abstract class representing a piece
  */
+@JsonDeserialize(using = PieceDeserializer.class)
 public abstract class Piece {
     protected Side side;
 
@@ -21,6 +24,7 @@ public abstract class Piece {
         return side;
     }
 
+    @JsonValue
     public String getSfenAbbreviation(){
         char letter = this.getClass().getSimpleName().charAt(0);
         return switch(side){
@@ -29,18 +33,7 @@ public abstract class Piece {
         };
     }
 
-//    protected abstract String getImageAbbreviationLetters();
-
     public abstract ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant);
-
-//    public String getImageAbbreviation() {
-//        return switch (side) {
-//            case GOTE -> "1" + getImageAbbreviationLetters();
-//            case SENTE -> "0" + getImageAbbreviationLetters();
-//        };
-//    };
-
-
 
     public Pos checkLegalMove (Pos pos, Board board, Variant variant){
         boolean valid = true;
@@ -55,10 +48,5 @@ public abstract class Piece {
             }
         }
         return null;
-    }
-
-    //kanske onödig funktion...
-    public boolean capturingOwnPiece(Pos pos, Board board){
-        return board.getPieceAt(pos).getSide() != side;
     }
 }

@@ -5,10 +5,13 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
+import model.pieces.Piece;
 import model.settings.JsonLoader;
 import model.variants.Mini;
 import model.variants.Standard;
 import model.variants.Variant;
+import util.PathResolver;
+import util.Pos;
 import util.Side;
 
 import java.io.IOException;
@@ -16,17 +19,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * Represents a save file containing the state of a Shogi game.
+ * Provides methods to load, save, and serialize the state of the game.
+ */
 public class SaveFile {
     private final String sfen;
-    private final List<String> history;
-    private final Variant variant;
+    private final List<Move> history;
+    private final String variant;
     private final Map<Side, Integer> timeLeft;
 
     @JsonCreator
     public SaveFile(
             @JsonProperty("sfen") String sfen,
-            @JsonProperty("history") List<String> history,
-            @JsonProperty("variant") Variant variant,
+            @JsonProperty("history") List<Move> history,
+            @JsonProperty("variant") String variant,
             @JsonProperty("timeLeft") Map<Side, Integer> timeLeft
     ) {
         this.sfen = sfen;
@@ -37,24 +44,15 @@ public class SaveFile {
 
     public SaveFile(Game game) {
         this.sfen = game.getSfen().toString();
-
-        this.history = new ArrayList<>();
-        for (Iterator<Move> it = game.getHistory().getMoves(); it.hasNext(); ) {
-            Move move = it.next();
-            history.add(move.toString());
-        }
-
-        this.variant = game.getVariant() instanceof model.variants.Standard ? Variant.STANDARD :
-                       game.getVariant() instanceof model.variants.Mini ? Variant.MINI :
-                       Variant.STANDARD;
-
+        this.history = game.getHistory().serialize();
+        this.variant = game.getVariant().serialize();
         this.timeLeft = new HashMap<>();
         timeLeft.put(Side.SENTE, game.getTime(Side.SENTE));
         timeLeft.put(Side.GOTE, game.getTime(Side.GOTE));
     }
 
     public static SaveFile load() {
-        return JsonLoader.load(getSaveFilePath().toString(), new TypeReference<SaveFile>() {});
+        return load(getSaveFilePath().toString());
     }
 
     public static SaveFile load(String path) {
@@ -86,47 +84,12 @@ public class SaveFile {
     }
 
     private static Path getSaveFilePath() {
-        String userHome = System.getProperty("user.home");
-        String os = System.getProperty("os.name").toLowerCase();
-
-        Path path;
-
-        if (os.contains("win")) {
-            path = Paths.get(userHome, "AppData", "Local", "Shogi", "save.json");
-        } else {
-            path = Paths.get(userHome, ".config", "Shogi", "save.json");
-        }
-        return path;
+        return PathResolver.getAppDataPath("save.json");
     }
 
     @JsonIgnore
     public Sfen getSfen() {
-        return new Sfen(sfen);
-    }
-
-    @JsonIgnore
-    public History getHistory() {
-        return new History();
-    }
-
-    private enum Variant {
-        STANDARD,
-        MINI,
-        CHU,
-        KYO
-    }
-    @JsonIgnore
-    public model.variants.Variant getVariant() {
-        return switch (variant) {
-            case STANDARD -> new Standard();
-            case MINI -> new Mini();
-            default -> new Standard();
-        };
-    }
-
-    @JsonIgnore
-    public int getTime(Side side) {
-        return timeLeft.get(side);
+        return new Sfen(this.sfen);
     }
 
     @JsonGetter("sfen")
@@ -134,14 +97,32 @@ public class SaveFile {
         return sfen;
     }
 
-    @JsonGetter("history")
-    public List<String> getSerializedHistory() {
-        return history;
+    @JsonIgnore
+    public History getHistory() {
+        History historyObj = new History();
+        if (history == null) return historyObj;
+        for (Move move : history) {
+            historyObj.addMove(move);
+        }
+        return historyObj;
     }
 
-    @JsonGetter("variant")
-    public String getSerializedVariant() {
-        return variant.toString();
+    @JsonGetter("history")
+    public List<Move> getSerializedHistory() {
+        return this.history;
+    }
+
+    public Variant getVariant() {
+        return switch (variant) {
+            case "Standard" -> new Standard();
+            case "Mini" -> new Mini();
+            default -> throw new IllegalArgumentException("Unsupported variant in save file: " + variant);
+        };
+    }
+
+    @JsonIgnore
+    public int getTime(Side side) {
+        return timeLeft.get(side);
     }
 
     @JsonGetter("timeLeft")

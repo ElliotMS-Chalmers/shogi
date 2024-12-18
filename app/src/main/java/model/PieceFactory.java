@@ -1,10 +1,13 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import model.pieces.*;
 import model.pieces.Piece;
 import util.Side;
 
 public class PieceFactory {
+
     public static Piece fromSfenAbbreviation(String sfen) {
         boolean isPromoted = sfen.startsWith("+");
         char letter = sfen.charAt(sfen.length() - 1);

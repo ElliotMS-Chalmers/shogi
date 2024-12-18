@@ -1,5 +1,8 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import util.Pos;
 
 import java.util.function.BiConsumer;
@@ -8,7 +11,7 @@ public class Sfen {
     private String boardPosition;
     private char turn;             // 'b' for Black (Sente), 'w' for White (Gote)
     private String capturedPieces;
-    private int moveCount = 1;     // Optional, default to 1 if not specified
+    private int moveCount = 1;
 
     public Sfen(String boardPosition, char turn, String capturedPieces, int moveCount) {
         this.boardPosition = boardPosition;
@@ -60,6 +63,7 @@ public class Sfen {
         this.moveCount = moveCount;
     }
 
+    @JsonValue
     public String toString() {
         return boardPosition + " " + turn + " " + capturedPieces + " " + moveCount;
     }
