@@ -5,7 +5,7 @@ git clone https://github.com/ElliotMS-Chalmers/shogi.git
 cd shogi 
 ```
 ### Windows
-Build and run using included bat script.
+Build and run using included batch script.
 ```
 ./gradlew.bat run
 ```
