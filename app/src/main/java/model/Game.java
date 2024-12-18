@@ -180,13 +180,7 @@ public class Game {
      * @return The time left for the specified player in seconds. Returns 0 if clocks are not initialized.
      */
     public Integer getTime(Side side) {
-        IntegerProperty time = null;
-        if (isClocksInitialized()) {
-            switch (side) {
-                case SENTE -> time = senteClock.getSeconds();
-                case GOTE -> time = goteClock.getSeconds();
-            }
-        }
+        IntegerProperty time = timeProperty(side);
         if (time == null) return 0;
         return time.get();
     }

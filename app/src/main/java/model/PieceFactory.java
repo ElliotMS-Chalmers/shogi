@@ -2,7 +2,6 @@ package model;
 
 import model.pieces.*;
 import model.pieces.Piece;
-import model.pieces.chu.CopperGeneral;
 import util.Side;
 
 public class PieceFactory {

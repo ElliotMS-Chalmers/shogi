@@ -211,3 +211,18 @@ DialogPane .toggle-button:hover, DialogPane .toggle-button:focused {
 DialogPane .toggle-button:selected {
     -fx-background-color: #2078CB; /* this is not ideal */
 }
+
+/* Clock */
+.clock {
+    -fx-background-color: white;
+    -fx-background-radius: 3;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.40), 2, 0, 0, 1);
+}
+
+.clock.active {
+    -fx-background-color: #2078CB;
+}
+
+.clock.active .label {
+    -fx-text-fill: white;
+}
