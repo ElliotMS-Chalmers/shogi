@@ -20,7 +20,7 @@ public class HistoryController {
     private final History history;
     private final ShogiController shogiController;
     private final Game game;
-    private boolean undo = false; //Påverkar vad som ska göras i onBoardChanged beroende på om förändringen kommer från ett drag eller undo
+    private boolean undo = false; //Effects onBoardChanged based on the change is from a new move or from undo
 
     public HistoryController(ShogiController shogiController, Game game, HistoryView view){
         this.game = game;
@@ -49,7 +49,7 @@ public class HistoryController {
             case 0:
                 return;
             case 1:
-                break; //Om det bara finns ett drag ska inget drag highlightas
+                break; //If there is only one move, no move should be highlighted
             default:
                 highlightMove(history.getNumberOfMoves()-2);
         }
@@ -89,11 +89,11 @@ public class HistoryController {
         boolean reverse = index < lastHighlightIndex;
 
         int iteratorIndex1 = lastHighlightIndex;
-        /*Draget som redan är highlightats ska inte vara med i iteratorn om den kör framlänges
-        eftersom det draget redan har gjorts i viewn*/
+        /*The currently highlighted move shouldn't be part of the iterator if running forward
+        because the move has already been made in view.*/
         if(!reverse){iteratorIndex1 += 1;}
 
-        //En iterator av alla drag mellan index och lastHighlightIndex
+        //An iterator of all moves between the new and previously highlighted moves
         Iterator<Move> moveIterator = history.getMoves(iteratorIndex1,index);
         Move move = null;
         while(moveIterator.hasNext()){
@@ -107,7 +107,7 @@ public class HistoryController {
         if(!move.fromPlayerHand()){shogiController.highlightSquare(move.from());}
     }
 
-    //En funktion för att uppdatera BoardView utifrån ett drag
+    //Updates Boardview based on a move
     private void forwardMove(Move move){
         shogiController.setBoardViewSquare(move.movedPiece(),move.to());
         if(move.capturedPiece() != null){
