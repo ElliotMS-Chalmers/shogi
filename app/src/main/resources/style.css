@@ -67,6 +67,10 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 2, 0, 0.5, 0.5);
 }
 
+.history-button:hover {
+    -fx-background-color: #F7F6F5;
+}
+
 .history-button-container {
     -fx-padding: 0;
     -fx-border-width: 0.5 0 0 0;

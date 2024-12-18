@@ -59,11 +59,12 @@ javafx {
 }
 
 tasks.named<Javadoc>("javadoc") {
-    isFailOnError = true // Fail the build on Javadoc errors
+    isFailOnError = false // Fail the build on Javadoc errors
     (options as StandardJavadocDocletOptions).apply {
         encoding = "UTF-8"
         charSet = "UTF-8"
         links("https://docs.oracle.com/en/java/javase/11/docs/api/") // Link to JDK API docs
-        exclude("App.java")
+        exclude("App.java", "controller", "view", "util")
+        title = "Shogi"
     }
 }

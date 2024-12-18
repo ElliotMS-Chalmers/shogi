@@ -58,7 +58,7 @@ public class ShogiView extends VBox {
         senteClockView.prefWidthProperty().bind(boardView.widthProperty().divide(8));
 
         // Align the clocks to the right
-        goteClockWrapper.setAlignment(Pos.CENTER_RIGHT);
+        goteClockWrapper.setAlignment(Pos.CENTER_LEFT);
         senteClockWrapper.setAlignment(Pos.CENTER_RIGHT);
 
         // Bind max width of clock wrappers to the board width

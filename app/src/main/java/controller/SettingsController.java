@@ -25,7 +25,7 @@ public class SettingsController {
 
     private void populateBoardThemeMenu() {
         settings.getBoardThemes().forEach((name, theme) -> {
-            settingsMenu.addBoardThemeMenuItem(name, new Image(theme.getImage()), (e) -> settings.setBoardTheme(name));
+            settingsMenu.addBoardThemeMenuItem(name, new Image(theme.getBackground()), (e) -> settings.setBoardTheme(name));
         });
     }
 

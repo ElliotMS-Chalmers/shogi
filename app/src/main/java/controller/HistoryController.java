@@ -18,15 +18,15 @@ import java.util.Iterator;
 public class HistoryController {
     private final HistoryView historyView;
     private final History history;
-    private final ShogiController shogiController;
+    private final GameController gameController;
     private final Game game;
     private boolean undo = false; //Effects onBoardChanged based on the change is from a new move or from undo
 
-    public HistoryController(ShogiController shogiController, Game game, HistoryView view){
+    public HistoryController(GameController gameController, Game game, HistoryView view){
         this.game = game;
         this.history = game.getHistory();
         this.historyView = view;
-        this.shogiController = shogiController;
+        this.gameController = gameController;
         this.game.boardChangedProperty().addListener(this::onBoardChanged);
         this.historyView.setMoveClickHandler(this::processMoveClick);
         this.historyView.setButtonClickHandler(this::forward,this::backward,this::undo);
@@ -90,7 +90,7 @@ public class HistoryController {
         if(index == lastHighlightIndex){return;}
 
         historyView.highlight(index);
-        shogiController.unselectsSquare();
+        gameController.unselectsSquare();
 
         boolean reverse = index < lastHighlightIndex;
 
@@ -108,37 +108,40 @@ public class HistoryController {
             else{forwardMove(move);}
         }
         if(reverse){forwardMove(move);}
-        shogiController.clearHighlightedSquares();
-        shogiController.highlightSquare(move.to());
-        if(!move.fromPlayerHand()){shogiController.highlightSquare(move.from());}
+        gameController.clearHighlightedSquares();
+        gameController.highlightSquare(move.to());
+        if(!move.fromPlayerHand()){
+            gameController.highlightSquare(move.from());}
     }
 
     //Updates Boardview based on a move
     private void forwardMove(Move move){
-        shogiController.setBoardViewSquare(move.movedPiece(),move.to());
+        gameController.setBoardViewSquare(move.movedPiece(),move.to());
         if(move.capturedPiece() != null){
             Piece piece = move.capturedPiece();
             Side side = (piece.getSide() == Side.SENTE) ? Side.GOTE : Side.SENTE;
-            shogiController.changeCountAtPieceStandView(piece.getClass(),side,1);
+            gameController.changeCountAtPieceStandView(piece.getClass(),side,1);
         }
         if(move.fromPlayerHand()){
             Piece piece = move.movedPiece();
-            shogiController.changeCountAtPieceStandView(piece.getClass(),piece.getSide(),-1);
+            gameController.changeCountAtPieceStandView(piece.getClass(),piece.getSide(),-1);
         }
-        else{shogiController.setBoardViewSquare(null,move.from());}
+        else{
+            gameController.setBoardViewSquare(null,move.from());}
     }
 
     private void reverseMove(Move move){
-        shogiController.setBoardViewSquare(move.capturedPiece(),move.to());
+        gameController.setBoardViewSquare(move.capturedPiece(),move.to());
         if(move.capturedPiece() != null){
             Piece piece = move.capturedPiece();
             Side side = (piece.getSide() == Side.SENTE) ? Side.GOTE : Side.SENTE;
-            shogiController.changeCountAtPieceStandView(piece.getClass(),side,-1);
+            gameController.changeCountAtPieceStandView(piece.getClass(),side,-1);
         }
         if(move.fromPlayerHand()){
             Piece piece = move.movedPiece();
-            shogiController.changeCountAtPieceStandView(piece.getClass(),piece.getSide(),1);
+            gameController.changeCountAtPieceStandView(piece.getClass(),piece.getSide(),1);
         }
-        else{shogiController.setBoardViewSquare(move.movedPiece(),move.from());}
+        else{
+            gameController.setBoardViewSquare(move.movedPiece(),move.from());}
     }
 }

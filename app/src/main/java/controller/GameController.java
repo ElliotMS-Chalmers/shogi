@@ -1,7 +1,6 @@
 package controller;
 
 import javafx.beans.Observable;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.image.Image;
 import model.*;
@@ -18,7 +17,7 @@ import javafx.scene.input.MouseButton;
 import java.util.List;
 
 
-public class ShogiController {
+public class GameController {
     private Settings settings;
     private Game game;
     private ShogiView shogiView;
@@ -29,7 +28,7 @@ public class ShogiController {
     private HistoryController historyController;
     private SquareView lastSquareClicked;
 
-    public ShogiController(Settings settings, Game game) {
+    public GameController(Settings settings, Game game) {
         this.settings = settings;
         this.game = game;
         this.shogiView = new ShogiView(game.getVariant().getWidth(), game.getVariant().getHand().size());
@@ -69,7 +68,7 @@ public class ShogiController {
     }
 
     private void setBackground() {
-        boardView.setBackground(new Image(settings.getBoardTheme().getImage()));
+        boardView.setBackground(new Image(settings.getBoardTheme().getBackground()));
     }
 
     private void movePiece(Pos from, Pos to) {
