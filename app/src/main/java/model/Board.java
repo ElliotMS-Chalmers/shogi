@@ -42,9 +42,11 @@ public class Board {
         return move;
     }
 
-    public void testMove(Pos from, Pos to){
+    public Piece testMove(Pos from, Pos to, Piece piece){
+        Piece capturedPiece = getPieceAt(to);
         setAtPosition(to,grid[from.row()][from.col()]);
-        setAtPosition(from,null);
+        setAtPosition(from,piece);
+        return capturedPiece;
     }
 
     /**

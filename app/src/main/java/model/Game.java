@@ -124,8 +124,6 @@ public class Game {
                     break;
             }
         }
-        System.out.println(ruleSet.isCurrentlyInCheck(board, variant, board.getPiecePos(variant, turn, King.class), oppositeTurn));
-        System.out.println(ruleSet.isCurrentlyInCheckMate(board, variant, board.getPiecePos(variant, turn, King.class), oppositeTurn));
         changeTurn();
         moveCount++;
         history.addMove(move);
