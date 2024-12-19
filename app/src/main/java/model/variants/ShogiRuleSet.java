@@ -27,7 +27,7 @@ public class ShogiRuleSet implements RuleSet {
     public boolean validHandMove(Pos pos, Class pieceClass, Board board, Side side){
         if (board.getPieceAt(pos) != null){return false;}
         if (pieceClass == Pawn.class){
-            if (board.getIfPieceInColum(side, Pawn.class, pos.col())){return false;}
+            if (board.ifPieceInColum(side, Pawn.class, pos.col())){return false;}
         }
         if (pieceClass == Knight.class){
             if (side == Side.GOTE){

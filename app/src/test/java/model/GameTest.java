@@ -8,13 +8,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javafx.beans.property.BooleanProperty;
-import model.pieces.Bishop;
 import model.pieces.GoldGeneral;
-import model.pieces.Knight;
 import model.pieces.Pawn;
 import model.pieces.Piece;
 import model.pieces.Promotable;
-import model.pieces.Rook;
 import model.variants.Standard;
 import model.variants.Variant;
 import util.Pos;
@@ -300,7 +297,7 @@ public class GameTest {
     void testGameFromSaveFile() {
         game = new Game(variant, 360);
 
-        game.setCapturedPiecesFromSfen("pP");
+        game.setCapturedPiecesFromSfen("pP2");
 
 
 

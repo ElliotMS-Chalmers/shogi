@@ -1,22 +1,13 @@
 package model;
 
 import model.pieces.*;
-import model.settings.PieceSetType;
-import model.variants.Standard;
-import model.variants.Variant;
 import util.Pos;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.Pos;
 import util.Side;
-
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 class BoardTest {
 
@@ -69,22 +60,6 @@ class BoardTest {
     @Test
     void testGetEveryPiece() {
         Board board = new Board(9, 9);
-        Variant variant = new Standard() {
-            @Override
-            public PieceSetType getPieceSetType() {
-                return null;
-            }
-
-            @Override
-            public List<Class<? extends Piece>> getHand() {
-                return null;
-            }
-
-            @Override
-            public Map<Side, List<Integer>> getPromotionZones() {
-                return null;
-            }
-        };
 
         board.setAtPosition(new Pos(0, 0), new King(Side.SENTE));
         board.setAtPosition(new Pos(1, 1), new Pawn(Side.GOTE));
@@ -97,9 +72,6 @@ class BoardTest {
     void testGetEveryPiecePos() {
         // Create a 9x9 board
         Board board = new Board(9, 9);
-
-        // Create a variant with overridden width and height
-        Variant variant = new Standard();
 
         // Add some pieces to the board
         board.setAtPosition(new Pos(0, 0), new King(Side.SENTE)); // Position (0,0)
@@ -150,9 +122,13 @@ class BoardTest {
     }
 
     @Test
+    void testGetInvalidPiecePos() {
+        assertNull(new Board(9,9).getPiecePos(Side.SENTE, Pawn.class));
+    }
+
+    @Test
     void testGetPiecePosition() {
         Board board = new Board(9, 9);
-        Variant variant = new Standard();
 
         Piece king = new King(Side.SENTE);
         board.setAtPosition(new Pos(0, 0), king);
@@ -164,7 +140,6 @@ class BoardTest {
     @Test
     void testGetIfPieceInColum() {
         Board board = new Board(9, 9);
-        Variant variant = new Standard();
 
         int targetColumn = 4;
         King senteKing = new King(Side.SENTE);

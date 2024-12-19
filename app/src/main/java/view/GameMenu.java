@@ -89,18 +89,6 @@ public class GameMenu extends Menu {
         });
         VBox timePerSideContainer = new VBox(5, timeLabelFlow, timePerSideSlider);
 
-//         HBox toggleGroupContainer = new HBox(10);
-//         toggleGroupContainer.setAlignment(Pos.CENTER);
-//         ToggleGroup sideToggleGroup = new ToggleGroup();
-//         ToggleButton sente = new ToggleButton("Sente");
-//         ToggleButton random = new ToggleButton("Random");
-//         ToggleButton gote = new ToggleButton("Gote");
-//         toggleGroupContainer.getChildren().addAll(sente, random, gote);
-//         sente.setToggleGroup(sideToggleGroup);
-//         random.setToggleGroup(sideToggleGroup);
-//         gote.setToggleGroup(sideToggleGroup);
-//         random.setSelected(true);
-
         // Layout the controls in a grid
         VBox content = new VBox(10, variantContainer, timePerSideContainer /*, toggleGroupContainer */);
         content.setAlignment(Pos.TOP_CENTER);
