@@ -393,6 +393,7 @@ public class Game {
      * @param piece The piece to be played.
      */
     public void playHand(Pos pos, Piece piece) {
+        if (!ruleSet.validHandMove(pos, piece, board, variant, turn, oppositeTurn)){return;}
         board.setAtPosition(pos, piece);
         switch (piece.getSide()) {
             case GOTE -> gotePlayer.removeCapturedPiece(piece.getClass());

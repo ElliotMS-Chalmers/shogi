@@ -1,8 +1,7 @@
 package model.variants;
 
 import model.Board;
-import model.pieces.King;
-import model.pieces.Piece;
+import model.pieces.*;
 import util.Pos;
 import util.Side;
 
@@ -24,6 +23,29 @@ public class ShogiRuleSet implements RuleSet {
         return true;
     }
 
+    public boolean validHandMove(Pos pos, Piece piece, Board board, Variant variant, Side side, Side opposite){
+        if (board.getPieceAt(pos) != null){return false;}
+        if (piece.getClass() == Pawn.class){
+            if (board.getIfPieceInColum(variant, side, Pawn.class, pos.col())){return false;}
+        }
+        if (piece.getClass() == Knight.class){
+            if (side == Side.GOTE){
+                if (pos.row() < 2){return false;}
+            } else {
+                if (pos.row() > 6){return false;}
+            }
+        }
+        if (piece.getClass() == Lance.class){
+            if (side == Side.GOTE){
+                if (pos.row() < 1){return false;}
+            } else {
+                if (pos.row() > 7){return false;}
+            }
+        }
+
+
+        return true;
+    }
     public boolean checkIfNextMoveIsCheck(Pos posFrom, Pos posTo, Board board, Variant variant, Side side, Side oppositeSide){
         Piece piece = board.testMove(posFrom, posTo, null);
         if (isCurrentlyInCheck(board, variant, board.getPiecePos(variant, side, King.class), oppositeSide)) {

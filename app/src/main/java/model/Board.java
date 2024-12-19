@@ -188,4 +188,18 @@ public class Board {
         }
         return null;
     }
+
+    public boolean getIfPieceInColum(Variant variant, Side side, Class pieceType, int col) {
+        Piece piece;
+
+        for (int i = 0; i < variant.getWidth(); i++) {
+            piece = getPieceAt(new Pos(i, col));
+            if (piece != null) {
+                if (piece.getClass() == pieceType && piece.getSide() == side) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
