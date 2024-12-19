@@ -77,15 +77,17 @@ public class Rook extends Promotable {
         int availableCol;
         int movesLength = variant.getHeight();
         boolean previousPieceEnemy;
-        int[] test = {-1,0,0,1};
+        boolean previousPieceEnemyking;
+        int[] directions = {-1,0,0,1};
 
         for (int rowI = 0; rowI < 4; rowI ++) {
             previousPieceEnemy = false;
+            previousPieceEnemyking = false;
             for (int i = 1; i <= (movesLength); i ++) {
-                availableCol = (pos.col() + (i * test[(rowI+2)%4]));
-                availableRow = (pos.row() + (i * test[rowI%4]));
+                availableCol = (pos.col() + (i * directions[(rowI+2)%4]));
+                availableRow = (pos.row() + (i * directions[rowI%4]));
                 if (previousPieceEnemy){
-                    if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null) {
+                    if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null && previousPieceEnemyking) {
                         availableMoves.add(new Pos(availableRow, availableCol));
                     }
                     break;
@@ -94,6 +96,9 @@ public class Rook extends Promotable {
                     if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
                         if (board.getPieceAt(new Pos(availableRow, availableCol)).getSide() != side) {
                             previousPieceEnemy = true;
+                            if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class){
+                                previousPieceEnemyking = true;
+                            }
                         }
                     }
                 }

@@ -74,6 +74,7 @@ public class Lance extends Promotable {
         int availableRow;
         int movesLength = variant.getWidth();
         boolean previousPieceEnemy;
+        boolean previousPieceEnemyKing;
         if (side == Side.SENTE){
             team = 1;
         }
@@ -87,11 +88,12 @@ public class Lance extends Promotable {
             }
         } else {
             previousPieceEnemy = false;
+            previousPieceEnemyKing = false;
             for (int i = 1; i <= (movesLength); i ++) {
                 availableCol = (pos.col());
                 availableRow = (pos.row() + (i * -1* (-1+ team*2)));
                 if (previousPieceEnemy){
-                    if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null) {
+                    if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null && previousPieceEnemyKing) {
                         availableMoves.add(new Pos(availableRow, availableCol));
                     }
                     break;
@@ -100,6 +102,9 @@ public class Lance extends Promotable {
                     if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
                         if (board.getPieceAt(new Pos(availableRow, availableCol)).getSide() != side) {
                             previousPieceEnemy = true;
+                            if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class){
+                                previousPieceEnemyKing = true;
+                            }
                         }
                     }
                 }

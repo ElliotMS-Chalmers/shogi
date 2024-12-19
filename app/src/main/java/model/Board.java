@@ -22,6 +22,11 @@ public class Board {
         return move;
     }
 
+    public void testMove(Pos from, Pos to){
+        setAtPosition(to,grid[from.row()][from.col()]);
+        setAtPosition(from,null);
+    }
+
     public void setAtPosition(Pos pos, Piece piece){
         grid[pos.row()][pos.col()] = piece;
     }
