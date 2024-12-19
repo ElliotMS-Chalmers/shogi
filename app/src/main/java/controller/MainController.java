@@ -13,7 +13,7 @@ public class MainController {
     Game game;
     private final Settings settings;
     private final MenuController menuController;
-    private ShogiController shogiController;
+    private GameController gameController;
     private final SettingsController settingsController;
     private MainView mainView;
     private final Scene scene;
@@ -28,10 +28,10 @@ public class MainController {
         this.settings = new Settings();
 
         menuController = new MenuController();
-        shogiController = new ShogiController(settings, game);
+        gameController = new GameController(settings, game);
         settingsController = new SettingsController(settings);
 
-        mainView = new MainView(shogiController.getView(), menuController.getMenu(), settingsController.getMenu());
+        mainView = new MainView(gameController.getView(), menuController.getMenu(), settingsController.getMenu());
         scene = new Scene(mainView, 1280, 720);
 
         menuController.setNewGameHandler(this::newGame);
@@ -56,8 +56,8 @@ public class MainController {
         fadeOut.setOnFinished(event -> {
             this.game.stopClock();
             this.game = game;
-            this.shogiController = new ShogiController(settings, game);
-            this.mainView.setShogiView(shogiController.getView());
+            this.gameController = new GameController(settings, game);
+            this.mainView.setShogiView(gameController.getView());
 
             FadeTransition fadeIn = new FadeTransition(Duration.millis(100), scene.getRoot());
             fadeIn.setFromValue(0);

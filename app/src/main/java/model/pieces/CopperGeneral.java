@@ -1,7 +1,6 @@
-package model.pieces.chu;
+package model.pieces;
 
 import model.Board;
-import model.pieces.Promotable;
 import model.variants.Variant;
 import util.Pos;
 import util.Side;

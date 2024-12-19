@@ -1,6 +1,7 @@
 package view;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -9,30 +10,23 @@ import util.Side;
 
 public class ClockView extends VBox {
     private int time = 0;
-    private final Label playerLabel;
-    private final Label timeLabel;
-    private String playerName;
+    private final Label label;
 
     public ClockView(Side side) {
         super();
-        switch (side) {
-            case SENTE -> playerName = "Black";
-            case GOTE -> playerName = "White";
-        }
-
-        // Label for player name (e.g., "White" or "Black")
-        this.playerLabel = new Label(playerName);
-        this.playerLabel.setFont(new Font(24)); // Set font size for player name
-        this.playerLabel.setTextAlignment(TextAlignment.CENTER);
-
+        this.getStyleClass().add("clock");
         // Label for the timer
-        this.timeLabel = new Label("00:00");
-        this.timeLabel.setFont(new Font(48)); // Set font size for digital clock
-        this.timeLabel.setTextAlignment(TextAlignment.CENTER);
+        this.label = new Label("00:00");
+        this.label.setFont(new Font(24));
+        this.label.setTextAlignment(TextAlignment.CENTER);
+        this.setAlignment(Pos.CENTER);
 
         // Add labels to the layout
-        this.getChildren().addAll(playerLabel, timeLabel);
+        this.getChildren().add(label);
         this.setVisible(false);
+
+        scaleFont();
+        this.widthProperty().addListener((obs, oldVal, newVal) -> scaleFont());
     }
 
     public void bindToTimer(IntegerProperty timerProperty) {
@@ -48,18 +42,46 @@ public class ClockView extends VBox {
         );
     }
 
+    public void initialize(Integer seconds) {
+        time = seconds;
+        updateVisibility();
+        updateTimeLabel();
+    }
+
+    public void setTime(Integer seconds) {
+        javafx.application.Platform.runLater(() -> {
+            time = seconds;
+            updateVisibility();
+            updateTimeLabel();
+        });
+    }
+
     private void updateVisibility() {
-        if (time > 0) {
-            setVisible(true);
-        } else {
-            setVisible(false);
-        }
+        setVisible(time > 0);
     }
 
     private void updateTimeLabel() {
         int minutes = time / 60;
         int seconds = time % 60;
         String timeString = String.format("%02d:%02d", minutes, seconds);
-        timeLabel.setText(timeString);
+        label.setText(timeString);
+    }
+
+    public void setActive(boolean active) {
+        if (active) {
+            if (!this.getStyleClass().contains("active")) {
+                this.getStyleClass().add("active");
+            }
+        } else {
+            this.getStyleClass().remove("active");
+        }
+    }
+
+    private void scaleFont() {
+        double width = this.getWidth();
+        if (width > 0) {
+            double fontSize = width / 3.5;
+            label.setFont(new Font(fontSize));
+        }
     }
 }

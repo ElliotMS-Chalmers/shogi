@@ -2,6 +2,7 @@ package view;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,14 +25,23 @@ public class HistoryView extends VBox {
 
         public ButtonHBox(){
             super();
+            this.getStyleClass().add("history-button-container");
+            this.setAlignment(Pos.CENTER);
 
             forwardButton.getStyleClass().add("history-button");
             backwardButton.getStyleClass().add("history-button");
             undoButton.getStyleClass().add("history-button");
 
+            forwardButton.prefHeightProperty().bind(this.prefHeightProperty().multiply(0.6));
+            backwardButton.prefHeightProperty().bind(this.prefHeightProperty().multiply(0.6));
+            undoButton.prefHeightProperty().bind(this.prefHeightProperty().multiply(0.6));
+            forwardButton.prefWidthProperty().bind(forwardButton.heightProperty());
+            backwardButton.prefWidthProperty().bind(backwardButton.heightProperty());
+            undoButton.prefWidthProperty().bind(undoButton.heightProperty());
+
             ImageView[] images = {forwardImageView,backwardImageView,undoImageView};
             for(ImageView image : images){
-                image.fitHeightProperty().bind(this.prefHeightProperty().multiply(0.6));
+                image.fitHeightProperty().bind(forwardButton.prefHeightProperty().multiply(0.6));
                 image.setPreserveRatio(true);
             }
             forwardButton.setGraphic(forwardImageView);
@@ -46,8 +56,8 @@ public class HistoryView extends VBox {
         }
 
         public void setClickHandlers(BiConsumer<Button, ActionEvent> forwardHandler,
-                                    BiConsumer<Button, ActionEvent> backwardHandler,
-                                    BiConsumer<Button, ActionEvent> undoHandler){
+                                     BiConsumer<Button, ActionEvent> backwardHandler,
+                                     BiConsumer<Button, ActionEvent> undoHandler){
             setClickHandler(forwardButton,forwardHandler);
             setClickHandler(backwardButton,backwardHandler);
             setClickHandler(undoButton,undoHandler);

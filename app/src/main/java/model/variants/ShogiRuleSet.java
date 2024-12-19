@@ -9,7 +9,7 @@ import util.Side;
 import java.util.ArrayList;
 
 
-public class ShogiRuleSet extends RuleSet{
+public class ShogiRuleSet implements RuleSet {
 
     @Override
     public boolean validMove(Pos posFrom, Pos posTo, Piece piece, Board board, Variant variant, Side side, Side oppositeSide) {

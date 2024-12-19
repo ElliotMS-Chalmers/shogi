@@ -8,17 +8,37 @@ import util.Side;
 import javax.xml.validation.Validator;
 import java.util.ArrayList;
 
+/**
+ * Represents a game board for managing and interacting with pieces during a game.
+ */
 public class Board {
+    /**
+     * A 2D array representing the board grid where each cell may contain a piece or be empty.
+     */
     private Piece[][] grid;
 
-    public Board(int width, int height){
+    /**
+     * Constructs a board with the specified dimensions.
+     *
+     * @param width  the width of the board
+     * @param height the height of the board
+     */
+    public Board(int width, int height) {
         grid = new Piece[height][width];
     }
 
-    public Move move(Pos from, Pos to){ // Is run through Game to also change the turn
-        Move move = new Move(from,to,getPieceAt(from),getPieceAt(to));
-        setAtPosition(to,grid[from.row()][from.col()]);
-        setAtPosition(from,null);
+    /**
+     * Moves a piece from one position to another.
+     * Updates the board and returns a Move object representing the move.
+     *
+     * @param from the starting position of the piece
+     * @param to   the target position of the piece
+     * @return a Move object representing the performed move
+     */
+    public Move move(Pos from, Pos to) {
+        Move move = new Move(from, to, getPieceAt(from), getPieceAt(to));
+        setAtPosition(to, grid[from.row()][from.col()]);
+        setAtPosition(from, null);
         return move;
     }
 
@@ -27,15 +47,31 @@ public class Board {
         setAtPosition(from,null);
     }
 
+    /**
+     * Sets a piece at a specific position on the board.
+     *
+     * @param pos   the position on the board
+     * @param piece the piece to place at the specified position
+     */
     public void setAtPosition(Pos pos, Piece piece){
         grid[pos.row()][pos.col()] = piece;
     }
 
-    public void setSfen(Sfen sfen){
+    /**
+     * Sets the board state based on the provided SFEN string.
+     *
+     * @param sfen the SFEN string representing the board state
+     */
+    public void setSfen(Sfen sfen) {
         grid = new Piece[grid.length][grid[0].length];
         initializeBoard(sfen);
     }
 
+    /**
+     * Converts the board state to an SFEN string representation.
+     *
+     * @return a string representing the current board state in SFEN format
+     */
     public String getBoardAsSfen() {
         StringBuilder sfen = new StringBuilder();
 
@@ -66,6 +102,11 @@ public class Board {
         return sfen.toString();
     }
 
+    /**
+     * Initializes the board using the provided SFEN string.
+     *
+     * @param sfen the SFEN string representing the board state
+     */
     public void initializeBoard(Sfen sfen) {
         sfen.forEachPiece((abbr, pos) -> {
             Piece piece = PieceFactory.fromSfenAbbreviation(abbr);
@@ -73,17 +114,29 @@ public class Board {
         });
     }
 
+    /**
+     * Retrieves the piece at a specific position on the board.
+     *
+     * @param pos the position to query
+     * @return the piece at the specified position, or null if the position is empty
+     */
     public Piece getPieceAt(Pos pos) {
         return grid[pos.row()][pos.col()];
     }
 
-    public ArrayList<Piece> getEveryPiece(Variant variant){
+    /**
+     * Gets all pieces currently on the board.
+     *
+     * @param variant the game variant defining the board dimensions
+     * @return a list of all pieces on the board
+     */
+    public ArrayList<Piece> getEveryPiece(Variant variant) {
         Piece piece;
         ArrayList<Piece> pieces = new ArrayList<>();
-        for (int i = 0; i < variant.getWidth(); i++){
-            for (int j = 0; j < variant.getHeight(); j++){
-                piece = getPieceAt(new Pos(i,j));
-                if (piece != null){
+        for (int i = 0; i < variant.getWidth(); i++) {
+            for (int j = 0; j < variant.getHeight(); j++) {
+                piece = getPieceAt(new Pos(i, j));
+                if (piece != null) {
                     pieces.add(piece);
                 }
             }
@@ -91,25 +144,39 @@ public class Board {
         return pieces;
     }
 
-    public ArrayList<Pos> getEveryPiecePos(Variant variant){
+    /**
+     * Gets the positions of all pieces currently on the board.
+     *
+     * @param variant the game variant defining the board dimensions
+     * @return a list of positions of all pieces on the board
+     */
+    public ArrayList<Pos> getEveryPiecePos(Variant variant) {
         Piece piece;
         ArrayList<Pos> positions = new ArrayList<>();
-        for (int i = 0; i < variant.getWidth(); i++){
-            for (int j = 0; j < variant.getHeight(); j++){
-                piece = getPieceAt(new Pos(i,j));
-                if (piece != null){
-                    positions.add(new Pos(i,j));
+        for (int i = 0; i < variant.getWidth(); i++) {
+            for (int j = 0; j < variant.getHeight(); j++) {
+                piece = getPieceAt(new Pos(i, j));
+                if (piece != null) {
+                    positions.add(new Pos(i, j));
                 }
             }
         }
         return positions;
     }
 
-    public Pos getPiecePos(Variant variant, Side side, Class pieceType){
+    /**
+     * Finds the position of a specific piece on the board.
+     *
+     * @param variant   the game variant defining the board dimensions
+     * @param side      the side to which the piece belongs
+     * @param pieceType the class of the piece to find
+     * @return the position of the specified piece, or null if not found
+     */
+    public Pos getPiecePos(Variant variant, Side side, Class pieceType) {
         Piece piece;
-        for (int i = 0; i < variant.getWidth(); i++){
-            for (int j = 0; j < variant.getHeight(); j++){
-                piece = getPieceAt(new Pos(i,j));
+        for (int i = 0; i < variant.getWidth(); i++) {
+            for (int j = 0; j < variant.getHeight(); j++) {
+                piece = getPieceAt(new Pos(i, j));
                 if (piece != null) {
                     if (piece.getClass() == pieceType && piece.getSide() == side) {
                         return new Pos(i, j);
