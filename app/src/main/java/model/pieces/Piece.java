@@ -3,7 +3,6 @@ package model.pieces;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import model.Board;
-import model.variants.Variant;
 import util.Side;
 import util.Pos;
 
@@ -33,11 +32,30 @@ public abstract class Piece {
         };
     }
 
-    public abstract ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant);
+//    protected abstract String getImageAbbreviationLetters();
 
-    public Pos checkLegalMove (Pos pos, Board board, Variant variant){
+    public abstract ArrayList<Pos> getAvailableMoves(Pos pos, Board board);
+
+    public abstract ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board);
+
+
+
+
+
+    public boolean checkLegalMoveWithinBounds (Pos pos, Board board){
+        return pos.col() >= 0 && pos.col() <= (board.getWidth() - 1) && pos.row() >= 0 && pos.row() <= (board.getHeight() - 1);
+    }
+
+    public boolean checkLegalMoveNotCapturingOwnPiece (Pos pos, Board board){
+        if (board.getPieceAt(pos) != null) {
+            return board.getPieceAt(pos).getSide() != side;
+        }
+        return true;
+    }
+
+    public Pos checkLegalMove (Pos pos, Board board){
         boolean valid = true;
-        if (pos.col() >= 0 && pos.col() <= (variant.getWidth()-1) && pos.row() >= 0 && pos.row() <= (variant.getHeight()-1)) {
+        if (pos.col() >= 0 && pos.col() <= (board.getWidth()-1) && pos.row() >= 0 && pos.row() <= (board.getHeight()-1)) {
             if (board.getPieceAt(pos) != null) {
                 if (board.getPieceAt(pos).getSide() == side) {
                     valid = false;
@@ -49,4 +67,5 @@ public abstract class Piece {
         }
         return null;
     }
+
 }

@@ -49,6 +49,8 @@ public class Player {
         return sfen.toString();
     }
 
+    public Map<Class<? extends Piece>, Integer> getHand(){return capturedPieces;}
+
     /**
      * Adds a specified amount (positive or negative) of a captured piece to the player's hand.
      *

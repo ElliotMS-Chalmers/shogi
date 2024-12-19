@@ -112,7 +112,7 @@ public class Game {
      * @return The resulting move, or null if the move is invalid.
      */
     public Move move(Pos from, Pos to){
-        if (board.getPieceAt(from) == null || !ruleSet.validMove(from, to, board.getPieceAt(from), board, variant, turn, oppositeTurn)) { return null; }
+        if (board.getPieceAt(from) == null || !ruleSet.validMove(from, to, board.getPieceAt(from), board, turn, oppositeTurn)) { return null; }
         Move move = board.move(from, to);
         Piece capturedPiece = move.capturedPiece();
         if (capturedPiece != null) {
@@ -125,6 +125,7 @@ public class Game {
                     break;
             }
         }
+        System.out.println(ruleSet.isCurrentlyInCheckMate(board, board.getPiecePos(oppositeTurn, King.class),oppositeTurn, turn, getOppositePlayer()) + " Checkmate");
         changeTurn();
         moveCount++;
         history.addMove(move);
@@ -394,6 +395,7 @@ public class Game {
      * @param piece The piece to be played.
      */
     public void playHand(Pos pos, Piece piece) {
+        if (!ruleSet.validHandMove(pos, piece.getClass(), board, turn)){return;}
         board.setAtPosition(pos, piece);
         switch (piece.getSide()) {
             case GOTE -> gotePlayer.removeCapturedPiece(piece.getClass());
@@ -421,6 +423,15 @@ public class Game {
         return turn;
     }
 
+    /** 
+     * Returns the number of moves occured
+     * 
+     * @return The number of moves done (returns the value of moveCount)
+    */
+    public int getMoveCount() {
+        return moveCount;
+    }
+
     /**
      * Promotes a piece at the specified position if it is eligible for promotion.
      * This checks if the piece is in the promotion zone and is of a type that can be promoted.
@@ -435,4 +446,11 @@ public class Game {
         }
     }
 
+    public Player getOppositePlayer(){
+        switch (turn){
+            case SENTE -> {return gotePlayer;}
+            case GOTE -> {return sentePlayer;}
+        }
+        return null;
+    }
 }
