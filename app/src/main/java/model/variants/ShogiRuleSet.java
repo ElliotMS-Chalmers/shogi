@@ -61,8 +61,6 @@ public class ShogiRuleSet implements RuleSet {
         ArrayList<Piece> everyPiece = board.getEveryPiece();
         ArrayList<Pos> everyPiecePos = board.getEveryPiecePos();
 
-        System.out.println(oppositeSide);
-
         for (int i = 0; i < everyPiece.size(); i ++) {
             if (everyPiece.get(i).getSide() == Side.SENTE) {
                 allPossibleMovesSente.addAll(everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board));
