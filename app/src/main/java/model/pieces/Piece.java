@@ -32,15 +32,9 @@ public abstract class Piece {
         };
     }
 
-//    protected abstract String getImageAbbreviationLetters();
-
     public abstract ArrayList<Pos> getAvailableMoves(Pos pos, Board board);
 
     public abstract ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board);
-
-
-
-
 
     public boolean checkLegalMoveWithinBounds (Pos pos, Board board){
         return pos.col() >= 0 && pos.col() <= (board.getWidth() - 1) && pos.row() >= 0 && pos.row() <= (board.getHeight() - 1);

@@ -6,6 +6,8 @@ import model.variants.Variant;
 import util.Pos;
 import util.Side;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.beans.property.BooleanProperty;
@@ -18,7 +20,6 @@ import javafx.beans.property.SimpleBooleanProperty;
  */
 public class Game {
     private Side turn = Side.SENTE;
-    private Side oppositeTurn = Side.GOTE;
     private Variant variant;
     private Board board;
     private BooleanProperty boardChanged = new SimpleBooleanProperty(false);
@@ -81,7 +82,6 @@ public class Game {
         this.gotePlayer = new Player(Side.GOTE);
         this.gotePlayer.intializeHand(variant.getHand());
         saveFile.getSfen().forEachCapturedPiece((abbr, amount) -> {
-            System.out.println(abbr + ": " + amount);
             Piece piece = PieceFactory.fromSfenAbbreviation(String.valueOf(abbr));
             switch (piece.getSide()) {
                 case SENTE: sentePlayer.addCapturedPiece(piece.getClass(), amount); break;
@@ -112,7 +112,7 @@ public class Game {
      * @return The resulting move, or null if the move is invalid.
      */
     public Move move(Pos from, Pos to){
-        if (board.getPieceAt(from) == null || !ruleSet.validMove(from, to, board.getPieceAt(from), board, turn, oppositeTurn)) { return null; }
+        if (board.getPieceAt(from) == null || !isValidMove(from, to)) { return null; }
         Move move = board.move(from, to);
         Piece capturedPiece = move.capturedPiece();
         if (capturedPiece != null) {
@@ -125,12 +125,32 @@ public class Game {
                     break;
             }
         }
-        System.out.println(ruleSet.isCurrentlyInCheckMate(board, board.getPiecePos(oppositeTurn, King.class),oppositeTurn, turn, getOppositePlayer()) + " Checkmate");
+        System.out.println(ruleSet.isCurrentlyInCheckMate(board, board.getPiecePos(turn.opposite(), King.class), turn.opposite(), turn, getOppositePlayer()) + " Checkmate");
         changeTurn();
         moveCount++;
         history.addMove(move);
         boardChanged();
         return move;
+    }
+
+    public boolean isValidMove(Pos from, Pos to) {
+        return ruleSet.validMove(from, to, board.getPieceAt(from), board, turn, turn.opposite());
+    }
+
+    public boolean isValidHandMove(Pos pos, Piece piece) {
+        return ruleSet.validHandMove(pos, piece.getClass(), board, turn);
+    }
+
+    public List<Pos> getValidHandMovePositions(Piece piece) {
+        List<Pos> positions = new ArrayList<>();
+        for (int i = 0; i < board.getHeight(); i++) {
+            for (int j = 0; j < board.getWidth(); j++) {
+                Pos pos = new Pos(i, j);
+                if (isValidHandMove(pos, piece))
+                    positions.add(pos);
+            }
+        }
+        return positions;
     }
 
     /**
@@ -369,10 +389,6 @@ public class Game {
             case SENTE -> Side.GOTE;
             case GOTE -> Side.SENTE;
         };
-        oppositeTurn = switch (oppositeTurn) {
-            case SENTE -> Side.GOTE;
-            case GOTE -> Side.SENTE;
-        };
         if (isClocksInitialized())
             changeActiveClock();
     }
@@ -403,7 +419,7 @@ public class Game {
      * @param piece The piece to be played.
      */
     public void playHand(Pos pos, Piece piece) {
-        if (!ruleSet.validHandMove(pos, piece.getClass(), board, turn)){return;}
+        if (!isValidHandMove(pos, piece)){ return; }
         board.setAtPosition(pos, piece);
         switch (piece.getSide()) {
             case GOTE -> gotePlayer.removeCapturedPiece(piece.getClass());
