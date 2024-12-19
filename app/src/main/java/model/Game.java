@@ -124,6 +124,7 @@ public class Game {
                     break;
             }
         }
+        System.out.println(ruleSet.isCurrentlyInCheckMate(board, variant, board.getPiecePos(variant, oppositeTurn, King.class),oppositeTurn, turn, getOppositePlayer()) + " Checkmate");
         changeTurn();
         moveCount++;
         history.addMove(move);
@@ -393,7 +394,7 @@ public class Game {
      * @param piece The piece to be played.
      */
     public void playHand(Pos pos, Piece piece) {
-        if (!ruleSet.validHandMove(pos, piece, board, variant, turn, oppositeTurn)){return;}
+        if (!ruleSet.validHandMove(pos, piece.getClass(), board, variant, turn)){return;}
         board.setAtPosition(pos, piece);
         switch (piece.getSide()) {
             case GOTE -> gotePlayer.removeCapturedPiece(piece.getClass());
@@ -435,4 +436,11 @@ public class Game {
         }
     }
 
+    public Player getOppositePlayer(){
+        switch (turn){
+            case SENTE -> {return gotePlayer;}
+            case GOTE -> {return sentePlayer;}
+        }
+        return null;
+    }
 }
