@@ -39,7 +39,7 @@ application {
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
-    // maxParallelForks = Runtime.getRuntime().availableProcessors()
+    maxParallelForks = Runtime.getRuntime().availableProcessors()
 }
 
 jacoco {

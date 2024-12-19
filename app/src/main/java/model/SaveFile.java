@@ -5,13 +5,11 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
-import model.pieces.Piece;
-import model.settings.JsonLoader;
+import util.JsonLoader;
 import model.variants.Mini;
 import model.variants.Standard;
 import model.variants.Variant;
 import util.PathResolver;
-import util.Pos;
 import util.Side;
 
 import java.io.IOException;

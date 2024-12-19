@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Properties;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import util.PathResolver;
 
 /**
  * Manages the application's user settings, such as themes, piece sets, and sound sets.
@@ -28,11 +28,9 @@ public class Settings {
 
     /**
      * Constructs a new {@code Settings} instance. Loads settings from a file or the default resource,
-     * and registers a shutdown hook to save settings on application exit.
      */
     public Settings() {
-        loadSettings();
-        Runtime.getRuntime().addShutdownHook(new Thread(this::saveSettings));
+        load();
     }
 
     /**
@@ -40,14 +38,14 @@ public class Settings {
      * If the file does not exist, it creates a new settings file from the default resource.
      * Populates the settings properties based on the loaded data.
      */
-    private void loadSettings() {
-        Path userSettingsFilePath = getUserSettingsFilePath();
+    private void load() {
+        Path userSettingsFilePath = PathResolver.getAppDataPath("/settings.properties");
 
         if (Files.exists(userSettingsFilePath)) {
             try (InputStream inputStream = Files.newInputStream(userSettingsFilePath)) {
                 properties.load(inputStream);
             } catch (IOException e) {
-                logError("Failed to load settings from file: " + userSettingsFilePath, e);
+                System.err.println("Failed to load settings from file: " + userSettingsFilePath + e);
             }
         } else {
             try {
@@ -62,11 +60,11 @@ public class Settings {
                     properties.load(inputStream);
                 }
             } catch (IOException | IllegalArgumentException e) {
-                logError("Failed to create or load settings file: " + userSettingsFilePath, e);
+                System.err.println("Failed to create or load settings file: " + userSettingsFilePath + e);
             }
         }
 
-        // Load individual settings properties
+        // currently we don't handle the case of invalid / incomplete save files
         String standardPieceSetName = properties.getProperty("standard_piece_set");
         String chuPieceSetName = properties.getProperty("chu_piece_set");
         String kyoPieceSetName = properties.getProperty("kyo_piece_set");
@@ -84,8 +82,8 @@ public class Settings {
      * Saves the current settings to the user-specific settings file.
      * Updates the properties with the current values from the resource manager before saving.
      */
-    private void saveSettings() {
-        Path userSettingsFilePath = getUserSettingsFilePath();
+    public void save() {
+        Path userSettingsFilePath = PathResolver.getAppDataPath("settings.properties");
 
         try {
             Files.createDirectories(userSettingsFilePath.getParent());
@@ -98,35 +96,8 @@ public class Settings {
                 properties.store(outputStream, "Settings");
             }
         } catch (IOException e) {
-            logError("Failed to save settings to file: " + userSettingsFilePath, e);
+            System.err.println("Failed to save settings to file: " + userSettingsFilePath + e.getMessage());
         }
-    }
-
-    /**
-     * Determines the path to the user-specific settings file, based on the operating system.
-     *
-     * @return the {@link Path} to the user-specific settings file.
-     */
-    private Path getUserSettingsFilePath() {
-        String userHome = System.getProperty("user.home");
-        String os = System.getProperty("os.name").toLowerCase();
-
-        if (os.contains("win")) {
-            return Paths.get(userHome, "AppData", "Local", "Shogi", "settings.properties");
-        } else {
-            return Paths.get(userHome, ".config", "Shogi", "settings.properties");
-        }
-    }
-
-    /**
-     * Logs an error message and exception stack trace.
-     *
-     * @param message the error message to log.
-     * @param e       the exception to log.
-     */
-    private void logError(String message, Exception e) {
-        System.err.println(message);
-        e.printStackTrace();
     }
 
     /**
@@ -268,4 +239,24 @@ public class Settings {
     public void setSoundSet(String name) {
         soundSet = resourceManager.getSoundSet(name);
     }
+
+    public String getStandardPieceSetName() {
+        return resourceManager.getPieceSetName(PieceSetType.STANDARD, standardPieceSet.get());
+    }
+
+    public String getChuPieceSetName() {
+        return resourceManager.getPieceSetName(PieceSetType.CHU, chuPieceSet.get());
+    }
+
+    public String getKyoPieceSetName() {
+        return resourceManager.getPieceSetName(PieceSetType.KYO, kyoPieceSet.get());
+    }
+
+    public String getBoardThemeName() {
+        return resourceManager.getBoardThemeName(boardTheme.get());
+    }
+
+//    public String getSoundSetName() {
+//        return resourceManager.getSoundSetName(soundSet);
+//    }
 }

@@ -46,6 +46,7 @@ public class MainController {
         game.stopClock();
         SaveFile saveFile = new SaveFile(game);
         saveFile.save();
+        settings.save();
     }
 
     private void newGame(Game game) {

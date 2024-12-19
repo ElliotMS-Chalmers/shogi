@@ -3,6 +3,7 @@ package model.settings;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import util.JsonLoader;
 
 /**
  * Manages and provides access to resources like board themes, piece sets, and sound sets.
