@@ -167,6 +167,39 @@ public class GameTest {
     }
 
     @Test
+    public void testUndoCaptureMoveGote() {
+        Pos from = new Pos(4, 0);
+        Pos to = new Pos(5, 0);
+
+        // Place a piece for sente and gote
+        Piece sentePiece = new Pawn(Side.SENTE);
+        Piece gotePiece = new Pawn(Side.GOTE);
+        game.getBoard().setAtPosition(new Pos(2,0), null);
+        game.getBoard().setAtPosition(new Pos(6, 0), null);
+        game.getBoard().setAtPosition(from, gotePiece);
+        game.getBoard().setAtPosition(new Pos(6,0), sentePiece);
+
+        // Make a move that captures
+        game.move(new Pos(6,0), new Pos(5,0));
+        game.move(from, to);
+
+        // Assert capture occurred
+        assertNull(game.getBoard().getPieceAt(from));
+        assertEquals(gotePiece, game.getBoard().getPieceAt(to));
+        assertTrue(game.getPlayer(Side.GOTE).getHand().containsKey(Pawn.class));
+
+        // Undo the move
+        game.undo();
+        game.undo();
+
+        // Assert move and capture were undone
+        assertEquals(gotePiece, game.getBoard().getPieceAt(from));
+        assertEquals(sentePiece, game.getBoard().getPieceAt(new Pos(6,0)));
+        assertFalse(game.getPlayer(Side.GOTE).getHand().get(Pawn.class) != 0);
+        assertEquals(1, game.getMoveCount());
+    }
+
+    @Test
     void testUndoMoveFromHand() {
         Pos to = new Pos(4, 0);
 
