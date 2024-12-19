@@ -89,7 +89,7 @@ class BoardTest {
         board.setAtPosition(new Pos(0, 0), new King(Side.SENTE));
         board.setAtPosition(new Pos(1, 1), new Pawn(Side.GOTE));
 
-        ArrayList<Piece> pieces = board.getEveryPiece(variant);
+        ArrayList<Piece> pieces = board.getEveryPiece();
         assertEquals(2, pieces.size(), "There should be two pieces on the board");
     }
 
@@ -107,7 +107,7 @@ class BoardTest {
         board.setAtPosition(new Pos(8, 8), new Rook(Side.SENTE)); // Position (8,8)
 
         // Call getEveryPiecePos
-        ArrayList<Pos> positions = board.getEveryPiecePos(variant);
+        ArrayList<Pos> positions = board.getEveryPiecePos();
 
         // Verify the results
         assertEquals(3, positions.size(), "There should be three pieces on the board");
@@ -157,7 +157,7 @@ class BoardTest {
         Piece king = new King(Side.SENTE);
         board.setAtPosition(new Pos(0, 0), king);
 
-        Pos kingPos = board.getPiecePos(variant, Side.SENTE, King.class);
+        Pos kingPos = board.getPiecePos(Side.SENTE, King.class);
         assertEquals(new Pos(0, 0), kingPos, "King position should be found");
     }
 
@@ -173,7 +173,7 @@ class BoardTest {
         board.setAtPosition(new Pos(3, targetColumn), senteKing);
         board.setAtPosition(new Pos(5, 5), gotePawn);
 
-        assertTrue(board.getIfPieceInColum(variant, Side.SENTE, King.class, targetColumn),
+        assertTrue(board.getIfPieceInColum(Side.SENTE, King.class, targetColumn),
                 "There should be a Sente King in column 4");
 
         assertFalse(board.getIfPieceInColum(Side.GOTE, King.class, targetColumn),

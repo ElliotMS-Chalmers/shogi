@@ -28,7 +28,7 @@ class ShogiRuleSetTest {
 
         // Create an instance of ShogiRuleSet and check if the move is valid
         ShogiRuleSet ruleSet = new ShogiRuleSet();
-        boolean validMove = ruleSet.validMove(from, to, king, board, standardVariant, Side.SENTE, Side.GOTE);
+        boolean validMove = ruleSet.validMove(from, to, king, board, Side.SENTE, Side.GOTE);
 
         // We expect the move to be valid
         assertTrue(validMove);
@@ -51,7 +51,7 @@ class ShogiRuleSetTest {
         Pos to = new Pos(4, 5);
 
         ShogiRuleSet ruleSet = new ShogiRuleSet();
-        boolean validMove = ruleSet.validMove(from, to, king, board, standardVariant, Side.SENTE, Side.GOTE);
+        boolean validMove = ruleSet.validMove(from, to, king, board, Side.SENTE, Side.GOTE);
 
         // We expect the move to be invalid
         assertFalse(validMove);
@@ -70,7 +70,7 @@ class ShogiRuleSetTest {
         Pos position = new Pos(3, 3);
 
         ShogiRuleSet ruleSet = new ShogiRuleSet();
-        boolean validHandMove = ruleSet.validHandMove(position, pawn, board, miniVariant, Side.SENTE, Side.GOTE);
+        boolean validHandMove = ruleSet.validHandMove(position, pawn.getClass(), board, Side.SENTE);
 
         // We expect the hand move to be valid
         assertTrue(validHandMove);
@@ -91,7 +91,7 @@ class ShogiRuleSetTest {
         Pos position = new Pos(3, 3);
 
         ShogiRuleSet ruleSet = new ShogiRuleSet();
-        boolean validHandMove = ruleSet.validHandMove(position, newPawn, board, standardVariant, Side.SENTE, Side.GOTE);
+        boolean validHandMove = ruleSet.validHandMove(position, newPawn.getClass(), board, Side.SENTE);
 
         // We expect the move to be invalid, as a pawn cannot be placed in a column where there is already a pawn
         assertFalse(validHandMove);
@@ -112,7 +112,7 @@ class ShogiRuleSetTest {
         ShogiRuleSet ruleSet = new ShogiRuleSet();
 
         // Check if the king is in check
-        boolean isInCheck = ruleSet.isCurrentlyInCheck(board, standardVariant, new Pos(4, 4), Side.GOTE);
+        boolean isInCheck = ruleSet.isCurrentlyInCheck(board, new Pos(4, 4), Side.GOTE);
 
         // We expect the king to be in check
         assertTrue(isInCheck);
@@ -133,7 +133,7 @@ class ShogiRuleSetTest {
         ShogiRuleSet ruleSet = new ShogiRuleSet();
 
         // Check that the king is not in check
-        boolean isInCheck = ruleSet.isCurrentlyInCheck(board, standardVariant, new Pos(4, 4), Side.GOTE);
+        boolean isInCheck = ruleSet.isCurrentlyInCheck(board, new Pos(4, 4), Side.GOTE);
 
         // We expect the king not to be in check
         assertFalse(isInCheck);
@@ -144,6 +144,7 @@ class ShogiRuleSetTest {
         // Initialize variant and board
         Variant standardVariant = new Standard();
         Board board = new Board(standardVariant.getWidth(), standardVariant.getHeight());
+        Player player = new Player(Side.SENTE);
 
         // Place the king in a checkmate situation
         King senteKing = new King(Side.SENTE);
@@ -158,7 +159,7 @@ class ShogiRuleSetTest {
         ShogiRuleSet ruleSet = new ShogiRuleSet();
 
         // Check if it's checkmate
-        boolean isInCheckMate = ruleSet.isCurrentlyInCheckMate(board, standardVariant, new Pos(4, 4), Side.GOTE);
+        boolean isInCheckMate = ruleSet.isCurrentlyInCheckMate(board,new Pos(4, 4), Side.SENTE,Side.GOTE,player);
 
         // We expect it to be checkmate
         assertTrue(isInCheckMate);

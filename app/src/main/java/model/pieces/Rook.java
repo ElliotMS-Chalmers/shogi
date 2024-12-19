@@ -70,11 +70,11 @@ public class Rook extends Promotable {
     }
 
     @Override
-    public ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board, Variant variant) {
+    public ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board) {
         ArrayList<Pos> availableMoves = new ArrayList<>();
         int availableRow;
         int availableCol;
-        int movesLength = variant.getHeight();
+        int movesLength = board.getHeight();
         boolean previousPieceEnemy;
         boolean previousPieceEnemyking;
         int[] directions = {-1,0,0,1};
@@ -86,12 +86,12 @@ public class Rook extends Promotable {
                 availableCol = (pos.col() + (i * directions[(rowI+2)%4]));
                 availableRow = (pos.row() + (i * directions[rowI%4]));
                 if (previousPieceEnemy){
-                    if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null && previousPieceEnemyking) {
+                    if (checkLegalMove(new Pos(availableRow, availableCol), board) != null && previousPieceEnemyking) {
                         availableMoves.add(new Pos(availableRow, availableCol));
                     }
                     break;
                 }
-                if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null) {
+                if (checkLegalMove(new Pos(availableRow, availableCol), board) != null) {
                     if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
                         if (board.getPieceAt(new Pos(availableRow, availableCol)).getSide() != side) {
                             previousPieceEnemy = true;
@@ -101,7 +101,7 @@ public class Rook extends Promotable {
                         }
                     }
                 }
-                if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) == null){
+                if (checkLegalMove(new Pos(availableRow, availableCol), board) == null){
                     break;
                 } else {
                     availableMoves.add(new Pos(availableRow, availableCol));
@@ -115,7 +115,7 @@ public class Rook extends Promotable {
             for (int[] promotedMove : promotedMoves) {
                 availableCol = pos.col() + promotedMove[0];
                 availableRow = pos.row() + promotedMove[1];
-                if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null) {
+                if (checkLegalMove(new Pos(availableRow, availableCol), board) != null) {
                     availableMoves.add(new Pos(availableRow, availableCol));
                 }
             }
