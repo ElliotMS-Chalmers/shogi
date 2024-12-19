@@ -200,6 +200,17 @@ public class GameTest {
     }
 
     @Test
+    void testValidHandMovePositions() {
+        Piece piece = new Pawn(Side.SENTE);
+        game.getBoard().setAtPosition(new Pos(6,0), null);
+
+        List<Pos> validPositions = game.getValidHandMovePositions(piece);
+
+        assertNotNull(validPositions);
+        assertEquals(6, validPositions.size());
+    }
+
+    @Test
     void testUndoMoveFromHand() {
         Pos to = new Pos(4, 0);
 
