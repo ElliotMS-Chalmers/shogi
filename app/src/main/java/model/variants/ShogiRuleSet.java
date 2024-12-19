@@ -25,8 +25,7 @@ public class ShogiRuleSet implements RuleSet {
     }
 
     public boolean checkIfNextMoveIsCheck(Pos posFrom, Pos posTo, Board board, Variant variant, Side side, Side oppositeSide){
-        Piece capturedPiece = null;
-        Piece piece = board.testMove(posFrom, posTo, capturedPiece);
+        Piece piece = board.testMove(posFrom, posTo, null);
         if (isCurrentlyInCheck(board, variant, board.getPiecePos(variant, side, King.class), oppositeSide)) {
             board.testMove(posTo, posFrom, piece);
             return true;
