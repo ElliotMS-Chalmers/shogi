@@ -68,4 +68,59 @@ public class Bishop extends Promotable {
         }
         return availableMoves;
     }
+
+    @Override
+    public ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board, Variant variant) {
+        ArrayList<Pos> availableMoves = new ArrayList<>();
+        int availableRow;
+        int availableCol;
+        int movesLength = variant.getHeight();
+        boolean previousPieceEnemy;
+        boolean previousPieceEnemyking;
+
+        for (int rowI = -1; rowI < 3; rowI = rowI + 2) {
+            for (int colI = -1; colI < 3; colI = colI + 2) {
+                previousPieceEnemy = false;
+                previousPieceEnemyking = false;
+                for (int i = 1; i <= (movesLength); i ++) {
+                    availableCol = pos.col() + (i * colI);
+                    availableRow = pos.row() + (i * rowI);
+                    if (previousPieceEnemy){
+                        if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null && previousPieceEnemyking){
+                            availableMoves.add(new Pos(availableRow, availableCol));
+                        }
+                        break;
+                    }
+                    if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null) {
+                        if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
+                            if (board.getPieceAt(new Pos(availableRow, availableCol)).getSide() != side) {
+                                previousPieceEnemy = true;
+                                if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class){
+                                    previousPieceEnemyking = true;
+                                }
+                            }
+                        }
+                    }
+                    if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) == null){
+                        break;
+                    } else {
+                        availableMoves.add(new Pos(availableRow, availableCol));
+                    }
+
+                }
+            }
+        }
+
+        if (isPromoted){
+            for (int[] promotedMove : promotedMoves) {
+                availableCol = pos.col() + promotedMove[0];
+                availableRow = pos.row() + promotedMove[1];
+                if (checkLegalMove(new Pos(availableRow, availableCol), board, variant) != null) {
+                    availableMoves.add(new Pos(availableRow, availableCol));
+                }
+            }
+        }
+        return availableMoves;
+    }
 }
+

@@ -1,5 +1,6 @@
 package view;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -31,6 +32,12 @@ public class BoardView extends GridPane {
         squares = new SquareView[size][size];
         this.setId("board");
         this.minWidthProperty().bind(this.heightProperty());
+
+        // fixes resizing bug when pressing "maximize" button
+        this.minWidthProperty().addListener((observable, oldValue, newValue) -> {
+            this.setWidth(newValue.doubleValue());
+        });
+
 		setContraints();
 		populateGrid();
     }

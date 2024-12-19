@@ -1,5 +1,9 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.*;
 
 /**
@@ -7,7 +11,6 @@ import java.util.*;
  * iteration, and modification of the list of moves.
  */
 public class History {
-
     // Stack to store the sequence of moves.
     private final Stack<Move> moves = new Stack<>();
 
@@ -92,5 +95,17 @@ public class History {
      */
     public Move getLast() {
         return moves.peek();
+    }
+
+    @JsonValue
+    public List<Move> serialize() {
+        if (moves.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(new ArrayList<Move>(moves));
+    }
+
+    public boolean isEmpty() {
+        return moves.isEmpty();
     }
 }

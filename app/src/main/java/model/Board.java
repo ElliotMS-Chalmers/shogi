@@ -4,6 +4,7 @@ import model.pieces.Piece;
 import util.Pos;
 import util.Side;
 
+import javax.xml.validation.Validator;
 import java.util.ArrayList;
 
 /**
@@ -17,7 +18,7 @@ public class Board {
 
     /**
      * Constructs a board with the specified dimensions.
-     * 
+     *
      * @param width  the width of the board
      * @param height the height of the board
      */
@@ -28,7 +29,7 @@ public class Board {
     /**
      * Moves a piece from one position to another.
      * Updates the board and returns a Move object representing the move.
-     * 
+     *
      * @param from the starting position of the piece
      * @param to   the target position of the piece
      * @return a Move object representing the performed move
@@ -40,19 +41,26 @@ public class Board {
         return move;
     }
 
+    public Piece testMove(Pos from, Pos to, Piece piece){
+        Piece capturedPiece = getPieceAt(to);
+        setAtPosition(to,grid[from.row()][from.col()]);
+        setAtPosition(from,piece);
+        return capturedPiece;
+    }
+
     /**
      * Sets a piece at a specific position on the board.
-     * 
+     *
      * @param pos   the position on the board
      * @param piece the piece to place at the specified position
      */
-    public void setAtPosition(Pos pos, Piece piece) {
+    public void setAtPosition(Pos pos, Piece piece){
         grid[pos.row()][pos.col()] = piece;
     }
 
     /**
      * Sets the board state based on the provided SFEN string.
-     * 
+     *
      * @param sfen the SFEN string representing the board state
      */
     public void setSfen(Sfen sfen) {
@@ -62,7 +70,7 @@ public class Board {
 
     /**
      * Converts the board state to an SFEN string representation.
-     * 
+     *
      * @return a string representing the current board state in SFEN format
      */
     public String getBoardAsSfen() {
@@ -119,14 +127,14 @@ public class Board {
 
     /**
      * Gets all pieces currently on the board.
-     * 
+     *
      * @return a list of all pieces on the board
      */
     public ArrayList<Piece> getEveryPiece() {
         Piece piece;
         ArrayList<Piece> pieces = new ArrayList<>();
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
                 piece = getPieceAt(new Pos(i, j));
                 if (piece != null) {
                     pieces.add(piece);
@@ -138,7 +146,7 @@ public class Board {
 
     /**
      * Gets the positions of all pieces currently on the board.
-     * 
+     *
      * @return a list of positions of all pieces on the board
      */
     public ArrayList<Pos> getEveryPiecePos() {
@@ -157,7 +165,7 @@ public class Board {
 
     /**
      * Finds the position of a specific piece on the board.
-     * 
+     *
      * @param side      the side to which the piece belongs
      * @param pieceType the class of the piece to find
      * @return the position of the specified piece, or null if not found
@@ -184,5 +192,23 @@ public class Board {
      * @return the height of the board.
      */
     public int getHeight(){return grid[0].length;}
+
+
+    public boolean getIfPieceInColum(Side side, Class pieceType, int col) {
+        Piece piece;
+
+        for (int i = 0; i < getWidth(); i++) {
+            piece = getPieceAt(new Pos(i, col));
+            if (piece != null) {
+                if (piece.getClass() == pieceType && piece.getSide() == side) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
 
 }

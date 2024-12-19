@@ -2,6 +2,7 @@ package model.pieces.chu;
 
 import model.Board;
 import model.pieces.Promotable;
+import model.variants.Variant;
 import util.Pos;
 import util.Side;
 
@@ -51,5 +52,10 @@ public class CopperGeneral extends Promotable {
             }
         }
         return availableMoves;
+    }
+
+    @Override
+    public ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board) {
+        return getAvailableMoves(pos, board);
     }
 }

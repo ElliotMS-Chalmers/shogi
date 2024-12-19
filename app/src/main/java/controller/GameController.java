@@ -17,7 +17,7 @@ import javafx.scene.input.MouseButton;
 import java.util.List;
 
 
-public class ShogiController {
+public class GameController {
     private Settings settings;
     private Game game;
     private ShogiView shogiView;
@@ -28,7 +28,7 @@ public class ShogiController {
     private HistoryController historyController;
     private SquareView lastSquareClicked;
 
-    public ShogiController(Settings settings, Game game) {
+    public GameController(Settings settings, Game game) {
         this.settings = settings;
         this.game = game;
         this.shogiView = new ShogiView(game.getVariant().getWidth(), game.getVariant().getHand().size());
@@ -52,16 +52,15 @@ public class ShogiController {
 
         // Handle change in clocks
         if (game.isClocksInitialized()) {
-            senteClockView.bindToTimer(game.timeProperty(Side.SENTE));
-            goteClockView.bindToTimer(game.timeProperty(Side.GOTE));
-            //game.getSenteTime().addListener(this::onSenteClockTimeChanged);
-            //game.getGoteTime().addListener(this::onGoteClockTimeChanged);
+            game.timeProperty(Side.SENTE).addListener(this::onSenteTimeChanged);
+            game.timeProperty(Side.GOTE).addListener(this::onGoteTimeChanged);
         }
 
         historyController = new HistoryController(this, game, shogiView.getHistoryView());
 
         // Setup
         setBackground();
+        initializeClocks();
         drawHands();
         Sfen sfen = game.getSfen();
         drawBoard(sfen);
@@ -69,10 +68,11 @@ public class ShogiController {
     }
 
     private void setBackground() {
-        boardView.setBackground(new Image(settings.getBoardTheme().getImage()));
+        boardView.setBackground(new Image(settings.getBoardTheme().getBackground()));
     }
 
     private void movePiece(Pos from, Pos to) {
+        // todo: game interface
         Move move = game.move(from, to);
         lastSquareClicked.unHighlight();
         lastSquareClicked = null;
@@ -87,6 +87,7 @@ public class ShogiController {
     }
 
     private void drawBoard(Sfen sfen) {
+        // todo: game interface
         sfen.forEachPiece((abbr, pos) -> {
             Piece piece =  PieceFactory.fromSfenAbbreviation(abbr);
             Image image = new Image(getPieceSet().getImage(piece));
@@ -95,6 +96,7 @@ public class ShogiController {
     }
 
     private void drawHands() {
+        // todo: move "reverse" logic to view
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
         int i = 0;
         int j = hand.size()-1;
@@ -114,6 +116,8 @@ public class ShogiController {
             gotePieceStandView.setCountAt(0, i);
         }
 
+        // todo: game interface
+        // todo: abstract setCountAt "reverse" logic in view (modify drawImageAt to also save abbreviation or something?)
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
         // Set new piece counts
         sfen.forEachCapturedPiece((abbr, count) -> {
@@ -147,14 +151,17 @@ public class ShogiController {
     }
 
     private void handleBoardRightClick(Pos pos) {
+        // todo: game interface
         game.promotePieceAt(pos);
         onBoardChanged(null); // temp fix to redraw board on piece promotion
     }
 
     private void handleHandToBoardClick(Pos pos) {
+        // todo: game interface
+        // todo: move reverse logic to view
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
         Side side = ((PieceStandView.SquareView) lastSquareClicked).getSide();
-        int index = ((PieceStandView.SquareView) lastSquareClicked).getIndex();
+        int index = ((PieceStandView.SquareView) lastSquareClicked).getIndex(); // maybe get abbreviation from square
         switch (side) {
             case GOTE -> game.playHand(pos, PieceFactory.fromClass(hand.get(index), side));
             case SENTE -> game.playHand(pos, PieceFactory.fromClass(hand.get(hand.size() - index - 1), side));
@@ -166,6 +173,7 @@ public class ShogiController {
     }
 
     private void handleBoardToBoardClick(Pos pos) {
+        // todo: game interface
         Pos lastPos = ((BoardView.SquareView) lastSquareClicked).getPos();
         if (lastPos.equals(pos)) {
             boardView.clearHighlightedSquares();
@@ -177,6 +185,7 @@ public class ShogiController {
     }
 
     private void handleFirstClick(BoardView.SquareView square, Pos pos) {
+        // todo: game interface
         Piece pieceClicked = game.getBoard().getPieceAt(pos);
         if (pieceClicked != null) {
             if (pieceClicked.getSide() != game.getTurn()) return;
@@ -203,14 +212,6 @@ public class ShogiController {
         historyController.highlightLastMove();
     }
 
-    //private void onSenteClockTimeChanged(Observable observable) { // Change so it can handle both SENTE and GOTE
-      //  senteClockView.update();
-   // }
-
-    //private void onGoteClockTimeChanged(Observable observable) {
-      //  goteClockView.update();
-    //}
-
     private void onBoardChanged(Observable observable) {
         boardView.clearPieces();
         boardView.clearHighlightedSquares();
@@ -230,22 +231,19 @@ public class ShogiController {
         drawBoard(game.getSfen());
     }
 
-    public ShogiView getView() {
-        return shogiView;
-    }
-
-    public void setBoardViewSquare(Piece piece,Pos pos){
+    public void setBoardViewSquare(Piece piece, Pos pos){
         Image image;
-        if(piece == null){image = null;}
-        else{image = new Image(getPieceSet().getImage(piece));}
-        boardView.drawImageAt(image,pos);
+        if (piece == null) { image = null; }
+        else { image = new Image(getPieceSet().getImage(piece)); }
+        boardView.drawImageAt(image, pos);
     }
 
-    public void clearHighlightedSquares(){boardView.clearHighlightedSquares();}
+    public void clearHighlightedSquares(){ boardView.clearHighlightedSquares(); }
 
-    public void highlightSquare(Pos pos){boardView.highlightSquare(pos);}
+    public void highlightSquare(Pos pos){ boardView.highlightSquare(pos); }
 
     public void changeCountAtPieceStandView(Class<?extends Piece> pieceClass,Side side,int change){
+        // todo: handle reverse logic in view
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
         int index;
         //Pjäserna i PieceStandView är i omvänd ordning för sente
@@ -256,7 +254,7 @@ public class ShogiController {
     }
 
     public void unselectsSquare(){
-        //This is used by HistoryController to prevent moving while viewing a past state
+        // This is used by HistoryController to prevent moving while viewing a past state
         lastSquareClicked = null;
         boardView.clearMarkedSquares();
         sentePieceStandView.unHighlightSquares();
@@ -264,11 +262,7 @@ public class ShogiController {
     }
 
     private PieceSet getPieceSet() {
-        return switch (game.getVariant().getPieceSetType()) {
-            case PieceSetType.STANDARD -> settings.getStandardPieceSet();
-            case PieceSetType.CHU -> settings.getChuPieceSet();
-            case PieceSetType.KYO -> settings.getKyoPieceSet();
-        };
+        return getPieceSetProperty().get();
     }
 
     private ObjectProperty<PieceSet> getPieceSetProperty() {
@@ -277,5 +271,31 @@ public class ShogiController {
             case PieceSetType.CHU -> settings.chuPieceSetProperty();
             case PieceSetType.KYO -> settings.kyoPieceSetProperty();
         };
+    }
+
+    private void onSenteTimeChanged(Observable observable, Number oldValue, Number newValue) {
+        senteClockView.setTime(newValue.intValue());
+        senteClockView.setActive(true);
+        goteClockView.setActive(false);
+    }
+
+    private void onGoteTimeChanged(Observable observable, Number oldValue, Number newValue) {
+        goteClockView.setTime(newValue.intValue());
+        goteClockView.setActive(true);
+        senteClockView.setActive(false);
+    }
+
+    public ShogiView getView() {
+        return shogiView;
+    }
+
+    private void initializeClocks() {
+        senteClockView.initialize(game.getTime(Side.SENTE));
+        goteClockView.initialize(game.getTime(Side.GOTE));
+        Side startSide = game.getTurn();
+        switch (startSide) {
+            case SENTE: senteClockView.setActive(true); break;
+            case GOTE: goteClockView.setActive(true); break;
+        }
     }
 }

@@ -67,6 +67,10 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 2, 0, 0.5, 0.5);
 }
 
+.history-button:hover {
+    -fx-background-color: #F7F6F5;
+}
+
 .history-button-container {
     -fx-padding: 0;
     -fx-border-width: 0.5 0 0 0;
@@ -210,4 +214,19 @@ DialogPane .toggle-button:hover, DialogPane .toggle-button:focused {
 
 DialogPane .toggle-button:selected {
     -fx-background-color: #2078CB; /* this is not ideal */
+}
+
+/* Clock */
+.clock {
+    -fx-background-color: white;
+    -fx-background-radius: 3;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.40), 2, 0, 0, 1);
+}
+
+.clock.active {
+    -fx-background-color: #2078CB;
+}
+
+.clock.active .label {
+    -fx-text-fill: white;
 }

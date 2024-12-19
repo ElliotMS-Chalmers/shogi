@@ -1,9 +1,7 @@
 package controller;
 
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
-import model.pieces.chu.CopperGeneral;
+import model.pieces.CopperGeneral;
 import model.settings.PieceSetType;
 import model.settings.Settings;
 import model.pieces.GoldGeneral;
@@ -11,8 +9,6 @@ import model.pieces.Lance;
 import model.pieces.Piece;
 import util.Side;
 import view.SettingsMenu;
-
-import java.io.InputStream;
 
 public class SettingsController {
     private final Settings settings;
@@ -29,7 +25,7 @@ public class SettingsController {
 
     private void populateBoardThemeMenu() {
         settings.getBoardThemes().forEach((name, theme) -> {
-            settingsMenu.addBoardThemeMenuItem(name, new Image(theme.getImage()), (e) -> settings.setBoardTheme(name));
+            settingsMenu.addBoardThemeMenuItem(name, new Image(theme.getBackground()), (e) -> settings.setBoardTheme(name));
         });
     }
 

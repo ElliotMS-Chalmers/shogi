@@ -1,5 +1,7 @@
 package model.pieces;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import model.Board;
 import util.Side;
 import util.Pos;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 /**
  * Abstract class representing a piece
  */
+@JsonDeserialize(using = PieceDeserializer.class)
 public abstract class Piece {
     protected Side side;
 
@@ -20,6 +23,7 @@ public abstract class Piece {
         return side;
     }
 
+    @JsonValue
     public String getSfenAbbreviation(){
         char letter = this.getClass().getSimpleName().charAt(0);
         return switch(side){
@@ -32,14 +36,22 @@ public abstract class Piece {
 
     public abstract ArrayList<Pos> getAvailableMoves(Pos pos, Board board);
 
-//    public String getImageAbbreviation() {
-//        return switch (side) {
-//            case GOTE -> "1" + getImageAbbreviationLetters();
-//            case SENTE -> "0" + getImageAbbreviationLetters();
-//        };
-//    };
+    public abstract ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board, Variant variant);
 
 
+
+
+
+    public boolean checkLegalMoveWithinBounds (Pos pos, Board board, Variant variant){
+        return pos.col() >= 0 && pos.col() <= (variant.getWidth() - 1) && pos.row() >= 0 && pos.row() <= (variant.getHeight() - 1);
+    }
+
+    public boolean checkLegalMoveNotCapturingOwnPiece (Pos pos, Board board, Variant variant){
+        if (board.getPieceAt(pos) != null) {
+            return board.getPieceAt(pos).getSide() != side;
+        }
+        return true;
+    }
 
     public Pos checkLegalMove (Pos pos, Board board){
         boolean valid = true;
@@ -56,8 +68,4 @@ public abstract class Piece {
         return null;
     }
 
-    //kanske onödig funktion...
-    public boolean capturingOwnPiece(Pos pos, Board board){
-        return board.getPieceAt(pos).getSide() != side;
-    }
 }

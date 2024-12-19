@@ -124,6 +124,7 @@ public class Game {
                     break;
             }
         }
+        System.out.println(ruleSet.isCurrentlyInCheckMate(board, variant, board.getPiecePos(variant, oppositeTurn, King.class),oppositeTurn, turn, getOppositePlayer()) + " Checkmate");
         changeTurn();
         moveCount++;
         history.addMove(move);
@@ -180,13 +181,7 @@ public class Game {
      * @return The time left for the specified player in seconds. Returns 0 if clocks are not initialized.
      */
     public Integer getTime(Side side) {
-        IntegerProperty time = null;
-        if (isClocksInitialized()) {
-            switch (side) {
-                case SENTE -> time = senteClock.getSeconds();
-                case GOTE -> time = goteClock.getSeconds();
-            }
-        }
+        IntegerProperty time = timeProperty(side);
         if (time == null) return 0;
         return time.get();
     }
@@ -399,6 +394,7 @@ public class Game {
      * @param piece The piece to be played.
      */
     public void playHand(Pos pos, Piece piece) {
+        if (!ruleSet.validHandMove(pos, piece.getClass(), board, variant, turn)){return;}
         board.setAtPosition(pos, piece);
         switch (piece.getSide()) {
             case GOTE -> gotePlayer.removeCapturedPiece(piece.getClass());
@@ -426,6 +422,15 @@ public class Game {
         return turn;
     }
 
+    /** 
+     * Returns the number of moves occured
+     * 
+     * @return The number of moves done (returns the value of moveCount)
+    */
+    public int getMoveCount() {
+        return moveCount;
+    }
+
     /**
      * Promotes a piece at the specified position if it is eligible for promotion.
      * This checks if the piece is in the promotion zone and is of a type that can be promoted.
@@ -440,4 +445,11 @@ public class Game {
         }
     }
 
+    public Player getOppositePlayer(){
+        switch (turn){
+            case SENTE -> {return gotePlayer;}
+            case GOTE -> {return sentePlayer;}
+        }
+        return null;
+    }
 }
