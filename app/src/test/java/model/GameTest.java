@@ -298,10 +298,15 @@ public class GameTest {
 
     @Test
     void testGameFromSaveFile() {
+        game = new Game(variant, 360);
+
         game.setCapturedPiecesFromSfen("pP");
+
+
 
         SaveFile saveFile = new SaveFile(game);
         Game gameFromSavefile = new Game(saveFile); 
+        gameFromSavefile.getClock(Side.SENTE).pause();
         assertEquals(gameFromSavefile.getHistory().getMoves(), game.getHistory().getMoves(), "History should be the same.");
         assertEquals(gameFromSavefile.getVariant().getClass(), game.getVariant().getClass(), "It should be the same Variant.");
         assertEquals(game.getPlayer(Side.SENTE).getHand(), gameFromSavefile.getPlayer(Side.SENTE).getHand(), "They should have the same hand.");
