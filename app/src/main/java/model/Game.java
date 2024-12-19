@@ -158,6 +158,31 @@ public class Game {
     }
 
     /**
+     * Sets the captured pieces from an SFEN string.
+     * This updates the captured pieces for both players.
+     * 
+     * @param sfen The SFEN string representing captured pieces.
+     */
+    public void setCapturedPiecesFromSfen(String sfen) {
+        int amount = 1;
+        char c;
+        for (int i = 0; i < sfen.length(); i++) {
+            c = sfen.charAt(i);
+            if (Character.isDigit(c)) {
+                amount = (int) c;
+                continue;
+            }
+            Class<? extends Piece> pieceClass = PieceFactory.fromSfenAbbreviation(String.valueOf(Character.toUpperCase(c))).getClass();
+            if (Character.isUpperCase(c)) {
+                sentePlayer.addCapturedPiece(pieceClass, amount);
+            } else {
+                gotePlayer.addCapturedPiece(pieceClass, amount);
+            }
+            amount = 1;
+        }
+    }
+
+    /**
      * Returns the time left for the specified player as an {@link IntegerProperty}.
      * 
      * @param side The side (SENTE or GOTE) whose time is requested.
@@ -336,31 +361,6 @@ public class Game {
     }
 
     /**
-     * Sets the captured pieces from an SFEN string.
-     * This updates the captured pieces for both players.
-     * 
-     * @param sfen The SFEN string representing captured pieces.
-     */
-    public void setCapturedPiecesFromSfen(String sfen) {
-        int amount = 1;
-        char c;
-        for (int i = 0; i < sfen.length(); i++) {
-            c = sfen.charAt(i);
-            if (Character.isDigit(c)) {
-                amount = (int) c;
-                continue;
-            }
-            Class<? extends Piece> pieceClass = PieceFactory.fromSfenAbbreviation(String.valueOf(Character.toUpperCase(c))).getClass();
-            if (Character.isUpperCase(c)) {
-                sentePlayer.addCapturedPiece(pieceClass, amount);
-            } else {
-                gotePlayer.addCapturedPiece(pieceClass, amount);
-            }
-            amount = 1;
-        }
-    }
-
-    /**
      * Switches the turn to the opposite player and updates the active clock accordingly.
      */
     private void changeTurn() {
@@ -372,7 +372,7 @@ public class Game {
             case SENTE -> Side.GOTE;
             case GOTE -> Side.SENTE;
         };
-        if (senteClock != null && goteClock != null)
+        if (isClocksInitialized())
             changeActiveClock();
     }
 
@@ -384,6 +384,14 @@ public class Game {
             case SENTE -> { senteClock.resume(); goteClock.pause(); }
             case GOTE -> { goteClock.resume(); senteClock.pause(); }
         }
+    }
+
+    public Clock getClock(Side side) {
+        switch (side) {
+            case SENTE -> {return senteClock;}
+            case GOTE -> {return goteClock;}
+        }
+        return null;
     }
 
     /**
@@ -443,6 +451,14 @@ public class Game {
         if (piece instanceof Promotable && variant.inPromotionZone(pos, side.opposite())) {
             ((Promotable) piece).promote();
         }
+    }
+
+    public Player getPlayer(Side side) {
+        switch (side) {
+            case SENTE -> {return sentePlayer;}
+            case GOTE -> {return gotePlayer;}
+        }
+        return null;
     }
 
     public Player getOppositePlayer(){

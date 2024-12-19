@@ -55,6 +55,15 @@ public class Clock implements Runnable {
     }
 
     /**
+     * Gets the value of AtomicBoolean paused
+     * 
+     * @return the boolean value for AtomicBoolean paused
+     */
+    public boolean isPaused() {
+        return paused.get();
+    }
+
+    /**
      * Pauses the clock, preventing it from decrementing.
      */
     public void pause() {

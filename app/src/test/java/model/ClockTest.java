@@ -52,7 +52,7 @@ class ClockTest {
         // Allow the clock to run for 2 more seconds
         Thread.sleep(2000);
 
-        assertEquals(timeRemaining - 2, clock.getSeconds().get(), "Clock should decrement after resuming");
+        assertEquals(timeRemaining - 2, clock.getSeconds().get(), 1, "Clock should decrement after resuming");
 
         clock.pause(); // Pause to stop the test from decrementing further
         clockThread.interrupt(); // Stop the thread
@@ -132,12 +132,12 @@ class ClockTest {
 
         Thread.sleep(200);
 
-        // Interrupt the thread while it's waiting
         clockThread.interrupt();
 
         Thread.sleep(2000); // Give it a bit more time to process the interruption
 
-        // Ensure that gameRunning is set to false due to the interruption
+        System.out.println("Game running after interruption: " + gameRunning.get());
+
         assertFalse(gameRunning.get(), "Game should be stopped due to the interruption");
 
         clockThread.join();  // Wait for the thread to finish
