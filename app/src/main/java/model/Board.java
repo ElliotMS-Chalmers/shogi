@@ -1,11 +1,9 @@
 package model;
 
 import model.pieces.Piece;
-import model.variants.Variant;
 import util.Pos;
 import util.Side;
 
-import javax.xml.validation.Validator;
 import java.util.ArrayList;
 
 /**
@@ -122,14 +120,13 @@ public class Board {
     /**
      * Gets all pieces currently on the board.
      * 
-     * @param variant the game variant defining the board dimensions
      * @return a list of all pieces on the board
      */
-    public ArrayList<Piece> getEveryPiece(Variant variant) {
+    public ArrayList<Piece> getEveryPiece() {
         Piece piece;
         ArrayList<Piece> pieces = new ArrayList<>();
-        for (int i = 0; i < variant.getWidth(); i++) {
-            for (int j = 0; j < variant.getHeight(); j++) {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
                 piece = getPieceAt(new Pos(i, j));
                 if (piece != null) {
                     pieces.add(piece);
@@ -142,14 +139,13 @@ public class Board {
     /**
      * Gets the positions of all pieces currently on the board.
      * 
-     * @param variant the game variant defining the board dimensions
      * @return a list of positions of all pieces on the board
      */
-    public ArrayList<Pos> getEveryPiecePos(Variant variant) {
+    public ArrayList<Pos> getEveryPiecePos() {
         Piece piece;
         ArrayList<Pos> positions = new ArrayList<>();
-        for (int i = 0; i < variant.getWidth(); i++) {
-            for (int j = 0; j < variant.getHeight(); j++) {
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
                 piece = getPieceAt(new Pos(i, j));
                 if (piece != null) {
                     positions.add(new Pos(i, j));
@@ -162,15 +158,14 @@ public class Board {
     /**
      * Finds the position of a specific piece on the board.
      * 
-     * @param variant   the game variant defining the board dimensions
      * @param side      the side to which the piece belongs
      * @param pieceType the class of the piece to find
      * @return the position of the specified piece, or null if not found
      */
-    public Pos getPiecePos(Variant variant, Side side, Class pieceType) {
+    public Pos getPiecePos(Side side, Class pieceType) {
         Piece piece;
-        for (int i = 0; i < variant.getWidth(); i++) {
-            for (int j = 0; j < variant.getHeight(); j++) {
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
                 piece = getPieceAt(new Pos(i, j));
                 if (piece != null) {
                     if (piece.getClass() == pieceType && piece.getSide() == side) {
@@ -181,4 +176,13 @@ public class Board {
         }
         return null;
     }
+    /**
+     * @return the width of the board.
+     */
+    public int getWidth(){return grid.length;}
+    /**
+     * @return the height of the board.
+     */
+    public int getHeight(){return grid[0].length;}
+
 }

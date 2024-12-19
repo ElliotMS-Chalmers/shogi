@@ -12,29 +12,29 @@ import java.util.ArrayList;
 public class ShogiRuleSet extends RuleSet{
 
     @Override
-    public boolean validMove(Pos posFrom, Pos posTo, Piece piece, Board board, Variant variant, Side side, Side oppositeSide){
+    public boolean validMove(Pos posFrom, Pos posTo, Piece piece, Board board, Side side, Side oppositeSide){
         if (piece instanceof King){
 //            if (isCurrentlyInCheck(board, variant, posFrom, oppositeSide)){
 //                if (isCurrentlyInCheck(board, variant, posTo, oppositeSide)){
 //                    return false;
 //                }
 //            }
-            return !isCurrentlyInCheck(board, variant, posTo, oppositeSide) && piece.getAvailableMoves(posFrom, board, variant).contains(posTo);
+            return !isCurrentlyInCheck(board, posTo, oppositeSide) && piece.getAvailableMoves(posFrom, board).contains(posTo);
         }
-        return (piece.getAvailableMoves(posFrom, board, variant).contains(posTo));
+        return (piece.getAvailableMoves(posFrom, board).contains(posTo));
     }
 
-    public boolean isCurrentlyInCheck(Board board, Variant variant, Pos kingPos, Side oppositeSide){
+    public boolean isCurrentlyInCheck(Board board, Pos kingPos, Side oppositeSide){
         ArrayList<Pos> allPossibleMovesSente = new ArrayList<>();
         ArrayList<Pos> allPossibleMovesGote = new ArrayList<>();
-        ArrayList<Piece> everyPiece = board.getEveryPiece(variant);
-        ArrayList<Pos> everyPiecePos = board.getEveryPiecePos(variant);
+        ArrayList<Piece> everyPiece = board.getEveryPiece();
+        ArrayList<Pos> everyPiecePos = board.getEveryPiecePos();
 
         for (int i = 0; i < everyPiece.size(); i ++) {
             if (everyPiece.get(i).getSide() == Side.SENTE) {
-                allPossibleMovesSente.addAll(everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant));
+                allPossibleMovesSente.addAll(everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board));
             } else {
-                allPossibleMovesGote.addAll(everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant));
+                allPossibleMovesGote.addAll(everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board));
             }
         }
 
@@ -56,17 +56,17 @@ public class ShogiRuleSet extends RuleSet{
         return false;
     }
 
-    public boolean isCurrentlyInCheckMate(Board board, Variant variant, Pos kingPos, Side oppositeSide){
-        if (!isCurrentlyInCheck(board, variant, kingPos, oppositeSide)){ return false;}
-        for (Pos move : board.getPieceAt(kingPos).getAvailableMoves(kingPos, board, variant)){
-            if (!isCurrentlyInCheck(board, variant, move, oppositeSide)){return false;}
+    public boolean isCurrentlyInCheckMate(Board board, Pos kingPos, Side oppositeSide){
+        if (!isCurrentlyInCheck(board, kingPos, oppositeSide)){ return false;}
+        for (Pos move : board.getPieceAt(kingPos).getAvailableMoves(kingPos, board)){
+            if (!isCurrentlyInCheck(board, move, oppositeSide)){return false;}
         }
         ArrayList<Piece> everyPieceSente = new ArrayList<>();
         ArrayList<Piece> everyPieceGote = new ArrayList<>();
         ArrayList<Pos> everyPieceSentePos = new ArrayList<>();
         ArrayList<Pos> everyPieceGotePos = new ArrayList<>();
-        ArrayList<Piece> everyPiece = board.getEveryPiece(variant);
-        ArrayList<Pos> everyPiecePos = board.getEveryPiecePos(variant);
+        ArrayList<Piece> everyPiece = board.getEveryPiece();
+        ArrayList<Pos> everyPiecePos = board.getEveryPiecePos();
         ArrayList<Pos> pieceForcingCheckMoves = null;
 
         for (int i = 0; i < everyPiece.size(); i ++) {
@@ -80,8 +80,8 @@ public class ShogiRuleSet extends RuleSet{
         }
 
         for (int i = 0; i <everyPiece.size(); i++){
-            if (everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant).contains(kingPos)){
-                pieceForcingCheckMoves = everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant);
+            if (everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board).contains(kingPos)){
+                pieceForcingCheckMoves = everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board);
                 pieceForcingCheckMoves.add(everyPiecePos.get(i));
             }
         }
@@ -91,7 +91,7 @@ public class ShogiRuleSet extends RuleSet{
             for (int i = 0; i < everyPieceSente.size(); i ++){
                 if (everyPieceSente.get(i).getClass() != King.class) {
                     for (Pos pieceForcingCheckMove : pieceForcingCheckMoves) {
-                        if (everyPieceSente.get(i).getAvailableMoves(everyPieceSentePos.get(i), board, variant).contains(pieceForcingCheckMove)) {
+                        if (everyPieceSente.get(i).getAvailableMoves(everyPieceSentePos.get(i), board).contains(pieceForcingCheckMove)) {
                             return false;
                         }
                     }
@@ -102,7 +102,7 @@ public class ShogiRuleSet extends RuleSet{
                 if (everyPieceGote.get(i).getClass() != King.class) {
                     assert pieceForcingCheckMoves != null;
                     for (Pos pieceForcingCheckMove : pieceForcingCheckMoves) {
-                        if (everyPieceGote.get(i).getAvailableMoves(everyPieceGotePos.get(i), board, variant).contains(pieceForcingCheckMove)) {
+                        if (everyPieceGote.get(i).getAvailableMoves(everyPieceGotePos.get(i), board).contains(pieceForcingCheckMove)) {
                             return false;
                         }
                     }

@@ -1,7 +1,6 @@
 package model.pieces;
 
 import model.Board;
-import model.variants.Variant;
 import util.Side;
 import util.Pos;
 
@@ -31,7 +30,7 @@ public abstract class Piece {
 
 //    protected abstract String getImageAbbreviationLetters();
 
-    public abstract ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant);
+    public abstract ArrayList<Pos> getAvailableMoves(Pos pos, Board board);
 
 //    public String getImageAbbreviation() {
 //        return switch (side) {
@@ -42,9 +41,9 @@ public abstract class Piece {
 
 
 
-    public Pos checkLegalMove (Pos pos, Board board, Variant variant){
+    public Pos checkLegalMove (Pos pos, Board board){
         boolean valid = true;
-        if (pos.col() >= 0 && pos.col() <= (variant.getWidth()-1) && pos.row() >= 0 && pos.row() <= (variant.getHeight()-1)) {
+        if (pos.col() >= 0 && pos.col() <= (board.getWidth()-1) && pos.row() >= 0 && pos.row() <= (board.getHeight()-1)) {
             if (board.getPieceAt(pos) != null) {
                 if (board.getPieceAt(pos).getSide() == side) {
                     valid = false;

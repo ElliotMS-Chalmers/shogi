@@ -111,7 +111,7 @@ public class Game {
      * @return The resulting move, or null if the move is invalid.
      */
     public Move move(Pos from, Pos to){
-        if (board.getPieceAt(from) == null || !ruleSet.validMove(from, to, board.getPieceAt(from), board, variant, turn, oppositeTurn)) { return null; }
+        if (board.getPieceAt(from) == null || !ruleSet.validMove(from, to, board.getPieceAt(from), board, turn, oppositeTurn)) { return null; }
         Move move = board.move(from, to);
         Piece capturedPiece = move.capturedPiece();
         if (capturedPiece != null) {

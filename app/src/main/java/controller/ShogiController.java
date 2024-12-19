@@ -183,7 +183,7 @@ public class ShogiController {
             lastSquareClicked = square;
             boardView.highlightSquare(pos);
             Piece piece = game.getBoard().getPieceAt(pos);
-            piece.getAvailableMoves(pos, game.getBoard(), game.getVariant()).forEach(boardView::markSquare);
+            piece.getAvailableMoves(pos, game.getBoard()).forEach(boardView::markSquare);
         }
         historyController.highlightLastMove();
     }

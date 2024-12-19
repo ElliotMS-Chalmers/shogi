@@ -6,8 +6,8 @@ import util.Pos;
 import util.Side;
 
 public abstract class RuleSet {
-    public abstract boolean validMove(Pos posFrom, Pos posTo, Piece piece, Board board, Variant variant, Side side, Side oppositeSide);
+    public abstract boolean validMove(Pos posFrom, Pos posTo, Piece piece, Board board, Side side, Side oppositeSide);
 
-    public abstract boolean isCurrentlyInCheck(Board board, Variant variant, Pos kingPos, Side side);
-    public abstract boolean isCurrentlyInCheckMate(Board board, Variant variant, Pos kingPos, Side oppositeSide);
+    public abstract boolean isCurrentlyInCheck(Board board, Pos kingPos, Side side);
+    public abstract boolean isCurrentlyInCheckMate(Board board, Pos kingPos, Side oppositeSide);
 }

@@ -99,7 +99,7 @@ class BoardTest {
         board.setAtPosition(new Pos(0, 0), piece1);
         board.setAtPosition(new Pos(0, 1), piece2);
 
-        ArrayList<Piece> pieces = board.getEveryPiece(new Standard());
+        ArrayList<Piece> pieces = board.getEveryPiece();
         
         assertEquals(2, pieces.size());
         assertTrue(pieces.contains(piece1));
@@ -111,7 +111,7 @@ class BoardTest {
         Piece piece1 = new Pawn(Side.GOTE);
         board.setAtPosition(new Pos(3, 3), piece1);
 
-        Pos pos = board.getPiecePos(new Standard(), Side.GOTE, Pawn.class);
+        Pos pos = board.getPiecePos(Side.GOTE, Pawn.class);
 
         assertEquals(new Pos(3, 3), pos);
     }
@@ -121,7 +121,7 @@ class BoardTest {
         Piece piece1 = new Pawn(Side.GOTE);
         board.setAtPosition(new Pos(3, 3), piece1);
 
-        Pos pos = board.getPiecePos(new Standard(), Side.SENTE, Pawn.class);
+        Pos pos = board.getPiecePos(Side.SENTE, Pawn.class);
 
         assertNull(pos);
     }

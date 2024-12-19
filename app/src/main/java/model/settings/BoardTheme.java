@@ -9,7 +9,7 @@ import java.io.InputStream;
 public class BoardTheme {
     private final String imageName;
     private final String thumbnailName;
-    private final String imagePath = "/image/boards/";
+    private final String directory = "/image/boards/";
 
     @JsonCreator
     public BoardTheme(@JsonProperty("image") String image, @JsonProperty("thumbnail") String thumbnail){
@@ -25,7 +25,7 @@ public class BoardTheme {
     }
 
     public InputStream getImage() {
-        String path = String.format(imagePath+"%s", imageName);
+        String path = String.format(directory+"%s", imageName);
         InputStream inputStream = getClass().getResourceAsStream(path);
         if (inputStream == null) {
             throw new IllegalArgumentException("Resource not found: " + path);
