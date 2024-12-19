@@ -85,6 +85,7 @@ public class Clock implements Runnable {
                     } catch (InterruptedException e) {
                         // Handle the interruption
                         Thread.currentThread().interrupt(); // Restore interrupt status
+                        gameRunning.set(false);
                         return; // Exit the thread when interrupted
                     }
                 }
@@ -110,6 +111,7 @@ public class Clock implements Runnable {
             } catch (InterruptedException e) {
                 // Handle interruption during sleep
                 Thread.currentThread().interrupt(); // Restore interrupt status
+                gameRunning.set(false); //Stop the game if interrupted during sleep
                 break; // Exit the loop
             }
         }
