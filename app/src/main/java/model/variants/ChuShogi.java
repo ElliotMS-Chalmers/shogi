@@ -3,8 +3,10 @@ package model.variants;
 import model.settings.PieceSetType;
 import model.pieces.*;
 import model.Sfen;
+import util.Side;
 
 import java.util.List;
+import java.util.Map;
 
 public class ChuShogi extends Variant {
 
@@ -45,6 +47,10 @@ public class ChuShogi extends Variant {
             Whale.class
              */
     );
+    protected Map<Side, List<Integer>> promotionZones = Map.ofEntries(
+            Map.entry(Side.SENTE, List.of(8, 9, 10, 11)),
+            Map.entry(Side.GOTE, List.of(0, 1, 2, 3))
+    );
 
     public ChuShogi(){
         width = 12;
@@ -63,5 +69,9 @@ public class ChuShogi extends Variant {
     @Override
     public PieceSetType getPieceSetType() {
         return PieceSetType.CHU;
+    }
+
+    public Map<Side, List<Integer>> getPromotionZones() {
+        return promotionZones;
     }
 }

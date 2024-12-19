@@ -2,12 +2,16 @@ package model;
 
 import model.pieces.Pawn;
 import model.pieces.Piece;
+import model.variants.Standard;
+import model.variants.Variant;
 import util.Pos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.Side;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
 
 class BoardTest {
 
@@ -72,5 +76,53 @@ class BoardTest {
 
         assertNotNull(board.getPieceAt(new Pos(0, 0)));
         assertNotNull(board.getPieceAt(new Pos(8, 8)));
+    }
+
+    @Test
+    void testMoveMultiplePieces() {
+        Piece piece1 = new Pawn(Side.GOTE);
+        Piece piece2 = new Pawn(Side.SENTE);
+        board.setAtPosition(new Pos(1, 1), piece1);
+        board.setAtPosition(new Pos(2, 2), piece2);
+
+        board.move(new Pos(1, 1), new Pos(3, 3));
+        board.move(new Pos(2, 2), new Pos(4, 4));
+
+        assertEquals(piece1, board.getPieceAt(new Pos(3, 3)));
+        assertEquals(piece2, board.getPieceAt(new Pos(4, 4)));
+    }
+
+    @Test
+    void testGetEveryPiece() {
+        Piece piece1 = new Pawn(Side.GOTE);
+        Piece piece2 = new Pawn(Side.SENTE);
+        board.setAtPosition(new Pos(0, 0), piece1);
+        board.setAtPosition(new Pos(0, 1), piece2);
+
+        ArrayList<Piece> pieces = board.getEveryPiece(new Standard());
+        
+        assertEquals(2, pieces.size());
+        assertTrue(pieces.contains(piece1));
+        assertTrue(pieces.contains(piece2));
+    }
+
+    @Test
+    void testGetPiecePos() {
+        Piece piece1 = new Pawn(Side.GOTE);
+        board.setAtPosition(new Pos(3, 3), piece1);
+
+        Pos pos = board.getPiecePos(new Standard(), Side.GOTE, Pawn.class);
+
+        assertEquals(new Pos(3, 3), pos);
+    }
+
+    @Test
+    void testGetPiecePosNotFound() {
+        Piece piece1 = new Pawn(Side.GOTE);
+        board.setAtPosition(new Pos(3, 3), piece1);
+
+        Pos pos = board.getPiecePos(new Standard(), Side.SENTE, Pawn.class);
+
+        assertNull(pos);
     }
 }

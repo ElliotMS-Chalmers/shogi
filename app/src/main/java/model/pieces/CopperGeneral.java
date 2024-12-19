@@ -1,7 +1,6 @@
-package model.pieces.chu;
+package model.pieces;
 
 import model.Board;
-import model.pieces.Promotable;
 import model.variants.Variant;
 import util.Pos;
 import util.Side;
@@ -30,6 +29,7 @@ public class CopperGeneral extends Promotable {
         int team = 0;
         int availableCol;
         int availableRow;
+
         int movesLength;
         if (side == Side.SENTE){
             team = 1;
@@ -47,10 +47,15 @@ public class CopperGeneral extends Promotable {
                 availableCol = pos.col() + moves[i * 2 + team][0];
                 availableRow = pos.row() + moves[i * 2 + team][1];
             }
-            if (checkLegalMove(new Pos(availableRow,availableCol), board, variant) != null) {
+            if (checkLegalMoveNotCapturingOwnPiece(new Pos(availableRow, availableCol), board, variant) && checkLegalMoveWithinBounds(new Pos(availableRow, availableCol), board, variant)) {
                 availableMoves.add(new Pos(availableRow, availableCol));
             }
         }
         return availableMoves;
+    }
+
+    @Override
+    public ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board, Variant variant) {
+        return getAvailableMoves(pos, board, variant);
     }
 }

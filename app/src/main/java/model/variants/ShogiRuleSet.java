@@ -1,27 +1,59 @@
 package model.variants;
 
 import model.Board;
-import model.pieces.King;
-import model.pieces.Piece;
+import model.pieces.*;
 import util.Pos;
 import util.Side;
 
 import java.util.ArrayList;
 
 
-public class ShogiRuleSet extends RuleSet{
+public class ShogiRuleSet implements RuleSet {
 
     @Override
-    public boolean validMove(Pos posFrom, Pos posTo, Piece piece, Board board, Variant variant, Side side, Side oppositeSide){
+    public boolean validMove(Pos posFrom, Pos posTo, Piece piece, Board board, Variant variant, Side side, Side oppositeSide) {
         if (piece instanceof King){
-//            if (isCurrentlyInCheck(board, variant, posFrom, oppositeSide)){
-//                if (isCurrentlyInCheck(board, variant, posTo, oppositeSide)){
-//                    return false;
-//                }
-//            }
-            return !isCurrentlyInCheck(board, variant, posTo, oppositeSide) && piece.getAvailableMoves(posFrom, board, variant).contains(posTo);
+            if (isCurrentlyInCheck(board, variant, posTo, oppositeSide)){return false;}
         }
-        return (piece.getAvailableMoves(posFrom, board, variant).contains(posTo));
+
+        if (!piece.getAvailableMoves(posFrom, board, variant).contains(posTo)) {return false;}
+
+        if (checkIfNextMoveIsCheck(posFrom,posTo,board,variant,side,oppositeSide)){return false;}
+
+        return true;
+    }
+
+    public boolean validHandMove(Pos pos, Piece piece, Board board, Variant variant, Side side, Side opposite){
+        if (board.getPieceAt(pos) != null){return false;}
+        if (piece.getClass() == Pawn.class){
+            if (board.getIfPieceInColum(variant, side, Pawn.class, pos.col())){return false;}
+        }
+        if (piece.getClass() == Knight.class){
+            if (side == Side.GOTE){
+                if (pos.row() < 2){return false;}
+            } else {
+                if (pos.row() > 6){return false;}
+            }
+        }
+        if (piece.getClass() == Lance.class){
+            if (side == Side.GOTE){
+                if (pos.row() < 1){return false;}
+            } else {
+                if (pos.row() > 7){return false;}
+            }
+        }
+
+
+        return true;
+    }
+    public boolean checkIfNextMoveIsCheck(Pos posFrom, Pos posTo, Board board, Variant variant, Side side, Side oppositeSide){
+        Piece piece = board.testMove(posFrom, posTo, null);
+        if (isCurrentlyInCheck(board, variant, board.getPiecePos(variant, side, King.class), oppositeSide)) {
+            board.testMove(posTo, posFrom, piece);
+            return true;
+        }
+        board.testMove(posTo, posFrom, piece);
+        return false;
     }
 
     public boolean isCurrentlyInCheck(Board board, Variant variant, Pos kingPos, Side oppositeSide){
@@ -32,9 +64,9 @@ public class ShogiRuleSet extends RuleSet{
 
         for (int i = 0; i < everyPiece.size(); i ++) {
             if (everyPiece.get(i).getSide() == Side.SENTE) {
-                allPossibleMovesSente.addAll(everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant));
+                allPossibleMovesSente.addAll(everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board, variant));
             } else {
-                allPossibleMovesGote.addAll(everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant));
+                allPossibleMovesGote.addAll(everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board, variant));
             }
         }
 
@@ -80,18 +112,17 @@ public class ShogiRuleSet extends RuleSet{
         }
 
         for (int i = 0; i <everyPiece.size(); i++){
-            if (everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant).contains(kingPos)){
-                pieceForcingCheckMoves = everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant);
+            if (everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board, variant).contains(kingPos)){
+                pieceForcingCheckMoves = everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board, variant);
                 pieceForcingCheckMoves.add(everyPiecePos.get(i));
             }
         }
-        // kan ta piece men kung även om den går in i schack
-        // kan baka om det står ett torn framför
+
         if (oppositeSide == Side.GOTE && pieceForcingCheckMoves != null){
             for (int i = 0; i < everyPieceSente.size(); i ++){
                 if (everyPieceSente.get(i).getClass() != King.class) {
                     for (Pos pieceForcingCheckMove : pieceForcingCheckMoves) {
-                        if (everyPieceSente.get(i).getAvailableMoves(everyPieceSentePos.get(i), board, variant).contains(pieceForcingCheckMove)) {
+                        if (everyPieceSente.get(i).getAvailableMovesBackend(everyPieceSentePos.get(i), board, variant).contains(pieceForcingCheckMove)) {
                             return false;
                         }
                     }
@@ -102,7 +133,7 @@ public class ShogiRuleSet extends RuleSet{
                 if (everyPieceGote.get(i).getClass() != King.class) {
                     assert pieceForcingCheckMoves != null;
                     for (Pos pieceForcingCheckMove : pieceForcingCheckMoves) {
-                        if (everyPieceGote.get(i).getAvailableMoves(everyPieceGotePos.get(i), board, variant).contains(pieceForcingCheckMove)) {
+                        if (everyPieceGote.get(i).getAvailableMovesBackend(everyPieceGotePos.get(i), board, variant).contains(pieceForcingCheckMove)) {
                             return false;
                         }
                     }

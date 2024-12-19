@@ -7,36 +7,74 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
-
-public class Clock implements Runnable{
+/**
+ * Represents a game clock for tracking time for a specific player or side during a game.
+ */
+public class Clock implements Runnable {
+    /**
+     * The number of seconds remaining on the clock.
+     */
     private IntegerProperty seconds;
+
+    /**
+     * The side (e.g., SENTE or GOTE) associated with this clock.
+     */
     private Side side;
+
+    /**
+     * Indicates whether the game is currently running.
+     */
     private AtomicBoolean gameRunning;
+
+    /**
+     * Indicates whether the clock is currently paused.
+     */
     private AtomicBoolean paused;
 
-    public Clock (int seconds, Side side, AtomicBoolean gameRunning) {
+    /**
+     * Constructs a new Clock with the specified initial time, side, and game state.
+     *
+     * @param seconds      the initial number of seconds on the clock
+     * @param side         the side associated with this clock
+     * @param gameRunning  an AtomicBoolean indicating whether the game is running
+     */
+    public Clock(int seconds, Side side, AtomicBoolean gameRunning) {
         this.seconds = new SimpleIntegerProperty(seconds);
         this.side = side;
         this.gameRunning = gameRunning;
         this.paused = new AtomicBoolean(false);
     }
 
+    /**
+     * Gets the property representing the remaining seconds on the clock.
+     *
+     * @return the IntegerProperty representing the remaining seconds
+     */
     public IntegerProperty getSeconds() {
         return seconds;
     }
 
+    /**
+     * Pauses the clock, preventing it from decrementing.
+     */
     public void pause() {
         paused.set(true);
     }
 
+    /**
+     * Resumes the clock, allowing it to continue decrementing.
+     */
     public void resume() {
         paused.set(false);
-        synchronized(this) {
+        synchronized (this) {
             this.notify();
         }
     }
 
+    /**
+     * Runs the clock in a separate thread, decrementing the time every second until it reaches zero
+     * or the game is no longer running. If paused, the clock will wait until resumed.
+     */
     @Override
     public void run() {
         while (gameRunning.get() && !Thread.currentThread().isInterrupted()) {
@@ -51,7 +89,7 @@ public class Clock implements Runnable{
                     }
                 }
             }
-    
+
             if (seconds.get() == 0) {
                 synchronized (gameRunning) {
                     if (gameRunning.get()) {
@@ -64,10 +102,9 @@ public class Clock implements Runnable{
                 }
                 break; // Exit loop
             }
-    
-            // System.out.println(this.side + " - Seconds left: " + this.seconds);
+
             seconds.set(seconds.get() - 1);
-    
+
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

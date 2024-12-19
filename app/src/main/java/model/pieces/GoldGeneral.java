@@ -19,8 +19,9 @@ public class GoldGeneral extends Piece {
 //        return "KI";
 //    }
 
+
     @Override
-    public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant){
+    public ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board, Variant variant) {
         ArrayList<Pos> availableMoves = new ArrayList<>();
         int team = 0;
         if (side == Side.SENTE){
@@ -29,8 +30,20 @@ public class GoldGeneral extends Piece {
         for (int i = 0; i < (moves.length/2); i ++) {
             int availableCol = pos.col() + moves[i*2 + team][0];
             int availableRow = pos.row() + moves[i*2 + team][1];
-            if (checkLegalMove(new Pos(availableRow,availableCol), board, variant) != null) {
+            if (checkLegalMoveWithinBounds(new Pos(availableRow,availableCol), board, variant)) {
                 availableMoves.add(new Pos(availableRow, availableCol));
+            }
+        }
+        return availableMoves;
+    }
+
+    @Override
+    public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant){
+        ArrayList<Pos> availableMoves = new ArrayList<>();
+        ArrayList<Pos> availableMovesBackend = getAvailableMovesBackend(pos, board, variant);
+        for (Pos availableMoveBackend : availableMovesBackend) {
+            if (checkLegalMoveNotCapturingOwnPiece(new Pos(availableMoveBackend.row(),availableMoveBackend.col()), board, variant)) {
+                availableMoves.add(new Pos(availableMoveBackend.row(),availableMoveBackend.col()));
             }
         }
         return availableMoves;
