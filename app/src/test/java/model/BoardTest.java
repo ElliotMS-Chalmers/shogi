@@ -148,16 +148,16 @@ class BoardTest {
         board.setAtPosition(new Pos(3, targetColumn), senteKing);
         board.setAtPosition(new Pos(5, 5), gotePawn);
 
-        assertTrue(board.getIfPieceInColum(Side.SENTE, King.class, targetColumn),
+        assertTrue(board.ifPieceInColum(Side.SENTE, King.class, targetColumn),
                 "There should be a Sente King in column 4");
 
-        assertFalse(board.getIfPieceInColum(Side.GOTE, King.class, targetColumn),
+        assertFalse(board.ifPieceInColum(Side.GOTE, King.class, targetColumn),
                 "There should not be a Gote King in column 4");
 
-        assertFalse(board.getIfPieceInColum(Side.SENTE, King.class, 5),
+        assertFalse(board.ifPieceInColum(Side.SENTE, King.class, 5),
                 "There should not be a Sente King in column 5");
 
-        assertFalse(board.getIfPieceInColum(Side.GOTE, Pawn.class, 6),
+        assertFalse(board.ifPieceInColum(Side.GOTE, Pawn.class, 6),
                 "There should not be any piece in column 6");
     }
 }
