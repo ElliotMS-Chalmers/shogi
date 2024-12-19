@@ -16,11 +16,8 @@ public class ShogiRuleSet implements RuleSet {
         if (piece instanceof King){
             if (isCurrentlyInCheck(board, posTo, oppositeSide)){return false;}
         }
-
         if (!piece.getAvailableMoves(posFrom, board).contains(posTo)) {return false;}
-
         if (checkIfNextMoveIsCheck(posFrom,posTo,board,side,oppositeSide)){return false;}
-
         return true;
     }
 
@@ -47,6 +44,7 @@ public class ShogiRuleSet implements RuleSet {
 
         return true;
     }
+
     public boolean checkIfNextMoveIsCheck(Pos posFrom, Pos posTo, Board board, Side side, Side oppositeSide){
         Piece piece = board.testMove(posFrom, posTo, null);
         if (isCurrentlyInCheck(board, board.getPiecePos(side, King.class), oppositeSide)) {

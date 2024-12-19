@@ -159,17 +159,24 @@ public class GameController {
     private void handleHandToBoardClick(Pos pos) {
         // todo: game interface
         // todo: move reverse logic to view
-        List<Class<? extends Piece>> hand = game.getVariant().getHand();
-        Side side = ((PieceStandView.SquareView) lastSquareClicked).getSide();
-        int index = ((PieceStandView.SquareView) lastSquareClicked).getIndex(); // maybe get abbreviation from square
-        switch (side) {
-            case GOTE -> game.playHand(pos, PieceFactory.fromClass(hand.get(index), side));
-            case SENTE -> game.playHand(pos, PieceFactory.fromClass(hand.get(hand.size() - index - 1), side));
-        }
+        Piece piece = getPieceFromHandSquare((PieceStandView.SquareView) lastSquareClicked);
+        if (game.isValidHandMove(pos, piece)) {
+            game.playHand(pos, piece);
+            SoundPlayer.playMoveSound(settings.getSoundSet());
+        };
         lastSquareClicked.unHighlight();
         lastSquareClicked = null;
         boardView.clearMarkedSquares();
-        SoundPlayer.playMoveSound(settings.getSoundSet());
+    }
+
+    public Piece getPieceFromHandSquare(PieceStandView.SquareView square) {
+        List<Class<? extends Piece>> hand = game.getVariant().getHand();
+        Side side = square.getSide();
+        int index = square.getIndex(); // maybe get abbreviation from square
+        return switch (side) {
+            case GOTE -> PieceFactory.fromClass(hand.get(index), side);
+            case SENTE -> PieceFactory.fromClass(hand.get(hand.size() - index - 1), side);
+        };
     }
 
     private void handleBoardToBoardClick(Pos pos) {
@@ -192,7 +199,10 @@ public class GameController {
             lastSquareClicked = square;
             boardView.highlightSquare(pos);
             Piece piece = game.getBoard().getPieceAt(pos);
-            piece.getAvailableMoves(pos, game.getBoard()).forEach(boardView::markSquare);
+            piece.getAvailableMoves(pos, game.getBoard()).forEach((p) -> {
+                if (game.isValidMove(pos, p))
+                    boardView.markSquare(p);
+            });
         }
         historyController.highlightLastMove();
     }
@@ -202,12 +212,17 @@ public class GameController {
         if (square.equals(lastSquareClicked)) {
             lastSquareClicked = null;
             square.unHighlight();
+            boardView.clearMarkedSquares();
         } else if (lastSquareClicked != null) {
             lastSquareClicked.unHighlight();
+            boardView.clearMarkedSquares();
         } else if (square.getCount() > 0) {
             lastSquareClicked = square;
             square.highlight();
-            // todo: highlight all available moves from hand
+            game.getValidHandMovePositions(getPieceFromHandSquare(square)).forEach((pos) -> {
+                boardView.markSquare(pos);
+            });
+            // TODO: highlihght hand squares
         }
         historyController.highlightLastMove();
     }
