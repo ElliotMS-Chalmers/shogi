@@ -347,7 +347,6 @@ public class Game {
             if (goteth != null && goteth.isAlive()) {
                 goteth.interrupt();
             }
-            System.out.println("Clocks stopped.");
         }
     }
 

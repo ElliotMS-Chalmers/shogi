@@ -31,7 +31,6 @@ public class MenuController {
             Integer time = null;
             Side side;
             for (String part : parts) {
-                System.out.println(part);
                 if (part.startsWith("Variant:")) {
                     variant = switch (part.substring("Variant: ".length())) {
                         case "Standard" -> new Standard();
@@ -41,7 +40,6 @@ public class MenuController {
                 } else if (part.startsWith("Time:")) { // Handle Spinner value for clocks
                     int spinnerValue = Integer.parseInt(part.split(":")[1].trim());
                     time = spinnerValue * 60;
-                    System.out.println("Spinner Value: " + spinnerValue);
                 } else if (part.startsWith("Side:")) {
                     side = switch (part.substring("Side: ".length())) {
                         case "Sente" -> Side.SENTE;

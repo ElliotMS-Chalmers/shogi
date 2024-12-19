@@ -79,13 +79,6 @@ public class ShogiView extends VBox {
         // Add all components to the main HBox
         hBox.getChildren().addAll(clockAndBoardWrapper, historyView);
 
-        // Temp styling for debugging
-//        hBox.setStyle("-fx-background-color: red");
-//        boardWrapper.setStyle("-fx-background-color: blue");
-//        clockAndBoardWrapper.setStyle("-fx-background-color: green");
-//        goteClockWrapper.setStyle("-fx-background-color: gray");
-//        senteClockWrapper.setStyle("-fx-background-color: gray");
-
     }
 
 

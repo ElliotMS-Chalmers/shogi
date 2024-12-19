@@ -194,7 +194,7 @@ public class Board {
     public int getHeight(){return grid[0].length;}
 
 
-    public boolean getIfPieceInColum(Side side, Class pieceType, int col) {
+    public boolean ifPieceInColum(Side side, Class pieceType, int col) {
         Piece piece;
 
         for (int i = 0; i < getWidth(); i++) {
