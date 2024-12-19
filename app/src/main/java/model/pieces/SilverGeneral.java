@@ -26,7 +26,7 @@ public class SilverGeneral extends Promotable {
 //    }
 
     @Override
-    public ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board, Variant variant){
+    public ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board){
         ArrayList<Pos> availableMoves = new ArrayList<>();
         int team = 0;
         int availableCol;
@@ -48,7 +48,7 @@ public class SilverGeneral extends Promotable {
                 availableCol = pos.col() + moves[i * 2 + team][0];
                 availableRow = pos.row() + moves[i * 2 + team][1];
             }
-            if (checkLegalMoveWithinBounds(new Pos(availableRow,availableCol), board, variant)) {
+            if (checkLegalMoveWithinBounds(new Pos(availableRow,availableCol), board)) {
                 availableMoves.add(new Pos(availableRow, availableCol));
             }
         }
@@ -56,11 +56,11 @@ public class SilverGeneral extends Promotable {
     }
 
     @Override
-    public ArrayList<Pos> getAvailableMoves(Pos pos, Board board, Variant variant){
+    public ArrayList<Pos> getAvailableMoves(Pos pos, Board board){
         ArrayList<Pos> availableMoves = new ArrayList<>();
-        ArrayList<Pos> availableMovesBackend = getAvailableMovesBackend(pos, board, variant);
+        ArrayList<Pos> availableMovesBackend = getAvailableMovesBackend(pos, board);
         for (Pos availableMoveBackend : availableMovesBackend) {
-            if (checkLegalMoveNotCapturingOwnPiece(new Pos(availableMoveBackend.row(),availableMoveBackend.col()), board, variant)) {
+            if (checkLegalMoveNotCapturingOwnPiece(new Pos(availableMoveBackend.row(),availableMoveBackend.col()), board)) {
                 availableMoves.add(new Pos(availableMoveBackend.row(),availableMoveBackend.col()));
             }
         }

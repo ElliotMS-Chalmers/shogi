@@ -12,22 +12,22 @@ import java.util.ArrayList;
 public class ShogiRuleSet implements RuleSet {
 
     @Override
-    public boolean validMove(Pos posFrom, Pos posTo, Piece piece, Board board, Variant variant, Side side, Side oppositeSide) {
+    public boolean validMove(Pos posFrom, Pos posTo, Piece piece, Board board, Side side, Side oppositeSide) {
         if (piece instanceof King){
-            if (isCurrentlyInCheck(board, variant, posTo, oppositeSide)){return false;}
+            if (isCurrentlyInCheck(board, posTo, oppositeSide)){return false;}
         }
 
-        if (!piece.getAvailableMoves(posFrom, board, variant).contains(posTo)) {return false;}
+        if (!piece.getAvailableMoves(posFrom, board).contains(posTo)) {return false;}
 
-        if (checkIfNextMoveIsCheck(posFrom,posTo,board,variant,side,oppositeSide)){return false;}
+        if (checkIfNextMoveIsCheck(posFrom,posTo,board,side,oppositeSide)){return false;}
 
         return true;
     }
 
-    public boolean validHandMove(Pos pos, Class pieceClass, Board board, Variant variant, Side side){
+    public boolean validHandMove(Pos pos, Class pieceClass, Board board, Side side){
         if (board.getPieceAt(pos) != null){return false;}
         if (pieceClass == Pawn.class){
-            if (board.getIfPieceInColum(variant, side, Pawn.class, pos.col())){return false;}
+            if (board.getIfPieceInColum(side, Pawn.class, pos.col())){return false;}
         }
         if (pieceClass == Knight.class){
             if (side == Side.GOTE){
@@ -47,9 +47,9 @@ public class ShogiRuleSet implements RuleSet {
 
         return true;
     }
-    public boolean checkIfNextMoveIsCheck(Pos posFrom, Pos posTo, Board board, Variant variant, Side side, Side oppositeSide){
+    public boolean checkIfNextMoveIsCheck(Pos posFrom, Pos posTo, Board board, Side side, Side oppositeSide){
         Piece piece = board.testMove(posFrom, posTo, null);
-        if (isCurrentlyInCheck(board, variant, board.getPiecePos(variant, side, King.class), oppositeSide)) {
+        if (isCurrentlyInCheck(board, board.getPiecePos(side, King.class), oppositeSide)) {
             board.testMove(posTo, posFrom, piece);
             return true;
         }
@@ -57,17 +57,17 @@ public class ShogiRuleSet implements RuleSet {
         return false;
     }
 
-    public boolean isCurrentlyInCheck(Board board, Variant variant, Pos kingPos, Side oppositeSide){
+    public boolean isCurrentlyInCheck(Board board, Pos kingPos, Side oppositeSide){
         ArrayList<Pos> allPossibleMovesSente = new ArrayList<>();
         ArrayList<Pos> allPossibleMovesGote = new ArrayList<>();
-        ArrayList<Piece> everyPiece = board.getEveryPiece(variant);
-        ArrayList<Pos> everyPiecePos = board.getEveryPiecePos(variant);
+        ArrayList<Piece> everyPiece = board.getEveryPiece();
+        ArrayList<Pos> everyPiecePos = board.getEveryPiecePos();
 
         for (int i = 0; i < everyPiece.size(); i ++) {
             if (everyPiece.get(i).getSide() == Side.SENTE) {
-                allPossibleMovesSente.addAll(everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board, variant));
+                allPossibleMovesSente.addAll(everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board));
             } else {
-                allPossibleMovesGote.addAll(everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board, variant));
+                allPossibleMovesGote.addAll(everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board));
             }
         }
 
@@ -89,17 +89,17 @@ public class ShogiRuleSet implements RuleSet {
         return false;
     }
 
-    public boolean isCurrentlyInCheckMate(Board board, Variant variant, Pos kingPos, Side side, Side oppositeSide, Player player){
-        if (!isCurrentlyInCheck(board, variant, kingPos, oppositeSide)){ return false;}
-        for (Pos move : board.getPieceAt(kingPos).getAvailableMoves(kingPos, board, variant)){
-            if (!isCurrentlyInCheck(board, variant, move, oppositeSide)){return false;}
+    public boolean isCurrentlyInCheckMate(Board board, Pos kingPos, Side side, Side oppositeSide, Player player){
+        if (!isCurrentlyInCheck(board, kingPos, oppositeSide)){ return false;}
+        for (Pos move : board.getPieceAt(kingPos).getAvailableMoves(kingPos, board)){
+            if (!isCurrentlyInCheck(board, move, oppositeSide)){return false;}
         }
         ArrayList<Piece> everyPieceSente = new ArrayList<>();
         ArrayList<Piece> everyPieceGote = new ArrayList<>();
         ArrayList<Pos> everyPieceSentePos = new ArrayList<>();
         ArrayList<Pos> everyPieceGotePos = new ArrayList<>();
-        ArrayList<Piece> everyPiece = board.getEveryPiece(variant);
-        ArrayList<Pos> everyPiecePos = board.getEveryPiecePos(variant);
+        ArrayList<Piece> everyPiece = board.getEveryPiece();
+        ArrayList<Pos> everyPiecePos = board.getEveryPiecePos();
         ArrayList<Pos> pieceForcingCheckMoves = null;
 
         ArrayList<Pos> avaialableHandMoves = new ArrayList<>();
@@ -116,8 +116,8 @@ public class ShogiRuleSet implements RuleSet {
         }
 
         for (int i = 0; i <everyPiece.size(); i++){
-            if (everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board, variant).contains(kingPos)){
-                pieceForcingCheckMoves = everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board, variant);
+            if (everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board).contains(kingPos)){
+                pieceForcingCheckMoves = everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board);
                 pieceForcingCheckMoves.add(everyPiecePos.get(i));
             }
         }
@@ -125,7 +125,7 @@ public class ShogiRuleSet implements RuleSet {
             for (int i = 0; i < everyPieceSente.size(); i ++){
                 if (everyPieceSente.get(i).getClass() != King.class) {
                     for (Pos pieceForcingCheckMove : pieceForcingCheckMoves) {
-                        if (everyPieceSente.get(i).getAvailableMovesBackend(everyPieceSentePos.get(i), board, variant).contains(pieceForcingCheckMove)) {
+                        if (everyPieceSente.get(i).getAvailableMovesBackend(everyPieceSentePos.get(i), board).contains(pieceForcingCheckMove)) {
                             return false;
                         }
                     }
@@ -136,7 +136,7 @@ public class ShogiRuleSet implements RuleSet {
                 if (everyPieceGote.get(i).getClass() != King.class) {
                     assert pieceForcingCheckMoves != null;
                     for (Pos pieceForcingCheckMove : pieceForcingCheckMoves) {
-                        if (everyPieceGote.get(i).getAvailableMovesBackend(everyPieceGotePos.get(i), board, variant).contains(pieceForcingCheckMove)) {
+                        if (everyPieceGote.get(i).getAvailableMovesBackend(everyPieceGotePos.get(i), board).contains(pieceForcingCheckMove)) {
                             return false;
                         }
                     }
@@ -147,9 +147,9 @@ public class ShogiRuleSet implements RuleSet {
 
         for (Class<? extends Piece> piece : player.getHand().keySet()){
             if (player.getHand().get(piece) > 0){
-                for (int i = 0; i < variant.getWidth(); i++) {
-                    for (int j = 0; j < variant.getHeight(); j++) {
-                        if (validHandMove(new Pos(i,j), piece.getClass(), board, variant, oppositeSide)){
+                for (int i = 0; i < board.getWidth(); i++) {
+                    for (int j = 0; j < board.getHeight(); j++) {
+                        if (validHandMove(new Pos(i,j), piece.getClass(), board, oppositeSide)){
                             avaialableHandMoves.add(new Pos(i,j));
                         }
                     }

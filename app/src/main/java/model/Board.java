@@ -1,7 +1,6 @@
 package model;
 
 import model.pieces.Piece;
-import model.variants.Variant;
 import util.Pos;
 import util.Side;
 
@@ -106,7 +105,7 @@ public class Board {
 
     /**
      * Initializes the board using the provided SFEN string.
-     *
+     * 
      * @param sfen the SFEN string representing the board state
      */
     public void initializeBoard(Sfen sfen) {
@@ -118,7 +117,7 @@ public class Board {
 
     /**
      * Retrieves the piece at a specific position on the board.
-     *
+     * 
      * @param pos the position to query
      * @return the piece at the specified position, or null if the position is empty
      */
@@ -129,14 +128,13 @@ public class Board {
     /**
      * Gets all pieces currently on the board.
      *
-     * @param variant the game variant defining the board dimensions
      * @return a list of all pieces on the board
      */
-    public ArrayList<Piece> getEveryPiece(Variant variant) {
+    public ArrayList<Piece> getEveryPiece() {
         Piece piece;
         ArrayList<Piece> pieces = new ArrayList<>();
-        for (int i = 0; i < variant.getWidth(); i++) {
-            for (int j = 0; j < variant.getHeight(); j++) {
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
                 piece = getPieceAt(new Pos(i, j));
                 if (piece != null) {
                     pieces.add(piece);
@@ -149,14 +147,13 @@ public class Board {
     /**
      * Gets the positions of all pieces currently on the board.
      *
-     * @param variant the game variant defining the board dimensions
      * @return a list of positions of all pieces on the board
      */
-    public ArrayList<Pos> getEveryPiecePos(Variant variant) {
+    public ArrayList<Pos> getEveryPiecePos() {
         Piece piece;
         ArrayList<Pos> positions = new ArrayList<>();
-        for (int i = 0; i < variant.getWidth(); i++) {
-            for (int j = 0; j < variant.getHeight(); j++) {
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
                 piece = getPieceAt(new Pos(i, j));
                 if (piece != null) {
                     positions.add(new Pos(i, j));
@@ -169,15 +166,14 @@ public class Board {
     /**
      * Finds the position of a specific piece on the board.
      *
-     * @param variant   the game variant defining the board dimensions
      * @param side      the side to which the piece belongs
      * @param pieceType the class of the piece to find
      * @return the position of the specified piece, or null if not found
      */
-    public Pos getPiecePos(Variant variant, Side side, Class pieceType) {
+    public Pos getPiecePos(Side side, Class pieceType) {
         Piece piece;
-        for (int i = 0; i < variant.getWidth(); i++) {
-            for (int j = 0; j < variant.getHeight(); j++) {
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
                 piece = getPieceAt(new Pos(i, j));
                 if (piece != null) {
                     if (piece.getClass() == pieceType && piece.getSide() == side) {
@@ -188,11 +184,20 @@ public class Board {
         }
         return null;
     }
+    /**
+     * @return the width of the board.
+     */
+    public int getWidth(){return grid.length;}
+    /**
+     * @return the height of the board.
+     */
+    public int getHeight(){return grid[0].length;}
 
-    public boolean getIfPieceInColum(Variant variant, Side side, Class pieceType, int col) {
+
+    public boolean getIfPieceInColum(Side side, Class pieceType, int col) {
         Piece piece;
 
-        for (int i = 0; i < variant.getWidth(); i++) {
+        for (int i = 0; i < getWidth(); i++) {
             piece = getPieceAt(new Pos(i, col));
             if (piece != null) {
                 if (piece.getClass() == pieceType && piece.getSide() == side) {
