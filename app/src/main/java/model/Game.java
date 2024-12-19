@@ -422,6 +422,15 @@ public class Game {
         return turn;
     }
 
+    /** 
+     * Returns the number of moves occured
+     * 
+     * @return The number of moves done (returns the value of moveCount)
+    */
+    public int getMoveCount() {
+        return moveCount;
+    }
+
     /**
      * Promotes a piece at the specified position if it is eligible for promotion.
      * This checks if the piece is in the promotion zone and is of a type that can be promoted.
