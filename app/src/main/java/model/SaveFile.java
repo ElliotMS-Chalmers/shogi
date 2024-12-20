@@ -112,14 +112,7 @@ public class SaveFile {
      */
     public void save() {
         Path path = getSaveFilePath();
-        try {
-            if (path.getParent() != null) {
-                java.nio.file.Files.createDirectories(path.getParent());
-            }
-            JsonLoader.getObjectMapper().writeValue(path.toFile(), this);
-        } catch (IOException e) {
-            System.err.println("Failed to save save file: " + e.getMessage());
-        }
+        save(path.toString());
     }
 
     /**
@@ -176,7 +169,6 @@ public class SaveFile {
     @JsonIgnore
     public History getHistory() {
         History historyObj = new History();
-        if (history == null) return historyObj;
         for (Move move : history) {
             historyObj.addMove(move);
         }

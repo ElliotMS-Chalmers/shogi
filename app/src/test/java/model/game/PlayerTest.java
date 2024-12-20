@@ -1,6 +1,5 @@
-package model;
+package model.game;
 
-import model.game.Player;
 import model.pieces.Piece;
 import model.pieces.PieceFactory;
 import model.variants.Standard;

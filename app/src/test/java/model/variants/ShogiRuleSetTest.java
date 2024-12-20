@@ -1,7 +1,6 @@
-package model;
+package model.variants;
 
 import model.game.Player;
-import model.variants.*;
 import model.game.Board;
 import model.pieces.King;
 import model.pieces.*;
