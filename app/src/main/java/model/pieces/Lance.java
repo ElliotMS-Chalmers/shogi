@@ -75,6 +75,7 @@ public class Lance extends Promotable {
         int movesLength = board.getWidth();
         boolean previousPieceEnemy;
         boolean previousPieceEnemyKing;
+        boolean previousPieceFriend;
         if (side == Side.SENTE){
             team = 1;
         }
@@ -82,33 +83,39 @@ public class Lance extends Promotable {
             for (int i = 0; i < (promotedMoves.length/2); i ++) {
                 availableCol = pos.col() + promotedMoves[i *2 + team][0];
                 availableRow = pos.row() + promotedMoves[i *2 + team][1];
-                if (checkLegalMove(new Pos(availableRow,availableCol), board) != null) {
+                if (checkLegalMoveWithinBounds(new Pos(availableRow,availableCol), board)) {
                     availableMoves.add(new Pos(availableRow, availableCol));
                 }
             }
         } else {
             previousPieceEnemy = false;
             previousPieceEnemyKing = false;
+            previousPieceFriend = false;
             for (int i = 1; i <= (movesLength); i ++) {
                 availableCol = (pos.col());
                 availableRow = (pos.row() + (i * -1* (-1+ team*2)));
                 if (previousPieceEnemy){
-                    if (checkLegalMove(new Pos(availableRow, availableCol), board) != null && previousPieceEnemyKing) {
+                    if (checkLegalMoveWithinBounds(new Pos(availableRow, availableCol), board) && previousPieceEnemyKing) {
                         availableMoves.add(new Pos(availableRow, availableCol));
                     }
                     break;
+                } else if (previousPieceFriend) {
+                    break;
                 }
-                if (checkLegalMove(new Pos(availableRow, availableCol), board) != null) {
+
+                if (checkLegalMoveWithinBounds(new Pos(availableRow, availableCol), board)) {
                     if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
                         if (board.getPieceAt(new Pos(availableRow, availableCol)).getSide() != side) {
                             previousPieceEnemy = true;
                             if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class){
                                 previousPieceEnemyKing = true;
                             }
+                        } else {
+                            previousPieceFriend = true;
                         }
                     }
                 }
-                if (checkLegalMove(new Pos(availableRow, availableCol), board) == null){
+                if (!checkLegalMoveWithinBounds(new Pos(availableRow, availableCol), board)){
                     break;
                 } else {
                     availableMoves.add(new Pos(availableRow, availableCol));
@@ -117,5 +124,10 @@ public class Lance extends Promotable {
         }
 
         return availableMoves;
+    }
+
+    @Override
+    public ArrayList<Pos> getForcingCheckMoves(Pos pos, Pos kingPos, Board board){
+        return getAvailableMoves(pos, board);
     }
 }

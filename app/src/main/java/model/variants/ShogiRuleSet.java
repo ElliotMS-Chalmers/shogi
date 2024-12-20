@@ -1,6 +1,7 @@
 package model.variants;
 
 import model.Board;
+import model.PieceFactory;
 import model.Player;
 import model.pieces.*;
 import util.Pos;
@@ -41,8 +42,20 @@ public class ShogiRuleSet implements RuleSet {
             }
         }
 
+        if (checkIfNextMoveIsCheckHand(pos, board, side, pieceClass)) {return false;}
+
 
         return true;
+    }
+
+    public boolean checkIfNextMoveIsCheckHand(Pos pos, Board board, Side side, Class pieceClass){
+        Piece piece = PieceFactory.fromClass(pieceClass, side);
+        if (isCurrentlyInCheck(board, board.getPiecePos(side, King.class), side.opposite())) {
+            board.setAtPosition(pos, piece);
+            if (isCurrentlyInCheck(board, board.getPiecePos(side, King.class), side.opposite())) {return true;}
+            board.setAtPosition(pos, null);
+        }
+        return false;
     }
 
     public boolean checkIfNextMoveIsCheck(Pos posFrom, Pos posTo, Board board, Side side, Side oppositeSide){
@@ -88,10 +101,13 @@ public class ShogiRuleSet implements RuleSet {
     }
 
     public boolean isCurrentlyInCheckMate(Board board, Pos kingPos, Side side, Side oppositeSide, Player player){
+
         if (!isCurrentlyInCheck(board, kingPos, oppositeSide)){ return false;}
-        for (Pos move : board.getPieceAt(kingPos).getAvailableMoves(kingPos, board)){
+
+        for (Pos move : board.getPieceAt(kingPos).getAvailableMovesBackend(kingPos, board)){
             if (!isCurrentlyInCheck(board, move, oppositeSide)){return false;}
         }
+
         ArrayList<Piece> everyPieceSente = new ArrayList<>();
         ArrayList<Piece> everyPieceGote = new ArrayList<>();
         ArrayList<Pos> everyPieceSentePos = new ArrayList<>();
@@ -115,8 +131,9 @@ public class ShogiRuleSet implements RuleSet {
 
         for (int i = 0; i <everyPiece.size(); i++){
             if (everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board).contains(kingPos)){
-                pieceForcingCheckMoves = everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board);
+                pieceForcingCheckMoves = everyPiece.get(i).getForcingCheckMoves(everyPiecePos.get(i), kingPos, board);
                 pieceForcingCheckMoves.add(everyPiecePos.get(i));
+
             }
         }
         if (oppositeSide == Side.GOTE && pieceForcingCheckMoves != null){
@@ -142,12 +159,11 @@ public class ShogiRuleSet implements RuleSet {
             }
         }
 
-
         for (Class<? extends Piece> piece : player.getHand().keySet()){
             if (player.getHand().get(piece) > 0){
                 for (int i = 0; i < board.getWidth(); i++) {
                     for (int j = 0; j < board.getHeight(); j++) {
-                        if (validHandMove(new Pos(i,j), piece.getClass(), board, oppositeSide)){
+                        if (validHandMove(new Pos(i,j), piece, board, oppositeSide)){
                             avaialableHandMoves.add(new Pos(i,j));
                         }
                     }

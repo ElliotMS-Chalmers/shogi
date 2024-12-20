@@ -36,6 +36,12 @@ public abstract class Piece {
 
     public abstract ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board);
 
+    public ArrayList<Pos> getForcingCheckMoves(Pos pos, Pos kingPos, Board board){
+        ArrayList<Pos> forcingCheckMoves = new ArrayList<>();
+        forcingCheckMoves.add(kingPos);
+        return forcingCheckMoves;
+    }
+
     public boolean checkLegalMoveWithinBounds (Pos pos, Board board){
         return pos.col() >= 0 && pos.col() <= (board.getWidth() - 1) && pos.row() >= 0 && pos.row() <= (board.getHeight() - 1);
     }
