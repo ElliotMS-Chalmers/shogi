@@ -199,9 +199,11 @@ public class Bishop extends Promotable {
                 availableRow = pos.row() + promotedMove[1];
                 ArrayList<Pos> availableMoves = new ArrayList<>();
                 if (checkLegalMove(new Pos(availableRow, availableCol), board) != null) {
-                    if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class) {
-                        availableMoves.add(new Pos(availableRow, availableCol));
-                        return availableMoves;
+                    if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
+                        if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class) {
+                            availableMoves.add(new Pos(availableRow, availableCol));
+                            return availableMoves;
+                        }
                     }
                 }
             }

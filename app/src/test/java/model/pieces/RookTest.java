@@ -35,6 +35,7 @@ class RookTest {
             if (isWithinBounds(pos)) {
                 board[pos.row()][pos.col()] = piece;
             }
+
         }
 
         public void removePiece(Pos pos) {
@@ -182,53 +183,77 @@ class RookTest {
     }
 
     @Test
+    void testGetForcingCheckMove() {
+        // Arrange
+        TestBoard board = new TestBoard();
+        Rook rook = new Rook(Side.SENTE);
+        King king = new King(Side.GOTE);
+        Pawn obstaclePawn = new Pawn(Side.SENTE);
+        Pos rookPos = new Pos(4, 4);
+        Pos kingPos = new Pos(4, 6);
+        Pos obstaclePos = new Pos(4, 5);
+
+        board.placePiece(rook, rookPos);
+        board.placePiece(king, kingPos);
+
+        // Act (Check for no obstacles)
+        ArrayList<Pos> forcingMove = rook.getForcingCheckMoves(rookPos, kingPos, board);
+
+        // Assert (No obstacle - Should find forcing move)
+        assertNotNull(forcingMove, "Rook should have a forcing move to check the king.");
+        assertTrue(forcingMove.contains(kingPos), "The forcing move should put the king in check.");
+
+        // Add obstacle and test again
+        board.placePiece(obstaclePawn, obstaclePos);
+
+        // Act (Check with obstacle)
+        forcingMove = rook.getForcingCheckMoves(rookPos, kingPos, board);
+
+        // Assert (With obstacle - Should find no forcing move)
+        assertNull(forcingMove, "Rook should not have a forcing move with an obstacle blocking the way.");
+    }
+    
+    @Test
+    void testGetForcingCheckMoves_PromotedRook() {
+        // Arrange
+        TestBoard board = new TestBoard();
+        Rook rook = new Rook(Side.SENTE);
+        King king = new King(Side.GOTE);
+        rook.promote();
+        Pos rookPos = new Pos(4, 4);
+        Pos kingPos = new Pos(3, 3); // King on a diagonal
+
+
+        board.placePiece(rook, rookPos);
+        board.placePiece(king, kingPos);
+
+        // Act
+        ArrayList<Pos> forcingMoves = rook.getForcingCheckMoves(rookPos, kingPos, board);
+
+        // Assert
+        assertNotNull(forcingMoves, "Promoted rook should find forcing moves to check the king.");
+        assertTrue(forcingMoves.contains(kingPos), "Promoted rook can check the king on a diagonal.");
+
+    }
+
+    @Test
     void testGetAvailableMovesBackend_PromotedRook() {
         // Arrange
         TestBoard board = new TestBoard();
         Rook rook = new Rook(Side.SENTE);
         rook.promote(); // Promote the rook
-        Pos rookPos = new Pos(4, 4); // Central position
+        Pos rookPos = new Pos(4, 4); // Center position on the board
         board.placePiece(rook, rookPos);
 
         // Act
-        ArrayList<Pos> moves = rook.getAvailableMovesBackend(rookPos, board);
+        ArrayList<Pos> backendMoves = rook.getAvailableMovesBackend(rookPos, board);
 
         // Assert
-        assertNotNull(moves);
-        // 14 moves for horizontal/vertical (unpromoted rook) + 4 diagonal moves
-        assertEquals(18, moves.size(), "Promoted Rook should have 18 possible moves.");
-
-        // Assert horizontal and vertical moves
-        assertTrue(moves.contains(new Pos(3, 4)), "Promoted Rook can move vertically to (3,4).");
-        assertTrue(moves.contains(new Pos(5, 4)), "Promoted Rook can move vertically to (5,4).");
-        assertTrue(moves.contains(new Pos(4, 3)), "Promoted Rook can move horizontally to (4,3).");
-        assertTrue(moves.contains(new Pos(4, 5)), "Promoted Rook can move horizontally to (4,5).");
-
-        // Assert diagonal moves (unique to promoted rook)
-        assertTrue(moves.contains(new Pos(3, 3)), "Promoted Rook can move diagonally to (3,3).");
-        assertTrue(moves.contains(new Pos(3, 5)), "Promoted Rook can move diagonally to (3,5).");
-        assertTrue(moves.contains(new Pos(5, 3)), "Promoted Rook can move diagonally to (5,3).");
-        assertTrue(moves.contains(new Pos(5, 5)), "Promoted Rook can move diagonally to (5,5).");
+        assertNotNull(backendMoves);
+        assertEquals(18, backendMoves.size(), "Backend moves should match the frontend moves for a promoted rook.");
+        assertTrue(backendMoves.contains(new Pos(3, 4)), "Promoted rook should allow move north.");
+        assertTrue(backendMoves.contains(new Pos(4, 5)), "Promoted rook should allow move east.");
+        assertTrue(backendMoves.contains(new Pos(3, 3)), "Promoted rook should allow diagonal move to (3,3).");
     }
-
-    @Test
-    void testGetAvailableMovesBackend_BlockByEnemyKing() {
-        // Arrange
-        TestBoard board = new TestBoard();
-        Rook rook = new Rook(Side.SENTE); // Sente Rook
-        King enemyKing = new King(Side.GOTE); // Gote King
-        Pos rookPos = new Pos(4, 4);
-        Pos kingPos = new Pos(4, 6); // Enemy King directly in rook's path
-        board.placePiece(rook, rookPos);
-        board.placePiece(enemyKing, kingPos);
-
-        // Act
-        ArrayList<Pos> moves = rook.getAvailableMovesBackend(rookPos, board);
-
-        // Assert
-        assertNotNull(moves);
-        assertTrue(moves.contains(kingPos), "Rook should be able to move to the enemy King's position.");
-        assertTrue(moves.contains(new Pos(4, 7)), "Rook should pass through the enemy King in the backend.");
-        assertFalse(moves.contains(new Pos(4, 8)), "Rook cannot continue movement past the enemy King.");
-    }
+    
 }

@@ -177,6 +177,46 @@ class BishopTest {
         assertTrue(moves.contains(new Pos(4, 3)), "Promoted Bishop can move to the left.");
     }
 
+    @Test
+    void testGetForcingCheckMoves() {
+        // Arrange
+        TestBoard board = new TestBoard();
+        Bishop bishop = new Bishop(Side.SENTE);
+        King enemyKing = new King(Side.GOTE);
+        Pos bishopPos = new Pos(4, 4);
+        Pos kingPos = new Pos(2, 2);
 
+        board.placePiece(bishop, bishopPos);
+        board.placePiece(enemyKing, kingPos);
+
+        // Act
+        ArrayList<Pos> moves = bishop.getForcingCheckMoves(bishopPos, kingPos, board);
+
+        // Assert
+        assertNotNull(moves, "Forcing check moves should not be null.");
+        assertTrue(moves.contains(new Pos(2, 2)), "Bishop should have a move that puts the enemy King in check.");
+        assertFalse(moves.contains(new Pos(6, 6)), "Bishop should not include moves that do not lead to a check.");
+    }
+
+    @Test
+    void testGetForcingCheckMoves_Promoted() {
+        // Arrange
+        TestBoard board = new TestBoard();
+        Bishop bishop = new Bishop(Side.SENTE);
+        bishop.promote(); // Promote the bishop
+        King enemyKing = new King(Side.GOTE);
+        Pos bishopPos = new Pos(4, 4);
+        Pos kingPos = new Pos(3, 4); // Position for forcing check orthogonally
+
+        board.placePiece(bishop, bishopPos);
+        board.placePiece(enemyKing, kingPos);
+
+        // Act
+        ArrayList<Pos> moves = bishop.getForcingCheckMoves(bishopPos, kingPos, board);
+
+        // Assert
+        assertNotNull(moves, "Forcing check moves should not be null for a promoted bishop.");
+        assertTrue(moves.contains(new Pos(3, 4)), "Promoted bishop should have moves that force a check orthogonally.");
+    }
 
 }

@@ -219,4 +219,25 @@ class LanceTest {
         assertTrue(moves.contains(new Pos(3, 4)), "Lance can capture the enemy king in backend logic.");
         assertTrue(moves.contains(new Pos(2, 4)), "Lance blocks behind the enemy king in backend logic.");
     }
+    
+    @Test
+    void testGetForcingCheckMoves() {
+        // Arrange
+        TestBoard board = new TestBoard();
+        Lance lance = new Lance(Side.SENTE);
+        King enemyKing = new King(Side.GOTE);
+        Pos lancePos = new Pos(4, 4);
+        Pos kingPos = new Pos(2, 4);
+
+        board.placePiece(lance, lancePos);
+        board.placePiece(enemyKing, kingPos);
+
+        // Act
+        ArrayList<Pos> forcingMoves = lance.getForcingCheckMoves(lancePos, kingPos, board);
+
+        // Assert
+        assertNotNull(forcingMoves, "Forcing moves should not be null.");
+        assertEquals(2, forcingMoves.size(), "Lance should have two moves causing a check.");
+        assertTrue(forcingMoves.contains(new Pos(2, 4)), "Forcing move should include the King's position.");
+    }
 }

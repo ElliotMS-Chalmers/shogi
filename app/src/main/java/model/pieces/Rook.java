@@ -200,9 +200,11 @@ public class Rook extends Promotable {
                 availableCol = pos.col() + promotedMove[0];
                 availableRow = pos.row() + promotedMove[1];
                 if (checkLegalMove(new Pos(availableRow, availableCol), board) != null) {
-                    if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class) {
-                        availableMoves.add(new Pos(availableRow, availableCol));
-                        return availableMoves;
+                    if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
+                        if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class) {
+                            availableMoves.add(new Pos(availableRow, availableCol));
+                            return availableMoves;
+                        }
                     }
                 }
             }
