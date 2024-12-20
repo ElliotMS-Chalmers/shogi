@@ -152,6 +152,10 @@ public class ResourceManager {
         return getKeyFromValue(pieceSets.get(type), pieceSet);
     }
 
+    public String getSoundSetName(SoundSet soundSet) {
+        return getKeyFromValue(soundSets, soundSet);
+    }
+
     /**
      * Helper method to retrieve the key associated with a given value in a map.
      *
