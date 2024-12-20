@@ -1,11 +1,10 @@
-package model;
+package model.game;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import model.game.Clock;
-import model.game.Game;
+import model.SaveFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

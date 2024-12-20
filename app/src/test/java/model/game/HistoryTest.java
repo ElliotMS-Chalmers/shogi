@@ -1,6 +1,6 @@
-package model;
+package model.game;
 
-import model.game.History;
+import model.Move;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.Pos;

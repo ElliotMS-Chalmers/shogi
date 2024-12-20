@@ -1,6 +1,7 @@
-package model;
+package model.game;
 
-import model.game.Board;
+import model.Move;
+import model.Sfen;
 import model.pieces.*;
 import util.Pos;
 import org.junit.jupiter.api.Test;

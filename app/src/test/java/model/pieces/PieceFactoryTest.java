@@ -1,6 +1,5 @@
-package model;
+package model.pieces;
 
-import model.pieces.*;
 import org.junit.jupiter.api.Test;
 import util.Side;
 
