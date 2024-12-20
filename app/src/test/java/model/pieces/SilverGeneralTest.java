@@ -1,6 +1,6 @@
 package model.pieces;
 
-import model.Board;
+import model.game.Board;
 import util.Pos;
 import util.Side;
 import org.junit.jupiter.api.Test;

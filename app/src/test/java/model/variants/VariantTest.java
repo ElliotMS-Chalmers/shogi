@@ -1,7 +1,7 @@
 package model.variants;
 
-import model.Board;
-import model.Player;
+import model.game.Board;
+import model.game.Player;
 import model.settings.PieceSetType;
 import model.pieces.Piece;
 import model.Sfen;
