@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
+import model.game.Game;
+import model.game.History;
 import util.JsonLoader;
 import model.variants.Mini;
 import model.variants.Standard;

@@ -1,4 +1,4 @@
-package model;
+package model.game;
 
 import model.pieces.Piece;
 
@@ -49,7 +49,15 @@ public class Player {
         return sfen.toString();
     }
 
-    public Map<Class<? extends Piece>, Integer> getHand(){return capturedPieces;}
+    /**
+     * Returns a map representing the captured pieces held in the player's hand.
+     *
+     * @return a map where the key is the class of the captured piece type (e.g., `Pawn.class`),
+     *         and the value is the number of captured pieces of that type.
+     */
+    public Map<Class<? extends Piece>, Integer> getHand() {
+        return capturedPieces;
+    }
 
     /**
      * Adds a specified amount (positive or negative) of a captured piece to the player's hand.

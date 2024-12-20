@@ -240,23 +240,52 @@ public class Settings {
         soundSet = resourceManager.getSoundSet(name);
     }
 
+    /**
+     * Returns the name of the standard piece set.
+     * This method retrieves the name of the standard piece set using the
+     * `resourceManager` by passing the appropriate piece set type and
+     * the currently selected standard piece set.
+     *
+     * @return the name of the standard piece set.
+     */
     public String getStandardPieceSetName() {
         return resourceManager.getPieceSetName(PieceSetType.STANDARD, standardPieceSet.get());
     }
 
+    /**
+     * Returns the name of the currently selected Chu piece set.
+     *
+     * @return the name of the Chu piece set.
+     */
     public String getChuPieceSetName() {
         return resourceManager.getPieceSetName(PieceSetType.CHU, chuPieceSet.get());
     }
 
+    /**
+     * Returns the name of the Kyo piece set using the
+     *
+     * @return the name of the Kyo piece set.
+     */
     public String getKyoPieceSetName() {
         return resourceManager.getPieceSetName(PieceSetType.KYO, kyoPieceSet.get());
     }
 
+    /**
+     * Returns the name of the currently selected board theme.
+     *
+     * @return the name of the board theme.
+     */
     public String getBoardThemeName() {
         return resourceManager.getBoardThemeName(boardTheme.get());
     }
 
+    /**
+     * Returnsthe name of the currently selected sound set.
+     *
+     * @return the name of the sound set.
+     */
     public String getSoundSetName() {
         return resourceManager.getSoundSetName(soundSet);
     }
+
 }

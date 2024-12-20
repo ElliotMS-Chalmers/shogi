@@ -5,6 +5,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.image.Image;
 import model.*;
 // import util.Piece;
+import model.game.Game;
+import model.Sfen;
 import model.settings.PieceSet;
 import model.settings.PieceSetType;
 import model.settings.Settings;
