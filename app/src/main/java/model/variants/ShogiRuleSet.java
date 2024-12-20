@@ -1,8 +1,8 @@
 package model.variants;
 
-import model.Board;
-import model.PieceFactory;
-import model.Player;
+import model.game.Board;
+import model.pieces.PieceFactory;
+import model.game.Player;
 import model.pieces.*;
 import util.Pos;
 import util.Side;
