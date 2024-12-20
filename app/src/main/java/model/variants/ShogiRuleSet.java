@@ -1,7 +1,8 @@
 package model.variants;
 
-import model.game.Board;
-import model.game.Player;
+import model.Board;
+import model.PieceFactory;
+import model.Player;
 import model.pieces.*;
 import util.Pos;
 import util.Side;
@@ -162,7 +163,7 @@ public class ShogiRuleSet implements RuleSet {
     public boolean isCurrentlyInCheckMate(Board board, Pos kingPos, Side side, Side oppositeSide, Player player) {
         if (!isCurrentlyInCheck(board, kingPos, oppositeSide)){ return false;}
 
-        for (Pos move : board.getPieceAt(kingPos).getAvailableMovesBackend(kingPos, board)){
+        for (Pos move : board.getPieceAt(kingPos).getAvailableMoves(kingPos, board)){
             if (!isCurrentlyInCheck(board, move, oppositeSide)){return false;}
         }
 
@@ -186,17 +187,20 @@ public class ShogiRuleSet implements RuleSet {
         }
 
         for (int i = 0; i <everyPiece.size(); i++){
-            if (everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board).contains(kingPos)){
-                pieceForcingCheckMoves = everyPiece.get(i).getForcingCheckMoves(everyPiecePos.get(i), kingPos, board);
-                pieceForcingCheckMoves.add(everyPiecePos.get(i));
+            if (everyPiece.get(i).getSide() == side.opposite()) {
+                if (everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board).contains(kingPos)) {
+                    pieceForcingCheckMoves = everyPiece.get(i).getForcingCheckMoves(everyPiecePos.get(i), kingPos, board);
+                    pieceForcingCheckMoves.add(everyPiecePos.get(i));
+
+                }
             }
         }
 
-        if (oppositeSide == Side.GOTE && pieceForcingCheckMoves != null) {
-            for (int i = 0; i < everyPieceSente.size(); i++) {
+        if (oppositeSide == Side.GOTE && pieceForcingCheckMoves != null){
+            for (int i = 0; i < everyPieceSente.size(); i ++){
                 if (everyPieceSente.get(i).getClass() != King.class) {
                     for (Pos pieceForcingCheckMove : pieceForcingCheckMoves) {
-                        if (everyPieceSente.get(i).getAvailableMovesBackend(everyPieceSentePos.get(i), board).contains(pieceForcingCheckMove)) {
+                        if (everyPieceSente.get(i).getAvailableMoves(everyPieceSentePos.get(i), board).contains(pieceForcingCheckMove)) {
                             return false;
                         }
                     }
@@ -206,7 +210,7 @@ public class ShogiRuleSet implements RuleSet {
             for (int i = 0; i < everyPieceGote.size(); i++) {
                 if (everyPieceGote.get(i).getClass() != King.class) {
                     for (Pos pieceForcingCheckMove : pieceForcingCheckMoves) {
-                        if (everyPieceGote.get(i).getAvailableMovesBackend(everyPieceGotePos.get(i), board).contains(pieceForcingCheckMove)) {
+                        if (everyPieceGote.get(i).getAvailableMoves(everyPieceGotePos.get(i), board).contains(pieceForcingCheckMove)) {
                             return false;
                         }
                     }

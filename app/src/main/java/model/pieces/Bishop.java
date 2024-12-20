@@ -157,24 +157,29 @@ public class Bishop extends Promotable {
         int availableCol;
         int movesLength = board.getHeight();
         boolean previousPieceEnemy;
-
+        boolean previousPieceEnemyking;
 
         for (int rowI = -1; rowI < 3; rowI = rowI + 2) {
             for (int colI = -1; colI < 3; colI = colI + 2) {
                 previousPieceEnemy = false;
-
+                previousPieceEnemyking = false;
                 ArrayList<Pos> availableMoves = new ArrayList<>();
                 for (int i = 1; i <= (movesLength); i ++) {
                     availableCol = pos.col() + (i * colI);
                     availableRow = pos.row() + (i * rowI);
                     if (previousPieceEnemy){
-                        return availableMoves;
+                        if (previousPieceEnemyking){
+                            return availableMoves;
+                        }
+                        break;
                     }
                     if (checkLegalMove(new Pos(availableRow, availableCol), board) != null) {
                         if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
                             if (board.getPieceAt(new Pos(availableRow, availableCol)).getSide() != side) {
                                 previousPieceEnemy = true;
-
+                                if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class){
+                                    previousPieceEnemyking = true;
+                                }
                             }
                         }
                     }
