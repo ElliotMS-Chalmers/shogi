@@ -98,29 +98,83 @@ public class Bishop extends Promotable {
         int availableCol;
         int movesLength = board.getHeight();
         boolean previousPieceEnemy;
-        boolean previousPieceEnemyKing;
+        boolean previousPieceEnemyking;
+        boolean previousPieceFriend;
 
-        // Check diagonal moves
-        for (int rowI = -1; rowI < 3; rowI += 2) {
-            for (int colI = -1; colI < 3; colI += 2) {
+        for (int rowI = -1; rowI < 3; rowI = rowI + 2) {
+            for (int colI = -1; colI < 3; colI = colI + 2) {
                 previousPieceEnemy = false;
-                previousPieceEnemyKing = false;
-                for (int i = 1; i <= movesLength; i++) {
+                previousPieceEnemyking = false;
+                previousPieceFriend = false;
+                for (int i = 1; i <= (movesLength); i ++) {
                     availableCol = pos.col() + (i * colI);
                     availableRow = pos.row() + (i * rowI);
-                    if (previousPieceEnemy) {
-                        if (checkLegalMove(new Pos(availableRow, availableCol), board) != null && previousPieceEnemyKing) {
+                    if (previousPieceEnemy){
+                        if (checkLegalMoveWithinBounds(new Pos(availableRow, availableCol), board) && previousPieceEnemyking){
                             availableMoves.add(new Pos(availableRow, availableCol));
                         }
                         break;
+                    } else if (previousPieceFriend){
+                        break;
+                    }
+                    if (checkLegalMoveWithinBounds(new Pos(availableRow, availableCol), board)) {
+                        if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
+                            if (board.getPieceAt(new Pos(availableRow, availableCol)).getSide() != side) {
+                                previousPieceEnemy = true;
+                                if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class){
+                                    previousPieceEnemyking = true;
+                                }
+                            } else if (board.getPieceAt(new Pos(availableRow, availableCol)).getSide() == side) {
+                                previousPieceFriend = true;
+                            }
+                        }
+                    }
+                    if (!checkLegalMoveWithinBounds(new Pos(availableRow, availableCol), board)){
+                        break;
+                    } else {
+                        availableMoves.add(new Pos(availableRow, availableCol));
+                    }
+
+                }
+            }
+        }
+
+        if (isPromoted){
+            for (int[] promotedMove : promotedMoves) {
+                availableCol = pos.col() + promotedMove[0];
+                availableRow = pos.row() + promotedMove[1];
+                if (checkLegalMoveWithinBounds(new Pos(availableRow, availableCol), board)) {
+                    availableMoves.add(new Pos(availableRow, availableCol));
+                }
+            }
+        }
+        return availableMoves;
+    }
+
+    @Override
+    public ArrayList<Pos> getForcingCheckMoves(Pos pos, Pos kingPos, Board board){
+        int availableRow;
+        int availableCol;
+        int movesLength = board.getHeight();
+        boolean previousPieceEnemy;
+
+
+        for (int rowI = -1; rowI < 3; rowI = rowI + 2) {
+            for (int colI = -1; colI < 3; colI = colI + 2) {
+                previousPieceEnemy = false;
+
+                ArrayList<Pos> availableMoves = new ArrayList<>();
+                for (int i = 1; i <= (movesLength); i ++) {
+                    availableCol = pos.col() + (i * colI);
+                    availableRow = pos.row() + (i * rowI);
+                    if (previousPieceEnemy){
+                        return availableMoves;
                     }
                     if (checkLegalMove(new Pos(availableRow, availableCol), board) != null) {
                         if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
                             if (board.getPieceAt(new Pos(availableRow, availableCol)).getSide() != side) {
                                 previousPieceEnemy = true;
-                                if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class) {
-                                    previousPieceEnemyKing = true;
-                                }
+
                             }
                         }
                     }
@@ -138,11 +192,16 @@ public class Bishop extends Promotable {
             for (int[] promotedMove : promotedMoves) {
                 availableCol = pos.col() + promotedMove[0];
                 availableRow = pos.row() + promotedMove[1];
+                ArrayList<Pos> availableMoves = new ArrayList<>();
                 if (checkLegalMove(new Pos(availableRow, availableCol), board) != null) {
-                    availableMoves.add(new Pos(availableRow, availableCol));
+                    if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class) {
+                        availableMoves.add(new Pos(availableRow, availableCol));
+                        return availableMoves;
+                    }
                 }
             }
         }
-        return availableMoves;
+        return null;
     }
 }
+

@@ -74,6 +74,12 @@ public abstract class Piece {
      */
     public abstract ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board);
 
+    public ArrayList<Pos> getForcingCheckMoves(Pos pos, Pos kingPos, Board board){
+        ArrayList<Pos> forcingCheckMoves = new ArrayList<>();
+        forcingCheckMoves.add(kingPos);
+        return forcingCheckMoves;
+    }
+
     /**
      * Checks if a move is within the boundaries of the board.
      *
@@ -111,7 +117,7 @@ public abstract class Piece {
      */
     public Pos checkLegalMove(Pos pos, Board board) {
         boolean valid = true;
-        if (pos.col() >= 0 && pos.col() <= (board.getWidth() - 1) && pos.row() >= 0 && pos.row() <= (board.getHeight() - 1)) {
+        if (pos.col() >= 0 && pos.col() <= (board.getWidth()-1) && pos.row() >= 0 && pos.row() <= (board.getHeight()-1)) {
             if (board.getPieceAt(pos) != null) {
                 if (board.getPieceAt(pos).getSide() == side) {
                     valid = false;
@@ -123,4 +129,5 @@ public abstract class Piece {
         }
         return null;
     }
+
 }

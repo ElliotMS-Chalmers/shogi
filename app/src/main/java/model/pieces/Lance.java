@@ -12,7 +12,6 @@ import java.util.ArrayList;
  */
 public class Lance extends Promotable {
 
-    // The movement options for the Lance's promoted form
     private final int[][] promotedMoves = {{-1,1},{-1,-1}, {0,1},{0,-1}, {1,1},{1,-1}, {-1,0},{-1,0}, {1,0},{1,0}, {0,-1},{0,1}};
 
     /**
@@ -100,7 +99,7 @@ public class Lance extends Promotable {
      * @return an ArrayList of valid positions the Lance can move to, considering promotion.
      */
     @Override
-    public ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board) {
+    public ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board){
         ArrayList<Pos> availableMoves = new ArrayList<>();
         int team = 0;
         int availableCol;
@@ -108,47 +107,47 @@ public class Lance extends Promotable {
         int movesLength = board.getWidth();
         boolean previousPieceEnemy;
         boolean previousPieceEnemyKing;
-
-        if (side == Side.SENTE) {
+        boolean previousPieceFriend;
+        if (side == Side.SENTE){
             team = 1;
         }
-
-        // Check for promoted Lance moves
-        if (isPromoted) {
-            for (int i = 0; i < (promotedMoves.length / 2); i++) {
-                availableCol = pos.col() + promotedMoves[i * 2 + team][0];
-                availableRow = pos.row() + promotedMoves[i * 2 + team][1];
-                if (checkLegalMove(new Pos(availableRow, availableCol), board) != null) {
+        if (isPromoted){
+            for (int i = 0; i < (promotedMoves.length/2); i ++) {
+                availableCol = pos.col() + promotedMoves[i *2 + team][0];
+                availableRow = pos.row() + promotedMoves[i *2 + team][1];
+                if (checkLegalMoveWithinBounds(new Pos(availableRow,availableCol), board)) {
                     availableMoves.add(new Pos(availableRow, availableCol));
                 }
             }
         } else {
             previousPieceEnemy = false;
             previousPieceEnemyKing = false;
-
-            for (int i = 1; i <= movesLength; i++) {
+            previousPieceFriend = false;
+            for (int i = 1; i <= (movesLength); i ++) {
                 availableCol = (pos.col());
-                availableRow = (pos.row() + (i * -1 * (-1 + team * 2)));
-
-                if (previousPieceEnemy) {
-                    if (checkLegalMove(new Pos(availableRow, availableCol), board) != null && previousPieceEnemyKing) {
+                availableRow = (pos.row() + (i * -1* (-1+ team*2)));
+                if (previousPieceEnemy){
+                    if (checkLegalMoveWithinBounds(new Pos(availableRow, availableCol), board) && previousPieceEnemyKing) {
                         availableMoves.add(new Pos(availableRow, availableCol));
                     }
                     break;
+                } else if (previousPieceFriend) {
+                    break;
                 }
 
-                if (checkLegalMove(new Pos(availableRow, availableCol), board) != null) {
+                if (checkLegalMoveWithinBounds(new Pos(availableRow, availableCol), board)) {
                     if (board.getPieceAt(new Pos(availableRow, availableCol)) != null) {
                         if (board.getPieceAt(new Pos(availableRow, availableCol)).getSide() != side) {
                             previousPieceEnemy = true;
-                            if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class) {
+                            if (board.getPieceAt(new Pos(availableRow, availableCol)).getClass() == King.class){
                                 previousPieceEnemyKing = true;
                             }
+                        } else {
+                            previousPieceFriend = true;
                         }
                     }
                 }
-
-                if (checkLegalMove(new Pos(availableRow, availableCol), board) == null) {
+                if (!checkLegalMoveWithinBounds(new Pos(availableRow, availableCol), board)){
                     break;
                 } else {
                     availableMoves.add(new Pos(availableRow, availableCol));
@@ -157,5 +156,10 @@ public class Lance extends Promotable {
         }
 
         return availableMoves;
+    }
+
+    @Override
+    public ArrayList<Pos> getForcingCheckMoves(Pos pos, Pos kingPos, Board board){
+        return getAvailableMoves(pos, board);
     }
 }

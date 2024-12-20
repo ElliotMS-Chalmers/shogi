@@ -88,6 +88,7 @@ class HistoryTest {
         assertEquals(move2, iterator.next());
         assertEquals(move3, iterator.next());
         assertFalse(iterator.hasNext());
+        assertThrows(NoSuchElementException.class,iterator::next);
     }
 
     @Test

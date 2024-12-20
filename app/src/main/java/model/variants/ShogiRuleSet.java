@@ -144,6 +144,7 @@ public class ShogiRuleSet implements RuleSet {
             }
         }
 
+
         return false;
     }
 
@@ -159,13 +160,10 @@ public class ShogiRuleSet implements RuleSet {
      * @return true if the player is in checkmate, false otherwise
      */
     public boolean isCurrentlyInCheckMate(Board board, Pos kingPos, Side side, Side oppositeSide, Player player) {
-        if (!isCurrentlyInCheck(board, kingPos, oppositeSide)) {
-            return false;
-        }
-        for (Pos move : board.getPieceAt(kingPos).getAvailableMoves(kingPos, board)) {
-            if (!isCurrentlyInCheck(board, move, oppositeSide)) {
-                return false;
-            }
+        if (!isCurrentlyInCheck(board, kingPos, oppositeSide)){ return false;}
+
+        for (Pos move : board.getPieceAt(kingPos).getAvailableMovesBackend(kingPos, board)){
+            if (!isCurrentlyInCheck(board, move, oppositeSide)){return false;}
         }
 
         ArrayList<Piece> everyPieceSente = new ArrayList<>();
@@ -187,9 +185,9 @@ public class ShogiRuleSet implements RuleSet {
             }
         }
 
-        for (int i = 0; i < everyPiece.size(); i++) {
-            if (everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board).contains(kingPos)) {
-                pieceForcingCheckMoves = everyPiece.get(i).getAvailableMoves(everyPiecePos.get(i), board);
+        for (int i = 0; i <everyPiece.size(); i++){
+            if (everyPiece.get(i).getAvailableMovesBackend(everyPiecePos.get(i), board).contains(kingPos)){
+                pieceForcingCheckMoves = everyPiece.get(i).getForcingCheckMoves(everyPiecePos.get(i), kingPos, board);
                 pieceForcingCheckMoves.add(everyPiecePos.get(i));
             }
         }
@@ -216,6 +214,27 @@ public class ShogiRuleSet implements RuleSet {
             }
         }
 
+        for (Class<? extends Piece> piece : player.getHand().keySet()){
+            if (player.getHand().get(piece) > 0){
+                for (int i = 0; i < board.getWidth(); i++) {
+                    for (int j = 0; j < board.getHeight(); j++) {
+                        if (validHandMove(new Pos(i,j), piece, board, oppositeSide)){
+                            avaialableHandMoves.add(new Pos(i,j));
+                        }
+                    }
+                }
+            }
+
+        }
+
+        //bug med att man kan gå bakom kung med en annan pejäs för att stoppa schack matt
+        if (pieceForcingCheckMoves != null) {
+            for (Pos pieceForcingCheckMove : pieceForcingCheckMoves){
+                if (avaialableHandMoves.contains(pieceForcingCheckMove)){
+                    return false;
+                }
+            }
+        }
         return true;
     }
 }
