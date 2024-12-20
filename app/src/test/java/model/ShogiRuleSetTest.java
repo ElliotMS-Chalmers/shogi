@@ -1,7 +1,8 @@
 package model;
 
+import model.game.Player;
 import model.variants.*;
-import model.Board;
+import model.game.Board;
 import model.pieces.King;
 import model.pieces.*;
 import org.junit.jupiter.api.Test;

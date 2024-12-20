@@ -1,5 +1,6 @@
 package model;
 
+import model.game.Clock;
 import org.junit.jupiter.api.Test;
 
 import util.Side;

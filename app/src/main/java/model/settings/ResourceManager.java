@@ -152,6 +152,12 @@ public class ResourceManager {
         return getKeyFromValue(pieceSets.get(type), pieceSet);
     }
 
+    /**
+     * Retrieves the name of a specific sound set.
+     *
+     * @param soundSet The piece set to find.
+     * @return The name of the piece set, or {@code null} if not found.
+     */
     public String getSoundSetName(SoundSet soundSet) {
         return getKeyFromValue(soundSets, soundSet);
     }

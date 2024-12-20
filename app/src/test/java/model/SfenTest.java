@@ -1,6 +1,5 @@
 package model;
 
-import model.Sfen;
 import org.junit.jupiter.api.Test;
 import util.Pos;
 

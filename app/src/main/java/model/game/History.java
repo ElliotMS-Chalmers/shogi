@@ -1,8 +1,7 @@
-package model;
+package model.game;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import model.Move;
 
 import java.util.*;
 
@@ -24,6 +23,8 @@ public class History {
     }
 
     /**
+     * Gets the number of moves in move stack.
+     *
      * @return the number of moves in the history
      */
     public int getNumberOfMoves() {
@@ -97,6 +98,12 @@ public class History {
         return moves.peek();
     }
 
+    /**
+     * Serializes the history of moves into a list of moves.
+     *
+     * @return a list of moves representing the current state of the move history.
+     *         If the history is empty, an empty list is returned.
+     */
     @JsonValue
     public List<Move> serialize() {
         if (moves.isEmpty()) {

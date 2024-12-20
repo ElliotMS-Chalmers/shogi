@@ -3,7 +3,7 @@ package controller;
 import javafx.animation.FadeTransition;
 import javafx.scene.Scene;
 import javafx.util.Duration;
-import model.Game;
+import model.game.Game;
 import model.SaveFile;
 import model.settings.Settings;
 import model.variants.Standard;

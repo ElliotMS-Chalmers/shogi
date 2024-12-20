@@ -1,6 +1,6 @@
 package controller;
 
-import model.Game;
+import model.game.Game;
 import model.SaveFile;
 import model.variants.Mini;
 import model.variants.Standard;

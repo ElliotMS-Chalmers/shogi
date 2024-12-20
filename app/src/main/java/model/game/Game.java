@@ -1,5 +1,6 @@
-package model;
+package model.game;
 
+import model.*;
 import model.pieces.*;
 import model.variants.RuleSet;
 import model.variants.Variant;
@@ -347,11 +348,6 @@ public class Game {
      */
     public History getHistory() {return history;}
 
-    /**
-     * Returns the BooleanProperty that tracks if the board state has changed.
-     * 
-     * @return The BooleanProperty for the board change state.
-     */
     public BooleanProperty boardChangedProperty() {
         return boardChanged;
     }

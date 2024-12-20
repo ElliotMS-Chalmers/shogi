@@ -1,6 +1,8 @@
 package model;
 
+import model.game.Player;
 import model.pieces.Piece;
+import model.pieces.PieceFactory;
 import model.variants.Standard;
 import model.variants.Variant;
 import org.junit.jupiter.api.BeforeEach;

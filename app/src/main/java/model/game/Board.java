@@ -1,10 +1,12 @@
-package model;
+package model.game;
 
+import model.Move;
+import model.Sfen;
 import model.pieces.Piece;
+import model.pieces.PieceFactory;
 import util.Pos;
 import util.Side;
 
-import javax.xml.validation.Validator;
 import java.util.ArrayList;
 
 /**
@@ -114,7 +116,7 @@ public class Board {
 
     /**
      * Initializes the board using the provided SFEN string.
-     * 
+     *
      * @param sfen the SFEN string representing the board state
      */
     public void initializeBoard(Sfen sfen) {
@@ -126,7 +128,7 @@ public class Board {
 
     /**
      * Retrieves the piece at a specific position on the board.
-     * 
+     *
      * @param pos the position to query
      * @return the piece at the specified position, or null if the position is empty
      */
@@ -193,14 +195,27 @@ public class Board {
         }
         return null;
     }
+
     /**
-     * @return the width of the board.
+     * Returns the width of the board.
+     * The width is determined by the number of columns in the grid.
+     *
+     * @return the number of columns in the board (width).
      */
-    public int getWidth(){return grid.length;}
+    public int getWidth() {
+        return grid.length;
+    }
+
     /**
-     * @return the height of the board.
+     * Returns the height of the board.
+     * The height is determined by the number of rows in the grid.
+     *
+     * @return the number of rows in the board (height).
      */
-    public int getHeight(){return grid[0].length;}
+    public int getHeight() {
+        return grid[0].length;
+    }
+
 
     /**
      * Checks if a specific type of piece belonging to a specified side exists in a given column on the board.
@@ -223,9 +238,4 @@ public class Board {
         }
         return false;
     }
-
-
-
-
-
 }
