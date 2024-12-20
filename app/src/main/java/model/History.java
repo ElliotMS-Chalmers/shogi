@@ -102,10 +102,6 @@ public class History {
         if (moves.isEmpty()) {
             return Collections.emptyList();
         }
-        return new ArrayList<>(new ArrayList<Move>(moves));
-    }
-
-    public boolean isEmpty() {
-        return moves.isEmpty();
+        return new ArrayList<Move>(moves);
     }
 }

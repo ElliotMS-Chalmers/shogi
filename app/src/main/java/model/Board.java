@@ -41,12 +41,21 @@ public class Board {
         return move;
     }
 
-    public Piece testMove(Pos from, Pos to, Piece piece){
+    /**
+     * Simulates a move on the board by moving a piece from one position to another.
+     *
+     * @param from The starting position of the piece.
+     * @param to The target position of the piece.
+     * @param piece The piece to place back at the starting position after the move.
+     * @return The piece that was captured at the target position, or {@code null} if no piece was present.
+     */
+    public Piece testMove(Pos from, Pos to, Piece piece) {
         Piece capturedPiece = getPieceAt(to);
-        setAtPosition(to,grid[from.row()][from.col()]);
-        setAtPosition(from,piece);
+        setAtPosition(to, grid[from.row()][from.col()]);
+        setAtPosition(from, piece);
         return capturedPiece;
     }
+
 
     /**
      * Sets a piece at a specific position on the board.
@@ -193,7 +202,14 @@ public class Board {
      */
     public int getHeight(){return grid[0].length;}
 
-
+    /**
+     * Checks if a specific type of piece belonging to a specified side exists in a given column on the board.
+     *
+     * @param side The side (SENTE or GOTE) to which the piece belongs.
+     * @param pieceType The class type of the piece to search for.
+     * @param col The column index to search in (0-based).
+     * @return {@code true} if a piece of the specified type and side exists in the given column, otherwise {@code false}.
+     */
     public boolean ifPieceInColum(Side side, Class pieceType, int col) {
         Piece piece;
 
@@ -207,6 +223,7 @@ public class Board {
         }
         return false;
     }
+
 
 
 
