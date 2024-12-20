@@ -19,18 +19,78 @@ import javafx.beans.property.SimpleBooleanProperty;
  * the board, the rules, and the move history.
  */
 public class Game {
+    /**
+     * The current player's turn (SENTE or GOTE).
+     */
     private Side turn = Side.SENTE;
+
+    /**
+     * The variant of the game, including rules and board configuration.
+     */
     private Variant variant;
+
+    /**
+     * The game board representing the state of the pieces.
+     */
     private Board board;
+
+    /**
+     * A property indicating whether the board state has changed.
+     * Used for notifying listeners of updates to the board.
+     */
     private BooleanProperty boardChanged = new SimpleBooleanProperty(false);
+
+    /**
+     * The player controlling the SENTE side.
+     */
     private Player sentePlayer;
+
+    /**
+     * The player controlling the GOTE side.
+     */
     private Player gotePlayer;
-    private Clock senteClock, goteClock;
-    private Thread senteth, goteth;
+
+    /**
+     * The clock for the SENTE player, tracking their remaining time.
+     */
+    private Clock senteClock;
+
+    /**
+     * The clock for the GOTE player, tracking their remaining time.
+     */
+    private Clock goteClock;
+
+    /**
+     * The thread managing the SENTE player's clock.
+     */
+    private Thread senteth;
+
+    /**
+     * The thread managing the GOTE player's clock.
+     */
+    private Thread goteth;
+
+    /**
+     * A flag indicating whether the game is running.
+     * True if the game is active, false if it is paused or ended.
+     */
     private AtomicBoolean gameRunning = new AtomicBoolean(true);
+
+    /**
+     * The number of moves that have been made in the game.
+     */
     private int moveCount = 1;
+
+    /**
+     * The history of moves made in the game, stored for undo or analysis purposes.
+     */
     private History history;
+
+    /**
+     * The rule set governing the game's mechanics and move validation.
+     */
     private RuleSet ruleSet;
+
 
     /**
      * Constructs a new game with the specified variant and time settings.
@@ -133,14 +193,35 @@ public class Game {
         return move;
     }
 
+    /**
+     * Checks if a move is valid according to the current rule set.
+     *
+     * @param from The position on the board where piece is.
+     * @param to   THe position on the board where piece wants to go.
+     * @return True if the move is valid, otherwise false.
+     */
     public boolean isValidMove(Pos from, Pos to) {
         return ruleSet.validMove(from, to, board.getPieceAt(from), board, turn, turn.opposite());
     }
 
+    /**
+     * Checks if a hand move (placing a piece from a player's captured pieces onto the board)
+     * is valid according to the current rule set.
+     *
+     * @param pos   The position on the board where the piece is to be placed.
+     * @param piece The piece to be placed.
+     * @return True if the move is valid, otherwise false.
+     */
     public boolean isValidHandMove(Pos pos, Piece piece) {
         return ruleSet.validHandMove(pos, piece.getClass(), board, turn);
     }
 
+    /**
+     * Returns all valid positions for placing a piece from a player's captured pieces onto the board.
+     *
+     * @param piece The piece to be placed.
+     * @return A list of valid positions for the specified piece.
+     */
     public List<Pos> getValidHandMovePositions(Piece piece) {
         List<Pos> positions = new ArrayList<>();
         for (int i = 0; i < board.getHeight(); i++) {
@@ -402,10 +483,16 @@ public class Game {
         }
     }
 
+    /**
+     * Gets the clock for a specified player.
+     *
+     * @param side The side (SENTE or GOTE) whose clock is requested.
+     * @return The {@link Clock} object for the specified side, or null if not initialized.
+     */
     public Clock getClock(Side side) {
         switch (side) {
-            case SENTE -> {return senteClock;}
-            case GOTE -> {return goteClock;}
+            case SENTE -> { return senteClock; }
+            case GOTE -> { return goteClock; }
         }
         return null;
     }
@@ -469,18 +556,29 @@ public class Game {
         }
     }
 
+    /**
+     * Gets the player corresponding to a specific side.
+     *
+     * @param side The side (SENTE or GOTE) for which the player is requested.
+     * @return The {@link Player} for the specified side.
+     */
     public Player getPlayer(Side side) {
         switch (side) {
-            case SENTE -> {return sentePlayer;}
-            case GOTE -> {return gotePlayer;}
+            case SENTE -> { return sentePlayer; }
+            case GOTE -> { return gotePlayer; }
         }
         return null;
     }
 
-    public Player getOppositePlayer(){
-        switch (turn){
-            case SENTE -> {return gotePlayer;}
-            case GOTE -> {return sentePlayer;}
+    /**
+     * Gets the player whose turn it is not (the opposite player).
+     *
+     * @return The {@link Player} whose turn it is not.
+     */
+    public Player getOppositePlayer() {
+        switch (turn) {
+            case SENTE -> { return gotePlayer; }
+            case GOTE -> { return sentePlayer; }
         }
         return null;
     }

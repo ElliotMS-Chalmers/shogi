@@ -256,7 +256,7 @@ public class Settings {
         return resourceManager.getBoardThemeName(boardTheme.get());
     }
 
-//    public String getSoundSetName() {
-//        return resourceManager.getSoundSetName(soundSet);
-//    }
+    public String getSoundSetName() {
+        return resourceManager.getSoundSetName(soundSet);
+    }
 }

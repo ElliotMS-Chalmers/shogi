@@ -24,6 +24,7 @@ class SettingsTest {
     @Test
     void testLoadSettingsFromFile() {
         // Test that settings are loaded from a file
+        // todo: test all branches and exceptions
         assertNotNull(settings.getStandardPieceSet());
         assertNotNull(settings.getChuPieceSet());
         assertNotNull(settings.getKyoPieceSet());
@@ -63,11 +64,17 @@ class SettingsTest {
     @Test
     void testSetPieceSet() {
         // Test setting a new piece set
-        String newPieceSetName = "RYOKO_1_KANJI";
-        settings.setPieceSet(PieceSetType.STANDARD, newPieceSetName);
+        String newStandardPieceSetName = "RYOKO_1_KANJI";
+        String newChuPieceSetName = "EIGUTSU_GRORYU";
+        String newKyoPieceSetName = "DOUBUTSU";
+        settings.setPieceSet(PieceSetType.STANDARD, newStandardPieceSetName);
+        settings.setPieceSet(PieceSetType.CHU, newChuPieceSetName);
+        settings.setPieceSet(PieceSetType.KYO, newKyoPieceSetName);
 
         // Check if the piece set has been updated
-        assertEquals(newPieceSetName, settings.getStandardPieceSetName());
+        assertEquals(newStandardPieceSetName, settings.getStandardPieceSetName());
+        assertEquals(newChuPieceSetName, settings.getChuPieceSetName());
+        assertEquals(newKyoPieceSetName, settings.getKyoPieceSetName());
     }
 
     @Test
@@ -82,6 +89,17 @@ class SettingsTest {
     }
 
     @Test
+    void testGetSoundSets() {
+        // Test retrieving all available piece sets
+        Map<String, SoundSet> soundSets = settings.getSoundSets();
+
+        // Check if the piece sets for each type are non-empty
+        assertTrue(soundSets.containsKey("CHESS"));
+        assertTrue(soundSets.containsKey("SHOGI"));
+        assertTrue(soundSets.containsKey("SHOGI_ALT"));
+    }
+
+    @Test
     void testGetBoardThemes() {
         // Test retrieving all available board themes
         Map<String, BoardTheme> boardThemes = settings.getBoardThemes();
@@ -90,13 +108,54 @@ class SettingsTest {
         assertFalse(boardThemes.isEmpty());
     }
 
-//    @Test
-//    void testSetSoundSet() {
-//        // Test setting a new sound set
-//        String newSoundSetName = "NewSoundSet";
-//        settings.setSoundSet(newSoundSetName);
-//
-//        // Check if the sound set has been updated
-//        assertEquals(newSoundSetName, settings.getSoundSetName());
-//    }
+    @Test
+    void testSetSoundSet() {
+        // Test setting a new sound set
+        String newSoundSetName = "SHOGI";
+        settings.setSoundSet(newSoundSetName);
+
+        // Check if the sound set has been updated
+        assertEquals(newSoundSetName, settings.getSoundSetName());
+    }
+
+    @Test
+    void testBoardThemeProperty() {
+        BoardTheme defaultTheme = settings.getBoardTheme(); // Get the initial theme
+        BoardTheme newTheme = new BoardTheme("image", "thumbnail"); // Create a test theme
+
+        settings.boardThemeProperty().set(newTheme);
+        assertEquals(newTheme, settings.getBoardTheme());
+        assertNotEquals(defaultTheme, settings.getBoardTheme());
+    }
+
+    @Test
+    void testStandardPieceSetProperty() {
+        PieceSet defaultSet = settings.getStandardPieceSet(); // Get the initial piece set
+        PieceSet newSet = new PieceSet("directory"); // Create a test piece set
+
+        settings.standardPieceSetProperty().set(newSet);
+        assertEquals(newSet, settings.getStandardPieceSet());
+        assertNotEquals(defaultSet, settings.getStandardPieceSet());
+    }
+
+    @Test
+    void testChuPieceSetProperty() {
+        PieceSet defaultSet = settings.getChuPieceSet(); // Get the initial piece set
+        PieceSet newSet = new PieceSet("directory"); // Create a test piece set
+
+        settings.chuPieceSetProperty().set(newSet);
+        assertEquals(newSet, settings.getChuPieceSet());
+        assertNotEquals(defaultSet, settings.getChuPieceSet());
+    }
+
+    @Test
+    void testKyoPieceSetProperty() {
+        PieceSet defaultSet = settings.getKyoPieceSet(); // Get the initial piece set
+        PieceSet newSet = new PieceSet("Kyo Test Set"); // Create a test piece set
+
+        settings.kyoPieceSetProperty().set(newSet);
+        assertEquals(newSet, settings.getKyoPieceSet());
+        assertNotEquals(defaultSet, settings.getKyoPieceSet());
+    }
+
 }
