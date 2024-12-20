@@ -256,71 +256,71 @@ class ShogiRuleSetTest {
 
     @Test
     void testKingMoveIntoCheck() {
-        // Initialisera variant och bräde
+        // Initialize variant and board
         Variant standardVariant = new Standard();
         Board board = new Board(standardVariant.getWidth(), standardVariant.getHeight());
 
-        // Placera en kung för SENTE på en startposition
+        // Place a SENTE King on a starting position
         King senteKing = new King(Side.SENTE);
-        Pos kingPosition = new Pos(4, 4); // Kungens startposition
+        Pos kingPosition = new Pos(4, 4); // King's starting position
         board.setAtPosition(kingPosition, senteKing);
 
-        // Placera en fiende Rook för GOTE på en position som hotar kungen
+        // Place an enemy GOTE Rook on a position threatening the King
         Rook goteRook = new Rook(Side.GOTE);
-        Pos rookPosition = new Pos(4, 7); // Rooken hotar kungens position på samma rad
+        Pos rookPosition = new Pos(4, 7); // Rook threatens King's position on the same row
         board.setAtPosition(rookPosition, goteRook);
 
-        // Försök att flytta kungen till en position som är i schack
-        Pos newKingPosition = new Pos(4, 5); // Kungen försöker flytta till en hotad ruta (på samma rad som Rooken)
+        // Attempt to move the King to a position that is under attack
+        Pos newKingPosition = new Pos(4, 5); // King tries to move to a threatened square (same row as Rook)
 
         ShogiRuleSet ruleSet = new ShogiRuleSet();
 
-        // Kontrollera om kungen skulle hamna i schack
+        // Check if the King would end up in check
         boolean isInCheck = ruleSet.isCurrentlyInCheck(board, newKingPosition, Side.SENTE);
 
-        // Vi förväntar oss att kungen ska hamna i schack om den rör sig till den hotade rutan
+        // Expect the King to be in check if it moves to the threatened square
         assertTrue(isInCheck, "King should be in check after moving to the attacked square");
     }
 
     @Test
     void testKingCanMoveOutOfCheck() {
-        // Initialisera variant och bräde
+        // Initialize variant and board
         Variant standardVariant = new Standard();
         Board board = new Board(standardVariant.getWidth(), standardVariant.getHeight());
 
-        // Placera SENTE's kung på en position
+        // Place SENTE's King on a position
         King senteKing = new King(Side.SENTE);
         Pos senteKingPos = new Pos(4, 4);
         board.setAtPosition(senteKingPos, senteKing);
 
-        // Placera en GOTE Rook som hotar kungen
+        // Place a GOTE Rook threatening the King
         Rook goteRook = new Rook(Side.GOTE);
         board.setAtPosition(new Pos(4, 7), goteRook);
 
         ShogiRuleSet ruleSet = new ShogiRuleSet();
 
-        // Förväntar oss att kungen inte är i schackmatt, eftersom den kan flytta till en annan plats
+        // Expect the King not to be in checkmate, as it can move to a different position
         boolean isInCheckMate = ruleSet.isCurrentlyInCheckMate(board, senteKingPos, Side.SENTE, Side.GOTE, new Player(Side.SENTE));
         assertFalse(isInCheckMate, "King should be able to move out of check and avoid checkmate.");
     }
 
-    // Test: Kungen är i schack, men den kan inte flytta
+    // Test: King is in check but cannot move
     @Test
     void testKingCannotMoveOutOfCheck() {
-        // Initialisera variant och bräde
+        // Initialize variant and board
         Variant standardVariant = new Standard();
         Board board = new Board(standardVariant.getWidth(), standardVariant.getHeight());
 
-        // Placera SENTE's kung på en position
+        // Place SENTE's King on a position
         King senteKing = new King(Side.SENTE);
         Pos senteKingPos = new Pos(4, 4);
         board.setAtPosition(senteKingPos, senteKing);
 
-        // Placera en GOTE Rook som hotar kungen på samma rad
+        // Place a GOTE Rook threatening the King on the same row
         Rook goteRook = new Rook(Side.GOTE);
         board.setAtPosition(new Pos(4, 7), goteRook);
 
-        // Placera en Pawn för SENTE som blockerar kungen från att flytta
+        // Place SENTE Pawns blocking the King's movement
         Pawn sentePawn1 = new Pawn(Side.SENTE);
         board.setAtPosition(new Pos(4, 3), sentePawn1);
 
@@ -344,28 +344,28 @@ class ShogiRuleSetTest {
 
         ShogiRuleSet ruleSet = new ShogiRuleSet();
 
-        // Förväntar oss att kungen är i schackmatt, eftersom den inte kan flytta någonstans utan att vara i schack
+        // Expect the King to be in checkmate, as it cannot move anywhere without being in check
         boolean isInCheckMate = ruleSet.isCurrentlyInCheckMate(board, senteKingPos, Side.SENTE, Side.GOTE, new Player(Side.SENTE));
         assertTrue(isInCheckMate, "King should be in checkmate as it cannot move out of check.");
     }
 
-    /*
+
     @Test
     void testKingCannotMoveOutOfCheck_SenteAttacks() {
-        // Initialisera variant och bräde
+        // Initialize variant and board
         Variant standardVariant = new Standard();
         Board board = new Board(standardVariant.getWidth(), standardVariant.getHeight());
 
-        // Placera GOTE's kung på en position
+        // Place GOTE's king at a position
         King goteKing = new King(Side.GOTE);
         Pos goteKingPos = new Pos(4, 4);
         board.setAtPosition(goteKingPos, goteKing);
 
-        // Placera en SENTE Rook som hotar kungen på samma rad
+        // Place a SENTE Rook threatening the king on the same row
         Rook senteRook = new Rook(Side.SENTE);
         board.setAtPosition(new Pos(4, 7), senteRook);
 
-        // Placera en Pawn för GOTE som blockerar kungen från att flytta
+        // Place a Pawn for GOTE blocking the king from moving
         Pawn gotePawn1 = new Pawn(Side.GOTE);
         board.setAtPosition(new Pos(4, 3), gotePawn1);
 
@@ -389,149 +389,145 @@ class ShogiRuleSetTest {
 
         ShogiRuleSet ruleSet = new ShogiRuleSet();
 
-        // Förväntar oss att kungen är i schackmatt, eftersom den inte kan flytta någonstans utan att vara i schack
+        // Expect the king to be in checkmate, as it cannot move anywhere without being in check
         boolean isInCheckMate = ruleSet.isCurrentlyInCheckMate(board, goteKingPos, Side.GOTE, Side.SENTE, new Player(Side.GOTE));
         assertTrue(isInCheckMate, "Gote king should be in checkmate as it cannot move out of check.");
     }
 
-     */
-
-
-    // Test: Kungen är i schack, men en annan SENTE-pjäs kan blockera för att stoppa schack
+    // Test: The king is in check, but another SENTE piece can block to stop the check
     @Test
     void testPieceCanBlockCheck() {
-        // Initialisera variant och bräde
+        // Initialize variant and board
         Variant standardVariant = new Standard();
         Board board = new Board(standardVariant.getWidth(), standardVariant.getHeight());
 
-        // Placera SENTE's kung på en position
+        // Place SENTE's king at a position
         King senteKing = new King(Side.SENTE);
         Pos senteKingPos = new Pos(4, 4);
         board.setAtPosition(senteKingPos, senteKing);
 
-        // Placera en GOTE Rook som hotar kungen
+        // Place a GOTE Rook threatening the king
         Rook goteRook = new Rook(Side.GOTE);
         board.setAtPosition(new Pos(4, 7), goteRook);
 
-        // Placera en SENTE Pawn som kan blockera Rookens väg
+        // Place a SENTE Pawn that can block the Rook's path
         Pawn sentePawn = new Pawn(Side.SENTE);
         board.setAtPosition(new Pos(4, 6), sentePawn);
 
         ShogiRuleSet ruleSet = new ShogiRuleSet();
 
-        // Förväntar oss att kungen inte är i schackmatt, eftersom SENTE's Pawn kan blockera Rookens drag
+        // Expect the king not to be in checkmate, as SENTE's Pawn can block the Rook's move
         boolean isInCheckMate = ruleSet.isCurrentlyInCheckMate(board, senteKingPos, Side.SENTE, Side.GOTE, new Player(Side.SENTE));
         assertFalse(isInCheckMate, "King should not be in checkmate, as a piece can block the check.");
     }
 
-    // Test: Kungen är i schack och det finns inga möjliga drag för att blockera eller rädda den (schackmatt)
+    // Test: The king is in check and there are no possible moves to block or save it (checkmate)
     @Test
     void testNoPieceCanBlockCheck() {
-        // Initialisera variant och bräde
+        // Initialize variant and board
         Variant standardVariant = new Standard();
         Board board = new Board(standardVariant.getWidth(), standardVariant.getHeight());
 
-        // Placera SENTE's kung på en position
+        // Place SENTE's king at a position
         King senteKing = new King(Side.SENTE);
         Pos senteKingPos = new Pos(4, 4);
         board.setAtPosition(senteKingPos, senteKing);
 
-        // Placera en GOTE Rook som hotar kungen
+        // Place a GOTE Rook threatening the king
         Rook goteRook = new Rook(Side.GOTE);
         board.setAtPosition(new Pos(4, 7), goteRook);
 
-        // Placera en annan GOTE Rook som blockerar alla möjliga blockeringar för SENTE
+        // Place another GOTE Rook blocking all possible blocks for SENTE
         Rook goteRook2 = new Rook(Side.GOTE);
         board.setAtPosition(new Pos(3, 7), goteRook2);
 
-        // Placera en annan GOTE Rook på samma rad för att helt innesluta kungen
+        // Place another GOTE Rook on the same row to completely enclose the king
         Rook goteRook3 = new Rook(Side.GOTE);
         board.setAtPosition(new Pos(5, 7), goteRook3);
 
         ShogiRuleSet ruleSet = new ShogiRuleSet();
 
-        // Förväntar oss att kungen är i schackmatt, eftersom ingen pjäs kan blockera schackrörelsen
+        // Expect the king to be in checkmate, as no piece can block the check move
         boolean isInCheckMate = ruleSet.isCurrentlyInCheckMate(board, senteKingPos, Side.SENTE, Side.GOTE, new Player(Side.SENTE));
         assertTrue(isInCheckMate, "King should be in checkmate, as no piece can block the check.");
     }
 
-    // Test: Kungen är inte i schack, och vi förväntar oss att det inte är schackmatt
+    // Test: The king is not in check, and we expect it not to be in checkmate
     @Test
     void testKingNotInCheckMate() {
-        // Initialisera variant och bräde
+        // Initialize variant and board
         Variant standardVariant = new Standard();
         Board board = new Board(standardVariant.getWidth(), standardVariant.getHeight());
 
-        // Placera SENTE's kung på en position
+        // Place SENTE's king at a position
         King senteKing = new King(Side.SENTE);
         Pos senteKingPos = new Pos(4, 4);
         board.setAtPosition(senteKingPos, senteKing);
 
-        // Placera en GOTE Rook på en annan position som inte hotar kungen
+        // Place a GOTE Rook at another position not threatening the king
         Rook goteRook = new Rook(Side.GOTE);
         board.setAtPosition(new Pos(4, 6), goteRook);
 
         ShogiRuleSet ruleSet = new ShogiRuleSet();
 
-        // Förväntar oss att kungen inte är i schackmatt, eftersom det inte finns något hot mot den
+        // Expect the king not to be in checkmate, as there is no threat against it
         boolean isInCheckMate = ruleSet.isCurrentlyInCheckMate(board, senteKingPos, Side.SENTE, Side.GOTE, new Player(Side.SENTE));
         assertFalse(isInCheckMate, "King should not be in checkmate, as it's not in check.");
     }
 
     @Test
     void testCheckIfNextMoveIsCheck_CausingCheck() {
-        // Initialisera variant och bräde
+        // Initialize variant and board
         Variant standardVariant = new Standard();
         Board board = new Board(standardVariant.getWidth(), standardVariant.getHeight());
 
-        // Placera SENTE's kung på en position
+        // Place SENTE's king at a position
         King senteKing = new King(Side.SENTE);
         Pos senteKingPos = new Pos(4, 4);
         board.setAtPosition(senteKingPos, senteKing);
 
-        // Placera en GOTE Rook som hotar kungen på samma rad
+        // Place a GOTE Rook threatening the king on the same row
         Rook goteRook = new Rook(Side.GOTE);
         board.setAtPosition(new Pos(4, 7), goteRook);
 
-        // Placera en SENTE Pawn på en position för att göra ett drag
+        // Place a SENTE Pawn at a position to make a move
         Pawn sentePawn = new Pawn(Side.SENTE);
         Pos sentePawnPos = new Pos(4, 5);
         board.setAtPosition(sentePawnPos, sentePawn);
 
-        // Försök att flytta SENTE Pawn till (4, 4), vilket kommer att orsaka att kungen hamnar i schack
+        // Try to move SENTE Pawn to (4, 4), which will cause the king to be in check
         ShogiRuleSet ruleSet = new ShogiRuleSet();
         boolean causesCheck = ruleSet.checkIfNextMoveIsCheck(sentePawnPos, new Pos(5, 5), board, Side.SENTE, Side.GOTE);
 
-        // Vi förväntar oss att metoden returnerar true eftersom flytten orsakar ett schack
+        // Expect the method to return true as the move causes a check
         assertTrue(causesCheck, "Move should cause check as Rook is threatening the King.");
     }
 
     @Test
     void testCheckIfNextMoveIsCheck_NoCheck() {
-        // Initialisera variant och bräde
+        // Initialize variant and board
         Variant standardVariant = new Standard();
         Board board = new Board(standardVariant.getWidth(), standardVariant.getHeight());
 
-        // Placera SENTE's kung på en position
+        // Place SENTE's king at a position
         King senteKing = new King(Side.SENTE);
         Pos senteKingPos = new Pos(4, 4);
         board.setAtPosition(senteKingPos, senteKing);
 
-        // Placera en GOTE Rook på en annan position så den inte hotar kungen
+        // Place a GOTE Rook at another position not threatening the king
         Rook goteRook = new Rook(Side.GOTE);
         board.setAtPosition(new Pos(1, 4), goteRook);
 
-        // Placera en SENTE Pawn på en position för att göra ett drag
+        // Place a SENTE Pawn at a position to make a move
         Pawn sentePawn = new Pawn(Side.SENTE);
         Pos sentePawnPos = new Pos(3, 4);
         board.setAtPosition(sentePawnPos, sentePawn);
 
-        // Försök att flytta SENTE Pawn till en annan position som inte orsakar check
+        // Try to move SENTE Pawn to another position that doesn't cause check
         ShogiRuleSet ruleSet = new ShogiRuleSet();
         boolean causesCheck = ruleSet.checkIfNextMoveIsCheck(sentePawnPos, new Pos(2, 4), board, Side.SENTE, Side.GOTE);
 
-        // Vi förväntar oss att metoden returnerar false eftersom flytten inte orsakar något schack
+        // Expect the method to return false as the move does not cause a check
         assertFalse(causesCheck, "Move should not cause check as Rook is not threatening the King.");
     }
-
 }
