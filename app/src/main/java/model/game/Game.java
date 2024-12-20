@@ -186,7 +186,6 @@ public class Game {
                     break;
             }
         }
-        System.out.println(ruleSet.isCurrentlyInCheckMate(board, board.getPiecePos(turn.opposite(), King.class), turn.opposite(), turn, getOppositePlayer()) + " Checkmate");
         changeTurn();
         moveCount++;
         history.addMove(move);
@@ -461,6 +460,9 @@ public class Game {
      * Switches the turn to the opposite player and updates the active clock accordingly.
      */
     private void changeTurn() {
+        if(ruleSet.isCurrentlyInCheckMate(board, board.getPiecePos(turn.opposite(), King.class), turn.opposite(), turn, getOppositePlayer())){
+            System.out.println("Checkmate!");
+        }
         turn = switch (turn) {
             case SENTE -> Side.GOTE;
             case GOTE -> Side.SENTE;
