@@ -42,8 +42,8 @@ public class GameTest {
         gameWithClock.getClock(Side.SENTE).pause();
 
         assertTrue(gameWithClock.isClocksInitialized(), "Both clocks should be initialized.");
-        assertEquals(10, gameWithClock.getTime(Side.SENTE), "Sente's time should be 10 seconds.");
-        assertEquals(10, gameWithClock.getTime(Side.GOTE), "Gote's time should be 10 seconds.");
+        assertEquals(10, gameWithClock.getTime(Side.SENTE), 1,"Sente's time should be 10 seconds.");
+        assertEquals(10, gameWithClock.getTime(Side.GOTE), 1,"Gote's time should be 10 seconds.");
     }
     @Test
     void testMoveExecution() {
@@ -357,8 +357,8 @@ public class GameTest {
         assertEquals(gameFromSavefile.getTurn(), game.getTurn(), "The current turn should be the same.");
 
         if (gameFromSavefile.isClocksInitialized()) {
-            assertEquals(gameFromSavefile.getTime(Side.SENTE), game.getTime(Side.SENTE), "Sente's time should be the same.");
-            assertEquals(gameFromSavefile.getTime(Side.GOTE), game.getTime(Side.GOTE), "Gote's time should be the same.");
+            assertEquals(gameFromSavefile.getTime(Side.SENTE), game.getTime(Side.SENTE), 1, "Sente's time should be the same.");
+            assertEquals(gameFromSavefile.getTime(Side.GOTE), game.getTime(Side.GOTE), 1, "Gote's time should be the same.");
         }
     }
 

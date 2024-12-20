@@ -402,10 +402,16 @@ public class Game {
         }
     }
 
+    /**
+     * Gets the clock for a specified player.
+     *
+     * @param side The side (SENTE or GOTE) whose clock is requested.
+     * @return The {@link Clock} object for the specified side, or null if not initialized.
+     */
     public Clock getClock(Side side) {
         switch (side) {
-            case SENTE -> {return senteClock;}
-            case GOTE -> {return goteClock;}
+            case SENTE -> { return senteClock; }
+            case GOTE -> { return goteClock; }
         }
         return null;
     }
@@ -469,18 +475,29 @@ public class Game {
         }
     }
 
+    /**
+     * Gets the player corresponding to a specific side.
+     *
+     * @param side The side (SENTE or GOTE) for which the player is requested.
+     * @return The {@link Player} for the specified side.
+     */
     public Player getPlayer(Side side) {
         switch (side) {
-            case SENTE -> {return sentePlayer;}
-            case GOTE -> {return gotePlayer;}
+            case SENTE -> { return sentePlayer; }
+            case GOTE -> { return gotePlayer; }
         }
         return null;
     }
 
-    public Player getOppositePlayer(){
-        switch (turn){
-            case SENTE -> {return gotePlayer;}
-            case GOTE -> {return sentePlayer;}
+    /**
+     * Gets the player whose turn it is not (the opposite player).
+     *
+     * @return The {@link Player} whose turn it is not.
+     */
+    public Player getOppositePlayer() {
+        switch (turn) {
+            case SENTE -> { return gotePlayer; }
+            case GOTE -> { return sentePlayer; }
         }
         return null;
     }
