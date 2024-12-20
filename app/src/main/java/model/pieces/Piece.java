@@ -74,6 +74,14 @@ public abstract class Piece {
      */
     public abstract ArrayList<Pos> getAvailableMovesBackend(Pos pos, Board board);
 
+    /**
+     * Returns a list of all positions (moves) that would stop check.
+     *
+     * @param pos the position of the piece
+     * @param kingPos  the position of the opponents king
+     * @param board the state of the board
+     * @return a list of positions that stop check..
+     */
     public ArrayList<Pos> getForcingCheckMoves(Pos pos, Pos kingPos, Board board){
         ArrayList<Pos> forcingCheckMoves = new ArrayList<>();
         forcingCheckMoves.add(kingPos);
