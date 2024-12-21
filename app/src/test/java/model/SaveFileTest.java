@@ -16,6 +16,7 @@ import util.Side;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -120,6 +121,7 @@ class SaveFileTest {
 
     @Test
     void testSaveExceptionHandling() {
+        // Create a SaveFile instance with dummy data
         SaveFile saveFile = new SaveFile(
                 "sfen_string",
                 List.of(new Move(new Pos(1, 1), new Pos(2, 1), new Pawn(Side.GOTE), new Pawn(Side.SENTE))), // Dummy moves
@@ -127,8 +129,15 @@ class SaveFileTest {
                 Map.of(Side.SENTE, 600, Side.GOTE, 600)
         );
 
-        // Path to a location where writing is restricted or invalid
-        String invalidPath = "/root/invalid/save.json";
+        // Determine invalid path based on the operating system
+        String invalidPath;
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            // Invalid path for Windows
+            invalidPath = "C:/Windows/System32/forbidden/file.json";
+        } else {
+            // Invalid path for Linux/Unix
+            invalidPath = "/root/forbidden/file.json";
+        }
 
         // Capture System.err output
         java.io.ByteArrayOutputStream errStream = new java.io.ByteArrayOutputStream();
@@ -142,7 +151,10 @@ class SaveFileTest {
 
         // Verify the expected error message is logged
         String loggedMessage = errStream.toString();
-        assertTrue(loggedMessage.contains("Failed to save save file"), "Expected error message not found.");
+        assertTrue(
+                loggedMessage.contains("Failed to save save file"),
+                "Expected error message not found. Found: " + loggedMessage
+        );
     }
 }
 
