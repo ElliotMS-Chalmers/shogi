@@ -144,4 +144,12 @@ public class HistoryController {
         else{
             gameController.setBoardViewSquare(move.movedPiece(),move.from());}
     }
+
+    public void makeLastMovePromoted() {
+        Move move = history.removeLast();
+        historyView.removeLastMoves(1);
+        move = new Move(move.from(), move.to(), move.movedPiece(), move.capturedPiece(), true);
+        history.addMove(move);
+        historyView.addMove(move.toString());
+    }
 }

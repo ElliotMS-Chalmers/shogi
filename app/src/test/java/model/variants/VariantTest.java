@@ -107,16 +107,16 @@ class VariantTest {
     }
 
     @Test
-    void testInPromotionZone() {
+    void testIsInPromotionZone() {
         Variant variant = new TestVariant();
 
         // Test SENTE side promotion zone
-        assertTrue(variant.inPromotionZone(new Pos(1, 4), Side.SENTE));
-        assertFalse(variant.inPromotionZone(new Pos(4, 4), Side.SENTE));
+        assertTrue(variant.isInPromotionZone(new Pos(1, 4), Side.SENTE));
+        assertFalse(variant.isInPromotionZone(new Pos(4, 4), Side.SENTE));
 
         // Test GOTE side promotion zone
-        assertTrue(variant.inPromotionZone(new Pos(6, 4), Side.GOTE));
-        assertFalse(variant.inPromotionZone(new Pos(4, 4), Side.GOTE));
+        assertTrue(variant.isInPromotionZone(new Pos(6, 4), Side.GOTE));
+        assertFalse(variant.isInPromotionZone(new Pos(4, 4), Side.GOTE));
     }
 
     @Test
@@ -126,7 +126,7 @@ class VariantTest {
     }
 
     @Test
-    void testInPromotionZoneWithNullZoneRows() {
+    void testIsInPromotionZoneWithNullZoneRows() {
         // Create a test variant where promotion zones for one side are null
         Variant variant = new TestVariant() {
             @Override
@@ -140,10 +140,10 @@ class VariantTest {
         };
 
         // Test that inPromotionZone returns false for gote because no zone is defined
-        assertFalse(variant.inPromotionZone(new Pos(6, 4), Side.GOTE));
+        assertFalse(variant.isInPromotionZone(new Pos(6, 4), Side.GOTE));
 
         // Test for sente, where the zone is still defined and should return true for a position within the zone
-        assertTrue(variant.inPromotionZone(new Pos(1, 4), Side.SENTE));
+        assertTrue(variant.isInPromotionZone(new Pos(1, 4), Side.SENTE));
     }
 
 }

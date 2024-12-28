@@ -110,7 +110,7 @@ public abstract class Variant {
      * @param side the side of the player whose promotion zone to check.
      * @return true if the position is within the promotion zone, false otherwise.
      */
-    public boolean inPromotionZone(Pos pos, Side side) {
+    public boolean isInPromotionZone(Pos pos, Side side) {
         List<Integer> zoneRows = getPromotionZones().get(side);
         return zoneRows != null && zoneRows.contains(pos.row());
     }

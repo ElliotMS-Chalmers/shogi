@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 import util.Pos;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class BoardView extends GridPane {
     private final SquareView[][] squares;
@@ -26,6 +27,16 @@ public class BoardView extends GridPane {
         public Pos getPos() {
             return pos;
         }
+
+        public void setPromotable() {
+            this.getStyleClass().add("promotable");
+        }
+
+        public void removePromotable() {
+            this.getStyleClass().remove("promotable");
+        }
+
+        public boolean isPromotable() { return this.getStyleClass().contains("promotable"); }
     }
 
     public BoardView(Integer size) {
@@ -97,11 +108,7 @@ public class BoardView extends GridPane {
     }
 
     public void clearHighlightedSquares() {
-        for (SquareView[] row : squares) {
-            for (SquareView square : row) {
-                square.unHighlight();
-            }
-        }
+        forEachSquare(view.SquareView::unHighlight);
     }
 
     public void setClickHandler(BiConsumer<SquareView, MouseEvent> clickHandler) {
@@ -125,9 +132,21 @@ public class BoardView extends GridPane {
     }
 
     public void clearMarkedSquares() {
+        forEachSquare(view.SquareView::unMark);
+    }
+
+    public void setPromotableSquare(Pos pos) {
+        squares[pos.row()][pos.col()].setPromotable();
+    }
+
+    public void clearPromotableSquares() {
+        forEachSquare(BoardView.SquareView::removePromotable);
+    }
+
+    private void forEachSquare(Consumer<SquareView> handler) {
         for (SquareView[] row : squares) {
             for (SquareView square : row) {
-                square.unMark();
+                handler.accept(square);
             }
         }
     }

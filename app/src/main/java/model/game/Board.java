@@ -37,7 +37,7 @@ public class Board {
      * @return a Move object representing the performed move
      */
     public Move move(Pos from, Pos to) {
-        Move move = new Move(from, to, getPieceAt(from), getPieceAt(to));
+        Move move = new Move(from, to, getPieceAt(from), getPieceAt(to), false);
         setAtPosition(to, grid[from.row()][from.col()]);
         setAtPosition(from, null);
         return move;

@@ -16,7 +16,7 @@ import util.Pos;
  * @param movedPiece the piece being moved
  * @param capturedPiece the piece that is captured (if any)
  */
-public record Move(Pos from, Pos to, Piece movedPiece, Piece capturedPiece) {
+public record Move(Pos from, Pos to, Piece movedPiece, Piece capturedPiece, boolean promoted) {
 
     /**
      * Constructor to create a Move object.
@@ -32,12 +32,15 @@ public record Move(Pos from, Pos to, Piece movedPiece, Piece capturedPiece) {
             @JsonProperty("from") Pos from,
             @JsonProperty("to") Pos to,
             @JsonProperty("movedPiece") Piece movedPiece,
-            @JsonProperty("capturedPiece") Piece capturedPiece)
+            @JsonProperty("capturedPiece") Piece capturedPiece,
+            @JsonProperty("promoted") boolean promoted
+    )
     {
         this.from = from;
         this.to = to;
         this.movedPiece = movedPiece;
         this.capturedPiece = capturedPiece;
+        this.promoted = promoted;
     }
 
     /**
@@ -57,8 +60,10 @@ public record Move(Pos from, Pos to, Piece movedPiece, Piece capturedPiece) {
      * @return a string representation of the move in SFEN notation.
      */
     public String toString() {
-        char moveType;
+        String abbr = movedPiece.getSfenAbbreviation();
+        abbr = promoted ? abbr.substring(1) : abbr; // prevents moves where piece was promoted from displaying piece as promoted before move was made
 
+        char moveType;
         if (from == null)
             moveType = '*';
         else if (capturedPiece != null)
@@ -66,6 +71,6 @@ public record Move(Pos from, Pos to, Piece movedPiece, Piece capturedPiece) {
         else
             moveType = '-';
 
-        return movedPiece.getSfenAbbreviation() + moveType + (to.col() + 1) + (to.row() + 1);
+        return abbr + moveType + (to.col() + 1) + (to.row() + 1) + (promoted ? "+" : "");
     }
 }

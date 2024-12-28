@@ -96,7 +96,7 @@ public class Game {
     /**
      * Constructs a new game with the specified variant and time settings.
      * Initializes the board, players, clocks, and rule set.
-     * 
+     *
      * @param variant The variant of the game (ruleset and board size).
      * @param time The time limit for the players, in seconds. Pass 0 for no time limit.
      */
@@ -126,7 +126,7 @@ public class Game {
     /**
      * Constructs a new game from a saved file.
      * Initializes the board, players, clocks, and rule set based on the saved game state.
-     * 
+     *
      * @param saveFile The saved game file.
      */
     public Game(SaveFile saveFile){
@@ -167,13 +167,14 @@ public class Game {
     /**
      * Executes a move from one position to another, if the move is valid.
      * Updates the board, captured pieces, turn, move count, and history.
-     * 
+     *
      * @param from The starting position of the move.
      * @param to The target position of the move.
      * @return The resulting move, or null if the move is invalid.
      */
-    public Move move(Pos from, Pos to){
+    public Move move(Pos from, Pos to) {
         if (board.getPieceAt(from) == null || !isValidMove(from, to)) { return null; }
+        // boolean isPromotableMove = isPromotableMove(from, to);
         Move move = board.move(from, to);
         Piece capturedPiece = move.capturedPiece();
         if (capturedPiece != null) {
@@ -192,6 +193,7 @@ public class Game {
         boardChanged();
         return move;
     }
+
 
     /**
      * Checks if a move is valid according to the current rule set.
@@ -511,7 +513,7 @@ public class Game {
         }
         changeTurn();
         moveCount++;
-        history.addMove(new Move(null, pos, piece, null));
+        history.addMove(new Move(null, pos, piece, null, false));
         boardChanged();
     }
 
@@ -549,9 +551,19 @@ public class Game {
     public void promotePieceAt(Pos pos) {
         Piece piece = board.getPieceAt(pos);
         Side side = piece.getSide();
-        if (piece instanceof Promotable && variant.inPromotionZone(pos, side.opposite())) {
+        if (piece instanceof Promotable && variant.isInPromotionZone(pos, side.opposite())) {
             ((Promotable) piece).promote();
         }
+    }
+
+    public boolean isPromotableMove(Pos from, Pos to) {
+        Piece piece = board.getPieceAt(from);
+        if (piece == null) return false;
+        Side side = piece.getSide();
+        if (piece instanceof Promotable && !((Promotable) piece).getIsPromoted()) {
+            return variant.isInPromotionZone(from, side.opposite()) || variant.isInPromotionZone(to, side.opposite());
+        }
+        return false;
     }
 
     /**

@@ -20,14 +20,15 @@ import java.util.List;
 
 
 public class GameController {
-    private Settings settings;
-    private Game game;
-    private ShogiView shogiView;
-    private BoardView boardView;
-    private PieceStandView gotePieceStandView;
-    private PieceStandView sentePieceStandView;
-    private ClockView senteClockView, goteClockView;
-    private HistoryController historyController;
+    private final Settings settings;
+    private final Game game;
+    private final ShogiView shogiView;
+    private final BoardView boardView;
+    private final PieceStandView gotePieceStandView;
+    private final PieceStandView sentePieceStandView;
+    private final ClockView senteClockView;
+    private final ClockView goteClockView;
+    private final HistoryController historyController;
     private SquareView lastSquareClicked;
 
     public GameController(Settings settings, Game game) {
@@ -74,7 +75,11 @@ public class GameController {
     }
 
     private void movePiece(Pos from, Pos to) {
-        // todo: game interface
+        boardView.clearPromotableSquares();
+        if (game.isPromotableMove(from, to)) {
+            boardView.setPromotableSquare(to);
+        }
+
         Move move = game.move(from, to);
         lastSquareClicked.unHighlight();
         lastSquareClicked = null;
@@ -118,7 +123,6 @@ public class GameController {
             gotePieceStandView.setCountAt(0, i);
         }
 
-        // todo: game interface
         // todo: abstract setCountAt "reverse" logic in view (modify drawImageAt to also save abbreviation or something?)
         List<Class<? extends Piece>> hand = game.getVariant().getHand();
         // Set new piece counts
@@ -139,11 +143,8 @@ public class GameController {
 
         boolean isRightClick = event.getButton() == MouseButton.SECONDARY;
         if (isRightClick) {
-            handleBoardRightClick(pos);
-            return;
-        }
-
-        if (lastSquareClicked instanceof PieceStandView.SquareView) {
+            handleBoardRightClick(pos, square);
+        } else if (lastSquareClicked instanceof PieceStandView.SquareView) {
             handleHandToBoardClick(pos);
         } else if (lastSquareClicked instanceof BoardView.SquareView) {
             handleBoardToBoardClick(pos);
@@ -152,14 +153,16 @@ public class GameController {
         }
     }
 
-    private void handleBoardRightClick(Pos pos) {
-        // todo: game interface
-        game.promotePieceAt(pos);
-        onBoardChanged(null); // temp fix to redraw board on piece promotion
+    private void handleBoardRightClick(Pos pos, BoardView.SquareView square) {
+        if (square.isPromotable()) { // hacky fix, probably breaks MVC to have "state" in view like this
+            square.removePromotable();
+            game.promotePieceAt(pos);
+            historyController.makeLastMovePromoted();
+            onBoardChanged(null); // temp fix to redraw board on piece promotion
+        }
     }
 
     private void handleHandToBoardClick(Pos pos) {
-        // todo: game interface
         // todo: move reverse logic to view
         Piece piece = getPieceFromHandSquare((PieceStandView.SquareView) lastSquareClicked);
         if (game.isValidHandMove(pos, piece)) {
@@ -169,6 +172,7 @@ public class GameController {
         lastSquareClicked.unHighlight();
         lastSquareClicked = null;
         boardView.clearMarkedSquares();
+        boardView.clearPromotableSquares();
     }
 
     public Piece getPieceFromHandSquare(PieceStandView.SquareView square) {
@@ -182,7 +186,6 @@ public class GameController {
     }
 
     private void handleBoardToBoardClick(Pos pos) {
-        // todo: game interface
         Pos lastPos = ((BoardView.SquareView) lastSquareClicked).getPos();
         if (lastPos.equals(pos)) {
             boardView.clearHighlightedSquares();
@@ -194,7 +197,6 @@ public class GameController {
     }
 
     private void handleFirstClick(BoardView.SquareView square, Pos pos) {
-        // todo: game interface
         Piece pieceClicked = game.getBoard().getPieceAt(pos);
         if (pieceClicked != null) {
             if (pieceClicked.getSide() != game.getTurn()) return;
@@ -224,7 +226,6 @@ public class GameController {
             game.getValidHandMovePositions(getPieceFromHandSquare(square)).forEach((pos) -> {
                 boardView.markSquare(pos);
             });
-            // TODO: highlihght hand squares
         }
         historyController.highlightLastMove();
     }
