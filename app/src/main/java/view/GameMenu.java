@@ -66,11 +66,11 @@ public class GameMenu extends Menu {
         variantContainer.setAlignment(Pos.CENTER);
         MenuItem standard = new MenuItem("Standard");
         MenuItem minishogi = new MenuItem("Minishogi");
-        MenuItem chushogi = new MenuItem("Chushogi (todo)");
-        MenuItem annanshogi = new MenuItem("Annanshogi (todo)");
-        MenuItem kyotoshogi = new MenuItem("Kyotoshogi (todo)");
-        MenuItem checkshogi = new MenuItem("Checkshogi (todo)");
-        variantMenuButton.getItems().addAll(standard, minishogi, chushogi, annanshogi, kyotoshogi, checkshogi);
+//        MenuItem chushogi = new MenuItem("Chushogi (todo)");
+//        MenuItem annanshogi = new MenuItem("Annanshogi (todo)");
+//        MenuItem kyotoshogi = new MenuItem("Kyotoshogi (todo)");
+//        MenuItem checkshogi = new MenuItem("Checkshogi (todo)");
+        variantMenuButton.getItems().addAll(standard, minishogi/*, chushogi, annanshogi, kyotoshogi, checkshogi */);
         for (MenuItem item : variantMenuButton.getItems()) {
             item.setOnAction(event -> {
                 variantMenuButton.setText(item.getText());

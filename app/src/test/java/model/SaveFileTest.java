@@ -46,7 +46,7 @@ class SaveFileTest {
     void testSerializationAndDeserialization() throws IOException {
         SaveFile original = new SaveFile(
                 "rbsgk/4p/5/P4/KGSBR b - 1",
-                List.of(new Move(new Pos(1, 1), new Pos(2, 1), new Pawn(Side.GOTE), new Pawn(Side.SENTE))), // Dummy moves
+                List.of(new Move(new Pos(1, 1), new Pos(2, 1), new Pawn(Side.GOTE), new Pawn(Side.SENTE), false)), // Dummy moves
                 "Mini",
                 Map.of(Side.SENTE, 600, Side.GOTE, 600)
         );
@@ -67,7 +67,7 @@ class SaveFileTest {
     void testSaveAndLoad() {
         SaveFile saveFile = new SaveFile(
                 "sfen_string",
-                List.of(new Move(new Pos(1, 1), new Pos(2, 1), new Pawn(Side.GOTE), new Pawn(Side.SENTE))), // Dummy moves
+                List.of(new Move(new Pos(1, 1), new Pos(2, 1), new Pawn(Side.GOTE), new Pawn(Side.SENTE), false)), // Dummy moves
                 "Standard",
                 Map.of(Side.SENTE, 600, Side.GOTE, 600)
         );
@@ -105,7 +105,7 @@ class SaveFileTest {
 
     @Test
     void testGetHistory() {
-        Move move = new Move(new Pos(1, 1), new Pos(2, 1), new Pawn(Side.GOTE), new Pawn(Side.SENTE)); // Dummy move
+        Move move = new Move(new Pos(1, 1), new Pos(2, 1), new Pawn(Side.GOTE), new Pawn(Side.SENTE), false); // Dummy move
         SaveFile saveFile = new SaveFile("sfen", List.of(move), "Standard", Map.of());
 
         History history = saveFile.getHistory();
@@ -124,7 +124,7 @@ class SaveFileTest {
         // Create a SaveFile instance with dummy data
         SaveFile saveFile = new SaveFile(
                 "sfen_string",
-                List.of(new Move(new Pos(1, 1), new Pos(2, 1), new Pawn(Side.GOTE), new Pawn(Side.SENTE))), // Dummy moves
+                List.of(new Move(new Pos(1, 1), new Pos(2, 1), new Pawn(Side.GOTE), new Pawn(Side.SENTE), false)), // Dummy moves
                 "Standard",
                 Map.of(Side.SENTE, 600, Side.GOTE, 600)
         );

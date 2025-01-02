@@ -22,7 +22,7 @@ class MoveTest {
         Piece capturedPiece = new Pawn(Side.GOTE);
 
         // Act
-        Move move = new Move(from, to, movedPiece, capturedPiece);
+        Move move = new Move(from, to, movedPiece, capturedPiece,false);
 
         // Assert
         assertEquals(from, move.from());
@@ -38,7 +38,7 @@ class MoveTest {
         Piece movedPiece = new Pawn(Side.SENTE);
 
         // Act
-        Move move = new Move(null, to, movedPiece, null);
+        Move move = new Move(null, to, movedPiece, null,false);
 
         // Assert
         assertTrue(move.fromPlayerHand());
@@ -52,7 +52,7 @@ class MoveTest {
         Piece movedPiece = new Pawn(Side.SENTE);
 
         // Act
-        Move move = new Move(from, to, movedPiece, null);
+        Move move = new Move(from, to, movedPiece, null,false);
 
         // Assert
         assertFalse(move.fromPlayerHand());
@@ -67,7 +67,7 @@ class MoveTest {
         Piece capturedPiece = new Pawn(Side.GOTE);
 
         // Act
-        Move move = new Move(from, to, movedPiece, capturedPiece);
+        Move move = new Move(from, to, movedPiece, capturedPiece,false);
 
         // Assert
         assertEquals("Px43", move.toString());
@@ -81,7 +81,7 @@ class MoveTest {
         Piece movedPiece = new Pawn(Side.SENTE);
 
         // Act
-        Move move = new Move(from, to, movedPiece, null);
+        Move move = new Move(from, to, movedPiece, null,false);
 
         // Assert
         assertEquals("P-43", move.toString());
@@ -94,7 +94,7 @@ class MoveTest {
         Piece movedPiece = new Pawn(Side.SENTE);
 
         // Act
-        Move move = new Move(null, to, movedPiece, null);
+        Move move = new Move(null, to, movedPiece, null,false);
 
         // Assert
         assertEquals("P*43", move.toString());

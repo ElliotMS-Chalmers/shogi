@@ -19,9 +19,9 @@ class HistoryTest {
     @BeforeEach
     void setUp() {
         history = new History();
-        move1 = new Move(new Pos(0,0),new Pos(1,1),null,null);
-        move2 = new Move(new Pos(5,3),new Pos(2,7),null,null);
-        move3 = new Move(new Pos(4,4),new Pos(2,6),null,null);
+        move1 = new Move(new Pos(0,0),new Pos(1,1),null,null,false);
+        move2 = new Move(new Pos(5,3),new Pos(2,7),null,null,false);
+        move3 = new Move(new Pos(4,4),new Pos(2,6),null,null,false);
     }
 
     @Test

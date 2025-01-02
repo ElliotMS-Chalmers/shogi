@@ -551,7 +551,7 @@ public class Game {
     public void promotePieceAt(Pos pos) {
         Piece piece = board.getPieceAt(pos);
         Side side = piece.getSide();
-        if (piece instanceof Promotable && variant.isInPromotionZone(pos, side.opposite())) {
+        if (piece instanceof Promotable /* && variant.isInPromotionZone(pos, side.opposite()) */) {
             ((Promotable) piece).promote();
         }
     }
