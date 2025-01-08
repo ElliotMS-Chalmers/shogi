@@ -9,6 +9,7 @@ import model.game.Game;
 import model.game.History;
 import model.Move;
 import model.pieces.Piece;
+import model.pieces.Promotable;
 import util.Side;
 import view.HistoryView;
 import view.MoveListItem;
@@ -116,6 +117,7 @@ public class HistoryController {
 
     //Updates Boardview based on a move
     private void forwardMove(Move move){
+        if(move.promoted()){((Promotable)move.movedPiece()).promote();}
         gameController.setBoardViewSquare(move.movedPiece(),move.to());
         if(move.capturedPiece() != null){
             Piece piece = move.capturedPiece();
@@ -131,6 +133,7 @@ public class HistoryController {
     }
 
     private void reverseMove(Move move){
+        if(move.promoted()){((Promotable)move.movedPiece()).unpromote();}
         gameController.setBoardViewSquare(move.capturedPiece(),move.to());
         if(move.capturedPiece() != null){
             Piece piece = move.capturedPiece();

@@ -49,6 +49,8 @@ public abstract class Promotable extends Piece {
         isPromoted = true;
     }
 
+    public void unpromote(){ isPromoted = false; }
+
     /**
      * Returns whether the piece is promoted.
      *

@@ -439,7 +439,10 @@ public class Game {
         if (lastMove.fromPlayerHand()) {
             (turn == Side.SENTE ? sentePlayer : gotePlayer).addCapturedPiece(lastMove.movedPiece().getClass());
         } else {
-            board.move(lastMove.to(), lastMove.from()); // Plays the last move in reverse.
+            if(lastMove.promoted()){
+                ((Promotable) lastMove.movedPiece()).unpromote();
+            }
+            board.setAtPosition(lastMove.from(),lastMove.movedPiece());
         }
         if (lastMove.capturedPiece() != null) {
             (turn == Side.SENTE ? sentePlayer : gotePlayer).removeCapturedPiece(lastMove.capturedPiece().getClass());
