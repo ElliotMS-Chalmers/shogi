@@ -1,3 +1,8 @@
+# Shogi
+<img width="1833" height="1347" alt="image" src="https://github.com/user-attachments/assets/6da4d9f5-50f1-4b9f-8bb9-a7cd6af4f83e" />
+
+
+
 ## Requirements
 - Java version 21 or higher must be installed on the system.
 - Java must be accessible either through the system's `PATH` or by setting the `JAVA_HOME` environment variable to point to the Java 21+ installation directory.
